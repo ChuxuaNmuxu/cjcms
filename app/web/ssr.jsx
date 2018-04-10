@@ -6,7 +6,6 @@ import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import { AppContainer } from 'react-hot-loader';
 import Layout from 'framework/layout/layout.jsx';
-import Header from 'component/header/header';
 import SSR from 'component/spa/ssr/ssr';
 // import { create } from 'component/spa/ssr/store';
 // import Root from './containers/Root';
