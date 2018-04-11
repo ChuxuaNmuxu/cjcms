@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {Iterable} from 'immutable';
+import {Iterable, fromJS} from 'immutable';
 import createSagaMiddleware from 'redux-saga'
 
 import rootReducer from '../reducers';
@@ -24,7 +24,7 @@ const logger = createLogger({
             if (Iterable.isIterable(state[i])) {
                 newState[i] = state[i].toJS();
             } else {
-                newState[i] = state[i];
+                newState[i] = fromJS(state[i]).toJS();
             }
         };
 

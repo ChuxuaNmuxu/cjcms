@@ -15,12 +15,12 @@ const BlockUtils = {
     /**
      * 添加多个
      */
-    // addBlocks: function (blocks) {
-    //     blocks = fromJS(blocks);
-    //     blocks = blocks.map(this.extractBlockData);
-    //     store.dispatch({type: HAMSTER.BLOCK_ADD, payload: {blocks}});
-    //     // addBlock时会生成唯一id
-    // },
+    addBlocks: function (blocks) {
+        blocks = fromJS(blocks);
+        blocks = blocks.map(this.extractBlockData);
+        // store.dispatch({type: HAMSTER.BLOCK_ADD, payload: {blocks}});
+        // addBlock时会生成唯一id
+    },
 
     /**
      * 从配置中提取数据
@@ -37,9 +37,9 @@ const BlockUtils = {
         return data;
     },
 
-    // activateBlock (blockIds) {
-    //     store.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
-    // }
+    activateBlock (blockIds) {
+        // store.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
+    }
 }
 
 export default BlockUtils;

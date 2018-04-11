@@ -35,14 +35,14 @@ export const Component = (props) => {
     return (
         <div className='blocks'>
             {
-                configHelper.blocks.map(block => <Block block={block} />)
+                configHelper.blocks.map(block => <Block block={block} key={block.get('name')} />)
             }
         </div>
     )
 }
 
 Component.propTypes = {
-    onAdd: PropTypes.func.isRequired
+    onAdd: PropTypes.func
 }
 
 export default Component;

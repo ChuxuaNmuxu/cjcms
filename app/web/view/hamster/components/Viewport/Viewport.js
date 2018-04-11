@@ -13,7 +13,7 @@ export const Component = (props) => {
                 <div className='slides'>
                     <section className='section'>
                         {
-                            blocks.map(block => <Block block={block} active={current.get('blocks').includes(block.get('id'))} />)
+                            blocks.map(block => <Block key={block.get('id')} block={block} active={current.get('blocks').includes(block.get('id'))} />)
                         }
                     </section>
                 </div>
