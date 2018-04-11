@@ -9,13 +9,15 @@ import Propsbar from './components/Propsbar';
 import Navbar from './components/Navbar';
 import Viewport from './components/Viewport';
 import {HAMSTER} from '../../actions/actionTypes';
+import Hamster, {HamsterContext} from './hamster';
 
 class Editor extends React.Component {
     state = {}
 
     constructor (props) {
         super(props);
-
+        
+        this.hamster = new Hamster(props.dispatch);
         this.handlePropChange = this.handlePropChange.bind(this);
     }
 
@@ -28,16 +30,18 @@ class Editor extends React.Component {
         const {blocks, current} = this.props;
         const currentBlocks = blocks.filter(block => current.get('blocks').includes(block.get('id')));
         return (
-            <div className='editor' styleName='editor'>
-                <header>
-                    <Toolbar />
-                </header>
-                <main>
-                    <Propsbar onPropChange={this.handlePropChange} data={currentBlocks} />
-                    <Navbar />
-                    <Viewport blocks={blocks} current={current} />
-                </main>
-            </div>
+            <HamsterContext.Provider value={this.hamster}>
+                <div className='editor' styleName='editor'>
+                    <header>
+                        <Toolbar />
+                    </header>
+                    <main>
+                        <Propsbar onPropChange={this.handlePropChange} data={currentBlocks} />
+                        <Navbar />
+                        <Viewport blocks={blocks} current={current} />
+                    </main>
+                </div>
+            </HamsterContext.Provider>
         )
     }
 }

@@ -31,7 +31,7 @@ function handleChangeProps (hamster, action) {
 // reducer生成函数，减少样板代码
 const createReducer = (initialState, handlers) => {
     return (state, action) => {
-        state = state && !state.toJS ? fromJS(state) : fromJS(initialState.hamster)
+        state = state ? (state.toJS ? state : fromJS(state)) : fromJS(initialState.hamster)
         if (handlers.hasOwnProperty(action.type)) {
             state = handlers[action.type](state, action);
         }
