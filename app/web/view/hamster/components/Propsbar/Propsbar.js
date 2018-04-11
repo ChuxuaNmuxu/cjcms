@@ -28,7 +28,7 @@ export const Component = ({data, onPropChange}) => {
             <h3>属性栏</h3>
             {
                 mergedPropsConfig.map((prop, key) =>
-                    <div key>
+                    <div key={key}>
                         {prop.get('title')}：
                         <input
                           name={key}
@@ -36,7 +36,7 @@ export const Component = ({data, onPropChange}) => {
                           onChange={e => onPropChange(key, e.target.value, data.get(0))}
                           />
                     </div>
-                )
+                ).toList()
             }
         </div>
     )

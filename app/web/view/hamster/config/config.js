@@ -13,6 +13,7 @@ export const defaultBlockConfig = fromJS({
     propsbar: null, // 自定义属性栏
     props: { // 属性
         propA: { // 属性项
+            name: 'propA',
             title: '属性A',
             value: 111, // 值
             component: null, // 所用控件

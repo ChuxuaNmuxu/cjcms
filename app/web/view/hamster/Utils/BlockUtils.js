@@ -1,7 +1,7 @@
 import {fromJS, Map} from 'immutable';
 import uuid from 'uuid';
 
-import store from '../../../core/configureStore';
+// import store from '../../../core/configureStore';
 import {HAMSTER} from '../../../actions/actionTypes'
 
 const BlockUtils = {
@@ -18,7 +18,7 @@ const BlockUtils = {
     addBlocks: function (blocks) {
         blocks = fromJS(blocks);
         blocks = blocks.map(this.extractBlockData);
-        store.dispatch({type: HAMSTER.BLOCK_ADD, payload: {blocks}});
+        // store.dispatch({type: HAMSTER.BLOCK_ADD, payload: {blocks}});
         // addBlock时会生成唯一id
     },
 
@@ -38,7 +38,7 @@ const BlockUtils = {
     },
 
     activateBlock (blockIds) {
-        store.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
+        // store.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
     }
 }
 

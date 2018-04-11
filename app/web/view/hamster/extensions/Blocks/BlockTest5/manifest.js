@@ -10,6 +10,7 @@ export default {
     propsbar: null, // 自定义属性栏
     props: { // 属性
         propB: { // 属性项
+            name: 'propB',
             title: '属性B', // 标题
             value: 333, // 值
             component: null, // 所用控件

@@ -8,4 +8,4 @@ const configureStore = (preloadedState = {}) => createStore(
     applyMiddleware(thunk)
 )
 
-export default configureStore();
+export default configureStore;
