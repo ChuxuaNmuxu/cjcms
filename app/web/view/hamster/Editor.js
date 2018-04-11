@@ -48,11 +48,9 @@ Editor.propTypes = {
     current: PropTypes.any
 }
 
-const mapStateToProps = ({hamster}) => {
-    return {
-        blocks: hamster.get('blocks'),
-        current: hamster.get('current')
-    }
-};
+const mapStateToProps = ({hamster}) => ({
+    blocks: hamster.get('blocks'),
+    current: hamster.get('current')
+});
 
 export default connect(mapStateToProps)(CSSModules(Editor, styles));
