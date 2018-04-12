@@ -1,4 +1,9 @@
-// // 业务模块
+/**
+ * 静态路由文件，服务端的location是不变的，不需要动态路由
+ * @https://reacttraining.com/react-router/
+ */
+
+// 业务模块
 // import Login from 'view/account/client/login';
 // import Logout from 'view/account/client/logout';
 // import Play from 'view/courseware/play';
@@ -28,6 +33,7 @@ const routes = [
     path: '/',
     component: Hamster,
     exact: true,
+    // 渲染前请求服务端数据
     fetch: () => Promise.resolve({
       hamster: {
         blocks: [],

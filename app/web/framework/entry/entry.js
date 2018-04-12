@@ -7,8 +7,6 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import { AppContainer } from 'react-hot-loader';
 import Layout from 'framework/layout/layout.js';
 import SSR from 'view/home';
-// import { create } from 'component/spa/ssr/store';
-// import Root from './containers/Root';
 import create from 'core/configureStore';
 import routes from 'router/routers';
 
