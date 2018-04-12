@@ -5,12 +5,12 @@ import {match, RouterContext} from 'react-router'
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import { AppContainer } from 'react-hot-loader';
-import Layout from 'framework/layout/layout.jsx';
-import SSR from 'component/spa/ssr/ssr';
+import Layout from 'framework/layout/layout.js';
+import SSR from 'view/home';
 // import { create } from 'component/spa/ssr/store';
 // import Root from './containers/Root';
-import create from './core/configureStore';
-import routes from 'component/spa/ssr/routers';
+import create from 'core/configureStore';
+import routes from 'router/routers';
 
 const clientRender = () => {
   const store = create(window.__INITIAL_STATE__);
@@ -65,6 +65,3 @@ const serverRender = (context, options)=> {
 };
 
 export default EASY_ENV_IS_NODE ?  serverRender : clientRender();
-
-
-
