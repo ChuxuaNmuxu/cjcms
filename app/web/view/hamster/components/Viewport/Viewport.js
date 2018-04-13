@@ -5,7 +5,7 @@ import CSSModules from 'react-css-modules';
 import styles from './Viewport.scss';
 import Block from './Block';
 
-export const Component = (props) => {
+export const Component = (props, context) => {
     const {blocks, current} = props;
     return (
         <div className='viewport' styleName='viewport'>

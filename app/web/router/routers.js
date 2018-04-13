@@ -12,6 +12,7 @@
 import Hamster from 'view/hamster';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import initialState from '../../../reducers/initialState';
 
 
 const NotFound = () => {
@@ -33,15 +34,7 @@ const routes = [
     path: '/',
     component: Hamster,
     exact: true,
-    // 渲染前请求服务端数据
-    fetch: () => Promise.resolve({
-      hamster: {
-        blocks: [],
-        current: {
-            blocks: []
-        }
-      }
-    })
+    fetch: () => Promise.resolve(initialState.hamster)
   },
   {
     path: '*',
