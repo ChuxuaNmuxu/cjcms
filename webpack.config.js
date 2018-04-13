@@ -3,14 +3,15 @@ module.exports = {
   framework: 'react',
   // devtool: 'source-map',
   entry: {
-    'ssr': 'app/web/ssr.jsx',
-    'layout': 'app/web/framework/layout/layout.jsx'
+    'ssr': 'app/web/framework/entry/entry.js',
+    'layout': 'app/web/framework/layout/layout.js'
   },
   alias: {
     asset: 'app/web/asset',
-    component: 'app/web/component',
     framework: 'app/web/framework',
-    view: 'app/web/view'
+    view: 'app/web/view',
+    core: 'app/web/core',
+    router: 'app/web/router'
   },
   dll: ['react', 'react-dom'],
   loaders: {
