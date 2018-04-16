@@ -12,7 +12,7 @@
 import Hamster from 'view/hamster';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import initialState from '../../../reducers/initialState';
+import initialState from '../reducers/initialState';
 
 
 const NotFound = () => {
