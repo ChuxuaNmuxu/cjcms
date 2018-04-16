@@ -1,21 +1,9 @@
-/**
- * 默认属性配置
- */
-const props = {
-    propA: { // 属性项
-        name: 'propA',
-        title: '属性A',
-        value: 111, // 值
-        component: null, // 所用控件
-        validator: [] // 验证规则
-        // ……
-    }
-}
+import props from './props';
 
 /**
  * 默认block配置
  */
-export default {
+const block = {
     name: 'default', // 名称
     title: '默认', // 标题
     icon: 'iconfont icon-link', // 图标
@@ -26,5 +14,7 @@ export default {
     },
     toolbar: null, // 自定义工具栏
     propsbar: null, // 自定义属性栏
-    props // 属性
+    props, // 属性，支持简单编排和自定义组件
 }
+
+export default block;
