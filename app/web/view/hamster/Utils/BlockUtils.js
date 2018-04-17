@@ -3,6 +3,18 @@ import uuid from 'uuid';
 
 import {HAMSTER} from '../../../actions/actionTypes'
 
+/**
+ * 递归提取block属性
+ * @param {*} block 
+ */
+const extractBlockProps = (block) => {
+    return block.get('props')
+        .reduce(
+            (reduction, v, k) => reduction.set(k, v.has('props') ? extractBlockProps(v) : v.get('value')),
+            Map()
+        )
+}
+
 const BlockUtils = {
     /**
      * 添加
@@ -30,12 +42,17 @@ const BlockUtils = {
         data = data.withMutations(data => {
             data.set('id', 'block-' + uuid.v4());
             data.set('type', block.get('name'));
-            data.set('props', block.get('props').reduce((reduction, v, k) => reduction.set(k, v.get('value')), Map()));
+            data.set('props', extractBlockProps(block));
+            data.set('data', block.get('data'));
             // TODO：props应该还有校验过程
         })
         return data;
     },
 
+    /**
+     * 激活blocks
+     * @param {*} blockIds 
+     */
     activateBlock (blockIds) {
         BlockUtils.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
     }
