@@ -26,6 +26,8 @@ function logSlowReducers (reducers, thresholdInMs = 5) {
 }
 
 let reducers = {
+    url: (state = '') => state,
+    csrf: (state = '') => state,
     hamster
 };
 if (process.env.NODE_ENV !== 'production') {

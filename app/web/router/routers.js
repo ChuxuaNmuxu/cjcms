@@ -34,7 +34,7 @@ const routes = [
     path: '/',
     component: Hamster,
     exact: true,
-    fetch: () => Promise.resolve(initialState.hamster)
+    fetch: () => Promise.resolve(initialState)
   },
   {
     path: '*',

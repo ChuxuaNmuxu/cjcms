@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {Iterable, fromJS} from 'immutable';
+import {fromJS} from 'immutable';
 import createSagaMiddleware from 'redux-saga'
 
 import rootReducer from '../reducers';
@@ -13,6 +13,11 @@ const composeEnhancers = composeWithDevTools({
   // 后续如需配置参数，可在这里配置
 });
 
+const toJS = state => {
+    let newState = fromJS(state);
+    return newState.toJS ? newState.toJS() : newState;
+}
+
 // 日志
 const logger = createLogger({
     duration: true,
@@ -21,11 +26,7 @@ const logger = createLogger({
         let newState = {};
 
         for (var i of Object.keys(state)) {
-            if (Iterable.isIterable(state[i])) {
-                newState[i] = state[i].toJS();
-            } else {
-                newState[i] = fromJS(state[i]).toJS();
-            }
+            newState[i] = toJS(state[i]);
         };
 
         return newState;
@@ -34,15 +35,7 @@ const logger = createLogger({
         let newAction = Object.assign({}, action);
 
         if (newAction.payload) {
-            if (Iterable.isIterable(newAction.payload)) {
-                newAction.payload = newAction.toJS();
-            } else {
-                for (var i of Object.keys(newAction.payload)) {
-                    if (Iterable.isIterable(newAction.payload[i])) {
-                        newAction.payload[i] = newAction.payload[i].toJS();
-                    }
-                }
-            }
+            newAction.payload = toJS(newAction.payload)
         }
 
         return newAction;
