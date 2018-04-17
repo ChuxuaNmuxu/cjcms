@@ -11,26 +11,28 @@ export default {
     props: { // 属性
         font: { // 属性项
             title: '字体', // 标题
-            textAlign: {
-                value: 'left'
-            },
-            fontSize: {
-                value: 18
-            },
-            fontStyle: {
-                value: 'none'
-            },
-            fontFamily: {
-                value: 'none'
-            },
-            color: {
-                value: 'left'
-            },
-            fontWeight: {
-                value: 'normal'
-            },
-            textDecoration: {
-                value: []
+            props: {
+                textAlign: {
+                    value: 'left'
+                },
+                fontSize: {
+                    value: 18
+                },
+                fontStyle: {
+                    value: 'none'
+                },
+                fontFamily: {
+                    value: 'none'
+                },
+                color: {
+                    value: 'left'
+                },
+                fontWeight: {
+                    value: 'normal'
+                },
+                textDecoration: {
+                    value: []
+                }
             }
             // ……
         },
