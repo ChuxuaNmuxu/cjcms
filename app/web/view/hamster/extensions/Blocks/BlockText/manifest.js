@@ -6,7 +6,7 @@ export default {
     propsbar: null, // 自定义属性栏
     data: {
         content: '', // HTML
-        editorState: null 
+        editorState: null
     },
     props: { // 属性
         font: { // 属性项

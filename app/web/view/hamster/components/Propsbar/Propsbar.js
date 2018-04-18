@@ -36,9 +36,9 @@ export const Component = ({data, onPropChange}) => {
                         {prop.get('title')}：
                         {
                             prop.has('props') ? '这是嵌套的' : <input
-                            name={key}
-                            value={mergedProps.get(key)}
-                            onChange={e => onPropChange(key, e.target.value, data.get(0))}
+                              name={key}
+                              value={mergedProps.get(key)}
+                              onChange={e => onPropChange(key, e.target.value, data.get(0))}
                             />
                         }
                     </div>

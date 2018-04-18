@@ -17,7 +17,7 @@ function pathResolve () {
 
 const config = {
     // 站点信息
-    info: {                         // 对于存在于site列表中的项目，可只配置站点名称，其它值则会从site列表中取，但这里的配置项目优化级较高
+    info: { // 对于存在于site列表中的项目，可只配置站点名称，其它值则会从site列表中取，但这里的配置项目优化级较高
         name: 'CJCMS'
     },
 

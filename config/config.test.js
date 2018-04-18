@@ -1,7 +1,6 @@
 
-
 module.exports = () => {
-  const exports = {};
+    const exports = {};
 
-  return exports;
+    return exports;
 };

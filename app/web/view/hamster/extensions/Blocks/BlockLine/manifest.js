@@ -6,7 +6,7 @@ export default {
     propsbar: null, // 自定义属性栏
     data: {
         nodes: [], // 节点信息
-        content: '', // HTML
+        content: '' // HTML
     },
     props: { // 属性
         startPoint: {

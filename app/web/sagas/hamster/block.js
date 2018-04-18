@@ -6,6 +6,6 @@ export function* addBlock (action) {
     try {
         yield put({type: hamster.BLOCK_ADD, action})
     } catch (error) {
-        
+
     }
 }

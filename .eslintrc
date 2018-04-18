@@ -1,44 +1,37 @@
 {
-  "env": {
-    "node": true,
-    "es6": true,
-    "mocha": true
-  },
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 8,
-    "ecmaFeatures": {
-      "jsx": true
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true
+    },
+    "extends": [
+        "standard",
+        "standard-react"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "babel",
+        "react",
+        "promise"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "react/jsx-indent": [2, 4],
+        "semi": 0,
+        "react/no-unused-prop-types": 0,
+        "generator-star-spacing": [
+            "error",
+            {"before": false, "after": true}
+        ]
     }
-  },
-  "rules": {
-    "indent": [
-      "error",
-      2
-    ],
-    "new-cap": "off",
-    "newline-after-var": "off",
-    "no-invalid-this": "off",
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "guard-for-in": "off",
-    "no-console": "off",
-    "no-undefined": "off",
-    "array-bracket-spacing": "off",
-    "no-unused-expressions": "off",
-    "linebreak-style": "off",
-    "func-style": [
-      "error",
-      "expression"
-    ],
-    "comma-dangle": [
-      "error",
-      "never"
-    ]
-  },
-  "plugins": [
-    "react"
-  ]
 }

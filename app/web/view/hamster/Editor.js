@@ -16,7 +16,7 @@ class Editor extends React.Component {
 
     constructor (props) {
         super(props);
-        
+
         this.hamster = new Hamster(props.dispatch);
         this.handlePropChange = this.handlePropChange.bind(this);
     }

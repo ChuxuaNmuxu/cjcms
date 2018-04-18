@@ -13,7 +13,7 @@ export const Component = (props, context) => {
                 <div className='slides'>
                     <section className='section'>
                         {
-                            blocks.map(block => 
+                            blocks.map(block =>
                                 <Block
                                   key={block.get('id')}
                                   block={block}

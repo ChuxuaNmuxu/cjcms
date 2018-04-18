@@ -5,7 +5,7 @@ import {HAMSTER} from '../../../actions/actionTypes'
 
 /**
  * 递归提取block属性
- * @param {*} block 
+ * @param {*} block
  */
 const extractBlockProps = (block) => {
     return block.get('props')
@@ -51,7 +51,7 @@ const BlockUtils = {
 
     /**
      * 激活blocks
-     * @param {*} blockIds 
+     * @param {*} blockIds
      */
     activateBlock (blockIds) {
         BlockUtils.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})

@@ -5,10 +5,10 @@ export const Toolbar = (props) => {
     const {block, BlockUtils} = props;
     return <div
       onClick={(e) => {
-          e.stopPropagation();
-          console.log(80, '自定义在模板中的事件', block.toJS())
-          BlockUtils.addBlock(block)
-      }}>
+            e.stopPropagation();
+            console.log(80, '自定义在模板中的事件', block.toJS())
+            BlockUtils.addBlock(block)
+        }}>
         {block.get('title')}
     </div>
 }

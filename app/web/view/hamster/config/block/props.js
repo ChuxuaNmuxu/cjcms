@@ -39,10 +39,10 @@ const props = {
                 component: 'select', // string || component 所用控件
                 validator: [{
                     type: ''
-                }], // 验证规则
+                }] // 验证规则
             },
             width: {
-                value: 0,
+                value: 0
             },
             color: {
                 value: '#fff'
@@ -66,15 +66,15 @@ const props = {
             },
             duration: {
                 title: '间隔',
-                value: 0,
+                value: 0
             },
             delay: {
                 title: '延迟',
-                value: 0,
+                value: 0
             },
             index: {
                 title: '播放次序',
-                value: 0,
+                value: 0
             },
             trigger: {
                 title: '触发方式',

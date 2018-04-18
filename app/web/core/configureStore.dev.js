@@ -10,7 +10,7 @@ import rootSaga from '../sagas';
 
 // 调试工具
 const composeEnhancers = composeWithDevTools({
-  // 后续如需配置参数，可在这里配置
+    // 后续如需配置参数，可在这里配置
 });
 
 const toJS = state => {
