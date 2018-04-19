@@ -3,6 +3,9 @@ import {List} from 'immutable';
 import * as extensions from './extensions';
 import * as config from './config';
 
+/**
+ * 配置管理类
+ */
 class ConfigHelper {
     blocks;
 
