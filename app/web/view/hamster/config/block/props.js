@@ -1,5 +1,6 @@
 /**
  * 默认属性配置
+ * 备忘：属性未定义component的则不在属性栏中显示
  */
 const props = {
     width: { // 属性项
@@ -21,7 +22,8 @@ const props = {
         value: 0, // 值
         validator: [{
             type: 'number'
-        }]
+        }],
+        formatter: () => {}
     },
     top: {
         title: '上边距', // 标题，可支持自定义模板
@@ -39,6 +41,8 @@ const props = {
                 component: 'select', // string || component 所用控件
                 validator: [{
                     type: ''
+                }, {
+                    validate: () => {}
                 }], // 验证规则
             },
             width: {
@@ -59,6 +63,7 @@ const props = {
     },
     animation: {
         title: '动画',
+        component: 'animation',
         props: {
             effect: {
                 title: '效果',

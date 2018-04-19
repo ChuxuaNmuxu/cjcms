@@ -1,9 +1,16 @@
+// navbar
+$navbarWidth: 200px;
+// propsbar
+$propsbarWidth: 320px;
+
+$lineColor: #e8e8e8;
+
 .editor {
     color: #000;
 
     :global {
         header {
-            border-bottom: 1px solid;
+            border-bottom: 1px solid $lineColor;
         }
 
         main {
@@ -16,7 +23,7 @@
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                width: 200px;
+                width: $propsbarWidth;
             }
 
             .navbar {
@@ -31,10 +38,10 @@
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                left: 200px;
-                right: 200px;
-                border-left: 1px solid;
-                border-right: 1px solid;
+                left: $navbarWidth;
+                right: $propsbarWidth;
+                border-left: 1px solid $lineColor;
+                border-right: 1px solid $lineColor;
             }
         }
     }

@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Viewport from './components/Viewport';
 import {HAMSTER} from '../../actions/actionTypes';
 import Hamster, {HamsterContext} from './hamster';
+import {Button} from 'antd'
 
 class Editor extends React.Component {
     state = {}
@@ -18,12 +19,12 @@ class Editor extends React.Component {
         super(props);
         
         this.hamster = new Hamster(props.dispatch);
-        this.handlePropChange = this.handlePropChange.bind(this);
+        this.handlePropsChange = this.handlePropsChange.bind(this);
     }
 
-    handlePropChange (name, value, block) {
+    handlePropsChange (value, block) {
         const {dispatch} = this.props;
-        dispatch({type: HAMSTER.BLOCK_PROPS_CHANGE, payload: {block, props: {[name]: value}}});
+        dispatch({type: HAMSTER.BLOCK_PROPS_CHANGE, payload: {block, props: value}});
     }
 
     render () {
@@ -36,9 +37,10 @@ class Editor extends React.Component {
                         <Toolbar />
                     </header>
                     <main>
-                        <Propsbar onPropChange={this.handlePropChange} data={currentBlocks} />
+                        <Propsbar onPropsChange={this.handlePropsChange} data={currentBlocks} />
                         <Navbar />
                         <Viewport blocks={blocks} current={current} />
+                        <Button />
                     </main>
                 </div>
             </HamsterContext.Provider>
