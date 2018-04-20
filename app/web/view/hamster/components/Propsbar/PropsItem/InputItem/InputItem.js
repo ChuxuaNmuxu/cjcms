@@ -21,8 +21,9 @@ class InputItem extends Component {
     }
 
     render() {
+        const {value, config} = this.props;
         return (
-            <Input className='input-item' placeholder="Basic usage" onChange={this.onChange} />
+            <Input className='input-item' value={value} placeholder="Basic usage" onChange={e => this.onChange(e.target.value)} />
         );
     }
 }
@@ -30,7 +31,7 @@ class InputItem extends Component {
 InputItem.propTypes = {
     config: PropTypes.object.isRequired,
     onChange: PropTypes.func,
-    value: PropTypes.object,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
 export default InputItem;

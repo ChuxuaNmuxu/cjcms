@@ -55,7 +55,8 @@ const props = {
     },
     opacity: {
         title: '透明度',
-        value: 100
+        value: 100,
+        component: 'input'
     },
     rotation: {
         title: '旋转角度',

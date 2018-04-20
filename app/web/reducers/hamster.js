@@ -25,7 +25,7 @@ function handleChangeProps (hamster, action) {
     const {payload} = action;
     // 修改props
     const blockIndex = hamster.get('blocks').findIndex(block => block.get('id') === payload.block.get('id'))
-    return hamster.updateIn(['blocks', blockIndex, 'props'], props => props.merge(payload.props))
+    return hamster.updateIn(['blocks', blockIndex, 'props'], props => props.mergeDeep(payload.props))
 }
 
 // reducer生成函数，减少样板代码

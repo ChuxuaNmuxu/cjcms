@@ -36,7 +36,7 @@ class PropsPane extends Component {
         }
         return (<Row key={item.join('-')} gutter={8} style={{marginBottom: 8}}>
             {item.map(subItem =>
-                <Col key={subItem} span={24 / item.length}>
+                <Col key={subItem} span={24 / item.size}>
                     {this.renderItem(subItem)}
                 </Col>
             )}
