@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {capitalize} from 'lodash';
+import {capitalize, isString} from 'lodash';
+import Color from '../../../extensions/Blocks/BlockText/Color'
 
 class PropsItem extends Component {
     constructor(props) {
@@ -18,10 +19,15 @@ class PropsItem extends Component {
 
     async componentDidMount () {
         const {config} = this.props;
-        const comp = capitalize(config.get('component') || 'input');
-        const Item = await import(`./${comp}Item`).then(module => module.default).catch(e => console.log(e))
+        let Comp = config.get('component') || 'input';
+
+        if (isString(Comp)) {
+            Comp = capitalize(Comp);
+            Comp = await import(`./${Comp}Item`).then(module => module.default).catch(e => console.log(e))
+        }
+
         this.setState({
-            Item
+            Item: Comp
         })
     }
 
@@ -29,7 +35,6 @@ class PropsItem extends Component {
         const {config, value} = this.props;
         const name = config.get('name');
         const {Item} = this.state;
-        // <input style={{width: '100%'}} name={name} value={value} onChange={this.onChange} />
         return (
             <div>
                 {config.get('title')}

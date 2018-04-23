@@ -33,7 +33,7 @@ class Editor extends React.Component {
         return (
             <HamsterContext.Provider value={this.hamster}>
                 <div className='editor' styleName='editor'>
-                    <header>
+                    <header className='header'>
                         <Toolbar />
                     </header>
                     <main>

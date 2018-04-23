@@ -1,3 +1,5 @@
+import Color from './Color'
+
 export default {
     name: 'text', // 名称
     title: '文本', // 标题
@@ -8,7 +10,8 @@ export default {
             name: 'custom',
             title: '文本',
             layout: [
-                'lineHeight'
+                'lineHeight',
+                'color'
             ]
         }
     ], // 自定义属性栏
@@ -32,9 +35,10 @@ export default {
                 fontFamily: {
                     value: 'none'
                 },
-                color: {
-                    value: 'left'
-                },
+                // color: {
+                //     value: 'left',
+                //     component: Color
+                // },
                 fontWeight: {
                     value: 'normal'
                 },
@@ -43,6 +47,11 @@ export default {
                 }
             }
             // ……
+        },
+        color: {
+            value: '#FF8C00',
+            title: '颜色',
+            component: Color
         },
         lineHeight: {
             title: '行高',

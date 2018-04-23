@@ -9,8 +9,16 @@ $lineColor: #e8e8e8;
     color: #000;
 
     :global {
-        header {
+        .header {
             border-bottom: 1px solid $lineColor;
+
+            &.hidden {
+                margin-top: -51px;
+            }
+        }
+
+        .header.hidden ~ main {
+            top: 0;
         }
 
         main {
@@ -23,15 +31,26 @@ $lineColor: #e8e8e8;
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                width: $propsbarWidth;
             }
 
             .navbar {
                 left: 0;
+                width: $navbarWidth;
+                border-right: 1px solid $lineColor;
+
+                &.hidden {
+                    left: -$navbarWidth;
+                }
             }
 
             .propsbar {
                 right: 0;
+                width: $propsbarWidth;
+                border-left: 1px solid $lineColor;
+
+                &.hidden {
+                    right: -$propsbarWidth;
+                }
             }
 
             .viewport {
@@ -40,8 +59,15 @@ $lineColor: #e8e8e8;
                 bottom: 0;
                 left: $navbarWidth;
                 right: $propsbarWidth;
-                border-left: 1px solid $lineColor;
-                border-right: 1px solid $lineColor;
+                // background: lightblue;
+            }
+
+            .navbar.hidden ~ .viewport {
+                left: 0;
+            }
+
+            .propsbar.hidden ~ .viewport {
+                right: 0;
             }
         }
     }

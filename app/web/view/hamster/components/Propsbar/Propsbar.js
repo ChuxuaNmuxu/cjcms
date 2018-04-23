@@ -47,7 +47,7 @@ class Propsbar extends React.Component {
         const key = data.reduce((k, v) => k += v.get('id').substr(-3), '')
         return (
             <div className='propsbar' styleName='propsbar'>
-                {data.size ? <Tabs key={key} defaultActiveKey={`.$${this.blockPropsLayout.getIn([0, 'name'])}`}>
+                {data.size ? <Tabs key={key} defaultActiveKey={`.$${this.blockPropsLayout.getIn([0, 'name'])}`} style={{overflow: 'visible'}}>
                     {
                         this.blockPropsLayout.map(item => {
                             return <TabPane style={{padding: '0 15px'}} tab={item.get('title')} key={item.get('name')}>
