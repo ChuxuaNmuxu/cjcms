@@ -13,6 +13,7 @@ const handleClick = (e, block) => {
 }
 
 export const Component = (props) => {
+    console.log('props', props)
     const {block, active, style} = props;
     let classes = ['block'];
     active && classes.push('active');

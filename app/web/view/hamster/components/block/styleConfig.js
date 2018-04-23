@@ -1,6 +1,6 @@
 import {fromJS} from 'immutable';
 
-const add = unit => value => `${value}${unit}`;
+export const add = unit => value => `${value}${unit}`;
 const addPx = add('px');
 const addMs = add('ms')
 
