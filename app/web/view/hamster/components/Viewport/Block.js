@@ -6,21 +6,23 @@ import classNames from 'classnames';
 import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
+import blockPraser from '../block/blockParse';
 
 const handleClick = (e, block) => {
     BlockUtils.activateBlock([block.get('id')]);
 }
 
-export const Component = ({block, active}) => {
+export const Component = (props) => {
+    const {block, active, style} = props;
     let classes = ['block'];
     active && classes.push('active');
     classes = classNames(...classes);
     return (
-        <div className={classes} styleName={classes} onClick={e => handleClick(e, block)}>
-            <h4>{block.get('type')}</h4>
+        <div className={classes} styleName={classes} onClick={e => handleClick(e, block)} style={style} >
+            <h4>{block.getIn(['data', 'type'])}</h4>
             <hr />
             {
-                block.get('props').map((v, k) => <p key={k}>{`${k}：${v}`}</p>).toList()
+                block.getIn(['data', 'props']).map((v, k) => <p key={k}>{`${k}：${v}`}</p>).toList()
             }
         </div>
     )
@@ -31,4 +33,6 @@ Component.propTypes = {
     active: PropTypes.bool
 }
 
-export default CSSModules(Component, styles, {allowMultiple: true});
+export default blockPraser()(
+    CSSModules(Component, styles, {allowMultiple: true})
+);

@@ -19,14 +19,14 @@ export const Component = ({data, onPropChange}) => {
     if (!data.size) {
         return <div />
     }
-    const dataPropsConfig = data.map(item => configHelper.getBlock(item.get('type')).get('props'))
+    const dataPropsConfig = data.map(item => configHelper.getBlock(item.getIn(['data', 'type'])).get('props'))
     let mergedPropsConfig = dataPropsConfig;
     if (data.size === 1) {
         mergedPropsConfig = dataPropsConfig.get(0);
     } else {
         // 需要合并处理多个block情况
     }
-    const mergedProps = data.getIn([0, 'props']);
+    const mergedProps = data.getIn([0, 'data', 'props']);
     return (
         <div className='propsbar' styleName='propsbar'>
             <h3>属性栏</h3>
