@@ -1,7 +1,12 @@
 import configHelper from '../../config/configHelper';
 import styleConfig, {add} from './styleConfig';
-import {isFunction, reduce, flowRight, curryRight, values, keys, join, filter} from 'lodash';
-import {Map} from 'immutable';
+import {isFunction, reduce, flowRight, curryRight, curry, values, keys, join, filter, pickBy} from 'lodash';
+import {Map, fromJS} from 'immutable';
+
+const debug = (args) => {
+    console.log(args);
+    return args;
+}
 
 const choose = (...args) => {
     return (...args) => {
@@ -45,7 +50,7 @@ const configProps = curryRight(handleNestProps)(styleConfig);
 /**
  * 生成基础style
 */
-const baseStyleParser = block => {
+export const baseStyleParser = block => {
     const props = block.getIn(['data', 'props']);
 
     const style = configProps(props, {})
@@ -62,20 +67,41 @@ const shapeBorderParser = props => {
     const {block} = props;
     if (block.getIn(['data', 'type']) !== 'shape') return props;
 
-    removeProps(block.getIn(['data', 'props', 'border']).keySeq().toList(), props.style);
+    props.style = filterNotObject(props.style)(block.getIn(['data', 'props', 'border']))
 
     return props;
 }
 
 /**
+ * immutable对象的keys
+ * @param {Map} obj 
+ */
+const immutableKeys = map => {
+    return map.keySeq().toList();
+}
+
+/**
  * 删除style的样式
- * @param {Array} props 
+ * @param {List} props 
  * @param {object} style 
  */
-const removeProps = (props, style) => {
-    props.map(prop => {
-        delete style[prop]
-    })
+export const removeProps = (props, style) => {
+    if (Map.isMap(style)) {
+        return style.filter((v, k) => {
+            return !props.includes(k);
+        })
+    }
+
+    return pickBy(style, (v, k) => {
+        return !props.includes(k);
+    });
+}
+
+/**
+ * 从对象中检出对象
+ */
+export const filterNotObject = style => {
+    return flowRight(curryRight(removeProps)(style), immutableKeys)
 }
 
 /**
@@ -90,23 +116,29 @@ const animationParse = props => {
      * 入场时触发返回正常动画
      * 点击触发返回reveal自定义属性
      */
-    let animation = {};
+    props.style = filterNotObject(props.style)(animationProps);
     const trigger = animationProps.get('trigger');
     if (trigger === 'click') {
-        animation = {
-            className: animationProps.get('effect'),
-            'data-fragment-index': animationProps.get('index')
+        // 删除style内的animation
+
+        return {
+            ...props,
+            animation: {
+                className: animationProps.get('effect'),
+                'data-fragment-index': animationProps.get('index')
+            }
         }
     }
 
-    animation = flowRight(add(' forwards'), curryRight(join)(' '), values, configProps({}))(animationProps);
-
-    removeProps(animationProps.keySeq().toList(), props.style)
-
-    return {
-        ...props,
-        animation
-    }
+    // animation css属性
+    props.style.animation = flowRight(
+        add(' forwards'),
+        curryRight(join)(' '),
+        values,
+        configProps({}),
+        curry(removeProps)(fromJS(['trigger', 'index']))
+    )(animationProps);
+    return props;
 }
 
 export default flowRight(

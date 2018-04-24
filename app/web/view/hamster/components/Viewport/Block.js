@@ -7,6 +7,7 @@ import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/blockParse';
+import {fromJS} from 'immutable';
 
 const handleClick = (e, block) => {
     BlockUtils.activateBlock([block.get('id')]);

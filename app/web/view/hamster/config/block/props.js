@@ -71,35 +71,15 @@ const props = {
             delay: {
                 title: '延迟',
                 value: 0
+            },
+            index: {
+                title: '播放次序',
+                value: 0,
+            },
+            trigger: {
+                title: '触发方式',
+                value: 'click',
             }
-        },
-        index: {
-            title: '播放次序',
-            value: 0,
-        },
-        trigger: {
-            title: '触发方式',
-            value: 'click',
-        },
-        formatter: value => {
-            /**
-             * 入场时触发返回正常动画
-             * 点击触发返回reveal自定义属性
-             */ 
-            const trigger = value.getIn(['props', 'trigger']);
-            if (trigger === 'click') {
-                return {
-                    className: value.get('effect'),
-                    'data-fragment-index': value.get('index')
-                } ;
-            }
-            return value.get('props').reduce((acc, v, k) => {
-                const formatter = v.formatter; 
-                const value = v.get('alue');
-
-                if (formatter) return `${acc} ${formatter(value)}`
-                return acc
-            } , 'forwards')
         }
     },
     zIndex: {
