@@ -3,6 +3,11 @@
     "react",
     ["env",  { "modules": false }]
   ],
+  "env": {
+    "test": {
+      "presets": [["env"], "react"]
+    }
+  },
   "plugins": [
     "transform-runtime",
     "react-hot-loader/babel",

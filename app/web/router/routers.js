@@ -14,32 +14,31 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import initialState from '../reducers/initialState';
 
-
 const NotFound = () => {
-  return (
-    <Route render={({ staticContext }) => {
-      if (staticContext) {
-        staticContext.status = 404;
-      }
-      return (
-        <div>
-          <h1>404 : Not Found</h1>
-        </div>
-      );
-    }}/>
-  );
+    return (
+        <Route render={({ staticContext }) => {
+            if (staticContext) {
+                staticContext.status = 404;
+            }
+            return (
+                <div>
+                    <h1>404 : Not Found</h1>
+                </div>
+            );
+        }} />
+    );
 };
 const routes = [
-  {
-    path: '/',
-    component: Hamster,
-    exact: true,
-    fetch: () => Promise.resolve(initialState)
-  },
-  {
-    path: '*',
-    component: NotFound
-  }
+    {
+        path: '/',
+        component: Hamster,
+        exact: true,
+        fetch: () => Promise.resolve(initialState)
+    },
+    {
+        path: '*',
+        component: NotFound
+    }
 ];
 
 export default routes;

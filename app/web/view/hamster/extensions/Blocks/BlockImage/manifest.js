@@ -5,7 +5,7 @@ export default {
     description: '点击添加图片', // 描述
     propsbar: null, // 自定义属性栏
     props: { // 属性
-        
+
     },
     data: {
         url: '', // sourceId

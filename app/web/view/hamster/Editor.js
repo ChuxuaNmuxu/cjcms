@@ -17,7 +17,7 @@ class Editor extends React.Component {
 
     constructor (props) {
         super(props);
-        
+
         this.hamster = new Hamster(props.dispatch);
         this.handlePropsChange = this.handlePropsChange.bind(this);
     }
@@ -28,8 +28,9 @@ class Editor extends React.Component {
     }
 
     render () {
-        const {blocks, current} = this.props;
-        const currentBlocks = blocks.filter(block => current.get('blocks').includes(block.get('id')));
+        const {blockIds, blockObjects} = this.props;
+        const currentBlocks = blockObjects.filter(block => blockIds .includes(block.get('id'))).toList();
+
         return (
             <HamsterContext.Provider value={this.hamster}>
                 <div className='editor' styleName='editor'>
@@ -39,7 +40,7 @@ class Editor extends React.Component {
                     <main>
                         <Propsbar onPropsChange={this.handlePropsChange} data={currentBlocks} />
                         <Navbar />
-                        <Viewport blocks={blocks} current={current} />
+                        <Viewport blockIds={blockIds}/>
                         <Button />
                     </main>
                 </div>
@@ -55,8 +56,8 @@ Editor.propTypes = {
 }
 
 const mapStateToProps = ({hamster}) => ({
-    blocks: hamster.get('blocks'),
-    current: hamster.get('current')
+    blockIds: hamster.getIn(['index', 'blocks']),
+    blockObjects: hamster.get('objects')
 });
 
 export default connect(mapStateToProps)(CSSModules(Editor, styles));

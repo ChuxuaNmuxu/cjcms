@@ -1,6 +1,9 @@
 export default {
     hamster: {
-        blocks: [],
+        index: {
+            blocks: []
+        },
+        objects: {},
         current: {
             blocks: []
         }

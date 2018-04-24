@@ -15,19 +15,19 @@ const Block = (props) => {
     const Toolbar = block.get('toolbar');
     return (
         <HamsterContext.Consumer>
-        {hamster => (
-            <div
-              className='block-item'
-              title={block.get('description')}
-              onClick={() => handleClick(block, hamster)}>
-                {
-                    Toolbar ? <Toolbar {...{block, BlockUtils}} /> : <div>
-                        <i className={block.get('icon')} /><br />
-                        {block.get('title')}&nbsp;
-                    </div>
-                }
-            </div>
-        )}
+            {hamster => (
+                <div
+                  className='block-item'
+                  title={block.get('description')}
+                  onClick={() => handleClick(block, hamster)}>
+                    {
+                        Toolbar ? <Toolbar {...{block, BlockUtils}} /> : <div>
+                            <i className={block.get('icon')} /><br />
+                            {block.get('title')}&nbsp;
+                        </div>
+                    }
+                </div>
+            )}
         </HamsterContext.Consumer>
     );
 }

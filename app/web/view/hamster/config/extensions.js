@@ -23,5 +23,5 @@ export const blocks = fromJS([
     BlockShape.manifest,
     BlockImage.manifest,
     BlockLine.manifest,
-    BlockAudio.manifest,
+    BlockAudio.manifest
 ]);

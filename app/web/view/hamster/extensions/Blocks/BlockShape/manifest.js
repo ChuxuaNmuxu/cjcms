@@ -7,7 +7,7 @@ export default {
     data: {
         content: '', // HTML
         editorState: null,
-        shapeType: '', // 形状类型
+        shapeType: '' // 形状类型
     },
     props: { // 属性
         color: {
@@ -44,6 +44,6 @@ export default {
         lineHeight: {
             title: '行高',
             value: 1.3
-        },
-    },
+        }
+    }
 }

@@ -15,5 +15,5 @@ app/web/asset/
 app/view/
 test.js
 
+app/web/framework
 app/web
-app/config

@@ -5,7 +5,7 @@ import {HAMSTER} from '../../../actions/actionTypes'
 
 /**
  * 递归提取block属性
- * @param {*} block 
+ * @param {*} block
  */
 const extractBlockProps = (block) => {
     return block.get('props')
@@ -41,9 +41,10 @@ const BlockUtils = {
         let data = Map();
         data = data.withMutations(data => {
             data.set('id', 'block-' + uuid.v4());
-            data.set('type', block.get('name'));
-            data.set('props', extractBlockProps(block));
-            data.set('data', block.get('data'));
+            data.set('type', 'block');
+            data.setIn(['data', 'type'], block.get('name'));
+            data.setIn(['data', 'props'], extractBlockProps(block));
+            data.mergeIn('data', block.get('data'));
             // TODO：props应该还有校验过程
         })
         return data;
@@ -51,7 +52,7 @@ const BlockUtils = {
 
     /**
      * 激活blocks
-     * @param {*} blockIds 
+     * @param {*} blockIds
      */
     activateBlock (blockIds) {
         BlockUtils.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})

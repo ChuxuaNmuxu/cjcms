@@ -3,11 +3,13 @@ import {fromJS, List} from 'immutable';
 import initialState from './initialState';
 
 function handleAddBlock (hamster, action) {
-    // 添加blocks
     const {payload} = action;
-    hamster = hamster.update('blocks', blocks => blocks.concat(payload.blocks))
-    // 修改current
     const blockIds = payload.blocks.map(block => block.get('id'));
+    // 添加blocks
+    hamster = hamster.updateIn(['index', 'blocks'], blocks => blocks.concat(blockIds));
+    // 添加object
+    hamster = hamster.update('objects', objects => payload.blocks.reduce((acc, block) => objects.set(block.get('id'), block), objects));
+    // 修改current
     hamster = hamster.updateIn(['current', 'blocks'], blocks => blocks.clear().concat(blockIds))
     return hamster;
 }

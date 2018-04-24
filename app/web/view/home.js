@@ -6,18 +6,18 @@ import routers from '../router/routers';
 import uuid from 'uuid';
 
 class App extends Component {
-  render() {
-    return <div>
-      <Switch>
-          {
-              routers.map(router => {
-                const {fetch, id = uuid.v1(), ...rest} = router;
-                return <Route {...rest} key={id} />
-              })
-          }
-      </Switch>
-    </div>;
-  }
+    render () {
+        return <div>
+            <Switch>
+                {
+                    routers.map(router => {
+                        const {fetch, id = uuid.v1(), ...rest} = router;
+                        return <Route {...rest} key={id} />
+                    })
+                }
+            </Switch>
+        </div>;
+    }
 }
 
 export default App;
