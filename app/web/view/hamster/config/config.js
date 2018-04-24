@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable';
+ import {fromJS} from 'immutable';
 import block from './block'
 
 /**
@@ -9,6 +9,4 @@ export const defaultBlockConfig = fromJS(block);
 /**
  * 内置block列表
  */
-export const blocks = fromJS([
-    block
-]);
+export const blocks = fromJS([]);

@@ -23,11 +23,21 @@ function handleActivateBlock (hamster, action) {
     return hamster;
 }
 
+const merger = (a, b) => {
+    if (a && a.mergeWith && !List.isList(a) && !List.isList(b)) {
+        return a.mergeWith(merger, b)
+    }
+    return b
+}
+
 function handleChangeProps (hamster, action) {
     const {payload} = action;
     // 修改props
     const blockIndex = hamster.get('blocks').findIndex(block => block.get('id') === payload.block.get('id'))
-    return hamster.updateIn(['blocks', blockIndex, 'props'], props => props.merge(payload.props))
+    return hamster.updateIn(
+        ['blocks', blockIndex, 'props'],
+        props => props.mergeWith(merger, payload.props)
+    )
 }
 
 // reducer生成函数，减少样板代码

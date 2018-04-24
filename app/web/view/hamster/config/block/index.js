@@ -1,4 +1,5 @@
 import props from './props';
+import propsbar from './propsbar';
 
 /**
  * 默认block配置
@@ -12,10 +13,10 @@ const block = {
         console.log(9, '默认点击事件', block.toJS());
         hamster.addBlock(block);
     },
+    content: null, // 组件，必需
     toolbar: null, // 自定义工具栏
-    propsbar: null, // 自定义属性栏
-    content: null, // 自定义组件
-    props // 属性，支持简单编排和自定义组件
+    propsbar, // 自定义属性栏
+    props, // 属性，支持简单编排和自定义组件
 }
 
 export default block;

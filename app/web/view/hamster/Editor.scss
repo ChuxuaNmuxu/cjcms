@@ -1,9 +1,24 @@
+// navbar
+$navbarWidth: 200px;
+// propsbar
+$propsbarWidth: 320px;
+
+$lineColor: #e8e8e8;
+
 .editor {
     color: #000;
 
     :global {
-        header {
-            border-bottom: 1px solid;
+        .header {
+            border-bottom: 1px solid $lineColor;
+
+            &.hidden {
+                margin-top: -51px;
+            }
+        }
+
+        .header.hidden ~ main {
+            top: 0;
         }
 
         main {
@@ -16,25 +31,43 @@
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                width: 200px;
             }
 
             .navbar {
                 left: 0;
+                width: $navbarWidth;
+                border-right: 1px solid $lineColor;
+
+                &.hidden {
+                    left: -$navbarWidth;
+                }
             }
 
             .propsbar {
                 right: 0;
+                width: $propsbarWidth;
+                border-left: 1px solid $lineColor;
+
+                &.hidden {
+                    right: -$propsbarWidth;
+                }
             }
 
             .viewport {
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                left: 200px;
-                right: 200px;
-                border-left: 1px solid;
-                border-right: 1px solid;
+                left: $navbarWidth;
+                right: $propsbarWidth;
+                // background: lightblue;
+            }
+
+            .navbar.hidden ~ .viewport {
+                left: 0;
+            }
+
+            .propsbar.hidden ~ .viewport {
+                right: 0;
             }
         }
     }
