@@ -1,7 +1,6 @@
 module.exports = {
   egg: true,
   framework: 'react',
-  // devtool: 'source-map',
   entry: {
     'ssr': 'app/web/framework/entry/entry.js',
     'layout': 'app/web/framework/layout/layout.js'
@@ -28,20 +27,6 @@ module.exports = {
        }],
        postcss: true
     },
-    // sass: {
-    //   enable: false
-    // },
-    // css: {
-    //   enable: false
-    // }
-    // sass:{
-    //     enable: true, 
-    //     test: /\.scss$/,
-    //     use: [{loader: 'css-loader'}, {  
-    //       loader: 'sass-loader'
-    //   }],
-    //   postcss: true
-    // }
   },
   plugins: {
     ignore: false,
