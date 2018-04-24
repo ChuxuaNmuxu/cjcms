@@ -80,7 +80,7 @@ class Color extends Component {
         )
         return (
             <div>
-                <Input value={color} addonAfter={addonAfter} />
+                <Input value={color} addonAfter={addonAfter} readOnly />
                 {
                     this.state.showColorPicker &&
                     <div style={{ position: 'absolute', zIndex: '2', right: 4 }}>

@@ -1,4 +1,5 @@
 import Color from './Color'
+import FontItem from './FontItem';
 
 export default {
     name: 'text', // 名称
@@ -10,8 +11,7 @@ export default {
             name: 'custom',
             title: '文本',
             layout: [
-                'lineHeight',
-                'color'
+                'font'
             ]
         }
     ], // 自定义属性栏
@@ -21,7 +21,8 @@ export default {
     },
     props: { // 属性
         font: { // 属性项
-            title: '字体', // 标题
+            // title: '字体', // 标题
+            component: FontItem,
             props: {
                 textAlign: {
                     value: 'left'
@@ -35,27 +36,21 @@ export default {
                 fontFamily: {
                     value: 'none'
                 },
-                // color: {
-                //     value: 'left',
-                //     component: Color
-                // },
+                color: {
+                    value: '#FF8C00'
+                },
                 fontWeight: {
                     value: 'normal'
                 },
                 textDecoration: {
                     value: []
+                },
+                lineHeight: {
+                    title: '行高',
+                    value: 1.3
                 }
             }
             // ……
-        },
-        color: {
-            value: '#FF8C00',
-            title: '颜色',
-            component: Color
-        },
-        lineHeight: {
-            title: '行高',
-            value: 1.3
         }
     }
 }
