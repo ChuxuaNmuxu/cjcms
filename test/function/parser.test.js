@@ -1,7 +1,7 @@
 import parser, {baseStyleParser, removeProps, filterNotObject} from '../../app/web/view/hamster/components/block/parser';
 import {fromJS} from 'immutable';
 
-test('removeProps is ready', () =>{
+test('test removeProps', () =>{
     const animation = {effect: "none", duration: 0, delay: 0, trigger: 'click', index: 1};
     const filt = ['trigger', 'index'];
     const result = {effect: "none", duration: 0, delay: 0};

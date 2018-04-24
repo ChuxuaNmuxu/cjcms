@@ -8,7 +8,7 @@ import Block from './Block';
 
 export class Component extends React.Component {
     render () {
-        const {blockIds, currentBlocks, blockObjects} = this.props;
+        const {blockIds, currentBlocks, objects} = this.props;
         return (
             <div className='viewport' styleName='viewport'>
                 <div className='reveal'>
@@ -18,7 +18,7 @@ export class Component extends React.Component {
                                 blockIds.map(id =>
                                     <Block
                                       key={id}
-                                      block={blockObjects.get(id)}
+                                      block={objects.get(id)}
                                       active={currentBlocks.includes(id)}
                                     />
                                 )
@@ -39,7 +39,7 @@ Component.propTypes = {
 const mapStateToProps = ({hamster}) => {
     return {
         currentBlocks: hamster.getIn(['current', 'blocks']),
-        blockObjects: hamster.get('objects')
+        objects: hamster.get('objects')
     }
 }
 

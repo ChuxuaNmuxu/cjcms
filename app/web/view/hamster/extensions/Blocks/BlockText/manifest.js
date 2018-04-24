@@ -1,9 +1,12 @@
+import React from 'react';
+
 export default {
     name: 'text', // 名称
     title: '文本', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '点击添加文本', // 描述
     propsbar: null, // 自定义属性栏
+    content: (context) => <div>context</div>,
     data: {
         content: '', // HTML
         editorState: null
