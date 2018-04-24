@@ -34,7 +34,7 @@ class Propsbar extends React.Component {
     
     getBlockProps (props) {
         const {data} = props;
-        this.blockType = !!data.size && data.getIn([0, 'type']);
+        this.blockType = !!data.size && data.getIn([0, 'data', 'type']);
         if (this.blockType) {
             const block = configHelper.getBlock(this.blockType);
             this.blockProps = block.get('props');
@@ -44,6 +44,7 @@ class Propsbar extends React.Component {
 
     render () {
         const {data, onPropsChange} = this.props;
+        console.log(4777, data.getIn([0, 'id']))
         const key = data.reduce((k, v) => k += v.get('id').substr(-3), '')
         return (
             <div className='propsbar' styleName='propsbar'>
@@ -54,7 +55,7 @@ class Propsbar extends React.Component {
                                 <PropsPane
                                   blockProps={this.blockProps}
                                   propsLayout={item.get('layout')}
-                                  value={data.getIn([0, 'props'])}
+                                  value={data.getIn([0, 'data', 'props'])}
                                   onChange={v => onPropsChange(v, data.get(0))}
                                 />
                             </TabPane>

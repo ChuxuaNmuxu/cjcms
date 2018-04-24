@@ -28,8 +28,9 @@ class Editor extends React.Component {
     }
 
     render () {
-        const {blockIds, blockObjects} = this.props;
-        const currentBlocks = blockObjects.filter(block => blockIds .includes(block.get('id'))).toList();
+        const {current, blockIds, blockObjects} = this.props;
+        const currentBlockIds = current.get('blocks')
+        const currentBlocks = blockObjects.filter(block => currentBlockIds.includes(block.get('id'))).toList();
 
         return (
             <HamsterContext.Provider value={this.hamster}>
@@ -57,7 +58,8 @@ Editor.propTypes = {
 
 const mapStateToProps = ({hamster}) => ({
     blockIds: hamster.getIn(['index', 'blocks']),
-    blockObjects: hamster.get('objects')
+    blockObjects: hamster.get('objects'),
+    current: hamster.get('current'),
 });
 
 export default connect(mapStateToProps)(CSSModules(Editor, styles));
