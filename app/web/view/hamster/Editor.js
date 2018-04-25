@@ -41,7 +41,7 @@ class Editor extends React.Component {
                     <main>
                         <Propsbar onPropsChange={this.handlePropsChange} data={currentBlocks} />
                         <Navbar />
-                        <Viewport blockIds={blockIds}/>
+                        <Viewport blockIds={blockIds} />
                         <Button />
                     </main>
                 </div>

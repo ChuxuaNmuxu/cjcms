@@ -94,7 +94,6 @@ class Color extends Component {
 }
 
 Color.propWs = {
-    type: PropTypes.string,
     onChange: PropTypes.func,
     value: PropTypes.string
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {capitalize, isString} from 'lodash';
-import Color from '../../../extensions/Blocks/BlockText/Color'
 
 class PropsItem extends Component {
     constructor(props) {

@@ -1,5 +1,4 @@
 import React from 'react';
-import Color from './Color'
 import FontItem from './FontItem';
 
 export default {
@@ -52,7 +51,6 @@ export default {
                     value: 1.3
                 }
             }
-            // ……
         }
     }
 }
