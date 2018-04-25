@@ -7,6 +7,7 @@ export default {
     props: { // 属性
 
     },
+    content: false,
     data: {
         url: '', // sourceId
         initHeight: 0, // 初始高度

@@ -1,9 +1,20 @@
+import Demo from '../BlockDemo/component/Demo';
+
 export default {
     name: 'shape', // 名称
     title: '形状', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '点击添加形状', // 描述
     propsbar: null, // 自定义属性栏
+    content: {
+        // container: {
+        //     editable: false, // 可编辑
+        //     rotatable: false, // 可旋转的
+        //     resizable: false // 可变尺寸
+        // },
+        container: false,
+        component: Demo
+    },
     data: {
         content: '', // HTML
         editorState: null,
