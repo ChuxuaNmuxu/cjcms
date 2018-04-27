@@ -6,13 +6,13 @@ import styles from './Container.scss';
 
 class BlockContainer extends Component {
     render() {
-        const {active, block, blockConfig, children} = this.props;
+        const {block, active, children, handleClick} = this.props;
         let classes = ['block'];
         active && classes.push('active');
         classes = classNames(...classes);
 
         return (
-            <div className={classes} styleName={classes} >
+            <div className={classes} styleName={classes} onClick={e => handleClick(e, block)} >
                 block容器  
                 {children}
             </div>
@@ -21,7 +21,10 @@ class BlockContainer extends Component {
 }
 
 BlockContainer.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    block: PropTypes.object,
+    handleClick: PropTypes.func,
+    active: PropTypes.bool
 };
 
 export default CSSModules(BlockContainer, styles, {allowMultiple: true});
