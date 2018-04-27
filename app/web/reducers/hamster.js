@@ -18,8 +18,8 @@ function handleActivateBlock (hamster, action) {
     // 添加blocks
     const {payload} = action;
     // 修改current
-    const blockIds = List(payload.blockIds);
-    hamster = hamster.updateIn(['current', 'blocks'], blocks => blocks.clear().concat(blockIds))
+    const handleBlockIds = payload.blockIds;
+    hamster = hamster.updateIn(['current', 'blocks'], handleBlockIds)
     return hamster;
 }
 

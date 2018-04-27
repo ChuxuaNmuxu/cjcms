@@ -1,12 +1,7 @@
-import configHelper from '../../config/configHelper';
+import configHelper from '../../../../config/configHelper';
 import styleConfig, {add} from './styleConfig';
 import {isFunction, reduce, flowRight, curryRight, curry, values, keys, join, filter, pickBy} from 'lodash';
 import {Map, fromJS} from 'immutable';
-
-const debug = (args) => {
-    console.log(args);
-    return args;
-}
 
 const choose = (...args) => {
     return (...args) => {

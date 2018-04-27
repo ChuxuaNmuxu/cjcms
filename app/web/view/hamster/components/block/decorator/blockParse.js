@@ -3,16 +3,17 @@
  * 假设：所有的配置都拥有相似的结构
  */
 import React from 'react';
-import configHelper from '../../config/configHelper';
 import {Map} from 'immutable';
 import {isFunction} from 'lodash';
-import baseStyleParser from './parser'
+
+import configHelper from '../../../config/configHelper';
+import styleParser from './style/styleParser';
 
 const parser = config => Component => class extends React.Component {
     render () {
         const {block} = this.props;
         // 生成元素的样式对象
-        const propsParsed = baseStyleParser(block);
+        const propsParsed = styleParser(block);
 
         const props = {
             ...this.props,
