@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {capitalize, isString} from 'lodash';
+import PropsGroupItem from './PropsGroupItem';
 
 class PropsItem extends Component {
     constructor(props) {
@@ -18,7 +19,8 @@ class PropsItem extends Component {
 
     async componentDidMount () {
         const {config} = this.props;
-        let Comp = config.get('component') || 'input';
+        console.log(21, config.get('props'))
+        let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : 'input');
 
         if (isString(Comp)) {
             Comp = capitalize(Comp);

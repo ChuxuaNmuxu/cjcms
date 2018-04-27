@@ -1,5 +1,4 @@
 import React from 'react';
-import FontItem from './FontItem';
 
 export default {
     name: 'text', // 名称
@@ -23,7 +22,7 @@ export default {
     props: { // 属性
         font: { // 属性项
             // title: '字体', // 标题
-            component: FontItem,
+            component: 'font',
             props: {
                 textAlign: {
                     value: 'left'
