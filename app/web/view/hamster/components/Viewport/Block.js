@@ -7,7 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import CSSModules from 'react-css-modules';
 // import classNames from 'classnames';
-import {isFunction} from 'lodash';
+import {isFunction, flowRight} from 'lodash';
 
 import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
@@ -17,13 +17,26 @@ import Container from '../block/container';
 import {dispatchMission} from '../../Utils/miaow';
 import Immutable from 'immutable';
 
+const add = values => prop => {
+    console.log('props: ', prop.concat(values))
+    return prop.concat(values);
+}
+
+const deleteProps = values => props => props.filterNot(item => values.includes(item || item.get(id)));
+
+const clear = props => props.clear();
+
 const handleClick = (e, block) => {
-    BlockUtils.activateBlock([block.get('id')]);
+    if (e.ctrlKey) {
+        BlockUtils.activateBlock(add([block.get('id')]))
+        return ;
+    };
+    BlockUtils.activateBlock(flowRight(add([block.get('id')]), clear));
 }
 
 // 其他情况
-const someOthers = (error) => {
-    return <Container>
+const someOthers = (error, props) => {
+    return <Container {...props}>
         <div style={{color: 'red'}}>
             {`config not support yet, please check: ${error}`}
         </div>
@@ -51,13 +64,14 @@ const containerConfigured = (config, props) => {
 
 // @config component: null 配置组件不存在的情况
 const componentIsNull = (config, props) => {
-    if (!config.get('component')) return someOthers('component is null');
+    if (!config.get('component')) return someOthers('component is null', props);
 } 
 
 // @config object 配置对象
 const contentIsObject = (config, props) => {
     if (!Immutable.Map.isMap(config)) return undefined;
 
+    // 先校验component是否为null(这是默认配置，说明没有第三方自定义)，在处理容器的配置
     return dispatchMission(noContainer, containerConfigured, componentIsNull)(config, props);
 }
 
