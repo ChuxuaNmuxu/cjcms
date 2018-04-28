@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import styles from './Editor.scss';
 import Toolbar from './components/Toolbar';
-import Propsbar from './components/Propsbar';
+import Propsbar from './Propsbar';
 import Navbar from './components/Navbar';
 import Viewport from './components/Viewport';
 import {HAMSTER} from '../../actions/actionTypes';
@@ -39,7 +39,7 @@ class Editor extends React.Component {
                         <Toolbar />
                     </header>
                     <main>
-                        <Propsbar onPropsChange={this.handlePropsChange} data={currentBlocks} />
+                        <Propsbar />
                         <Navbar />
                         <Viewport blockIds={blockIds} />
                         <Button />

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {capitalize, isString} from 'lodash';
 import PropsGroupItem from './PropsGroupItem';
 
-class PropsItem extends Component {
+class PropItem extends Component {
     constructor(props) {
         super(props);
 
@@ -45,10 +45,10 @@ class PropsItem extends Component {
     }
 }
 
-PropsItem.propTypes = {
+PropItem.propTypes = {
     config: PropTypes.object.isRequired,
     onChange: PropTypes.func,
     value: PropTypes.any,
 };
 
-export default PropsItem;
+export default PropItem;

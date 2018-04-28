@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PropsItem from '.';
+import PropItem from '.';
 
 class PropsGroupItem extends Component {
     render() {
@@ -9,7 +9,7 @@ class PropsGroupItem extends Component {
             <div>
                 {
                     config.get('props').map(prop => (
-                        <PropsItem
+                        <PropItem
                           key={prop.get('name')}
                           config={prop}
                           value={value.get(prop.get('name'))}

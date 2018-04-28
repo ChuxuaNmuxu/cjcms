@@ -1,3 +1,3 @@
 export {default as AnimationItem} from './AnimationItem';
 
-export {default as default} from './PropsItem';
+export {default as default} from './PropItem';
