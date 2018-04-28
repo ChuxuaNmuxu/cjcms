@@ -5,7 +5,15 @@ export default {
     title: '形状', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '点击添加形状', // 描述
-    propsbar: null, // 自定义属性栏
+    propsbar: [ // 自定义属性栏
+        {
+            name: 'custom',
+            title: '形状',
+            layout: [
+                'font'
+            ]
+        }
+    ],
     content: {
         // container: {
         //     editable: false, // 可编辑
@@ -25,32 +33,8 @@ export default {
             title: '颜色',
             value: ''
         },
-        font: { // 属性项
-            title: '字体', // 标题
-            props: {
-                textAlign: {
-                    value: 'left'
-                },
-                fontSize: {
-                    value: 18
-                },
-                fontStyle: {
-                    value: 'none'
-                },
-                fontFamily: {
-                    value: 'none'
-                },
-                color: {
-                    value: 'left'
-                },
-                fontWeight: {
-                    value: 'normal'
-                },
-                textDecoration: {
-                    value: []
-                }
-            }
-            // ……
+        font: {
+            widget: 'font'
         },
         lineHeight: {
             title: '行高',

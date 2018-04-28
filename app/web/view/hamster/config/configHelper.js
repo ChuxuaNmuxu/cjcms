@@ -2,6 +2,7 @@ import {List} from 'immutable';
 
 import * as extensions from './extensions';
 import * as config from './config';
+import { isString } from 'lodash';
 
 /**
  * 配置管理类
@@ -36,6 +37,14 @@ class ConfigHelper {
      */
     handleBlockProps = (props) => {
         return props.map((v, k) => {
+            // 处理属性套件
+            let widget = v.get('widget')
+            if (widget) {
+                if (isString(widget)) {
+                    widget = require(`../Widget/props/${widget}`).default
+                }
+                v = v.mergeDeep(widget)
+            }
             if (v.has('props')) {
                 v = v.update('props', this.handleBlockProps);
             }

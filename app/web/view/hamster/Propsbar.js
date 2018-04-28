@@ -5,15 +5,6 @@ import {HAMSTER} from '../../actions/actionTypes';
 import Propsbar from './components/Propsbar';
 import configHelper from './config/configHelper';
 
-function mapStateToProps({hamster}) {
-    const currentBlockIds = hamster.getIn(['current', 'blocks'])
-    const objects = hamster.get('objects')
-    const currentBlocks = currentBlockIds.map(id => objects.get(id));
-    return {
-        currentBlocks
-    };
-}
-
 /**
  * 可能选择多个block，甚至不同类型的block，这种情况要合并处理
  * TODO:
@@ -58,6 +49,15 @@ class PropsbarView extends Component {
             />
         );
     }
+}
+
+function mapStateToProps({hamster}) {
+    const currentBlockIds = hamster.getIn(['current', 'blocks'])
+    const objects = hamster.get('objects')
+    const currentBlocks = currentBlockIds.map(id => objects.get(id));
+    return {
+        currentBlocks
+    };
 }
 
 export default connect(
