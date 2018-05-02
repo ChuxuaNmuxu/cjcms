@@ -8,7 +8,7 @@ import configHelper from './config/configHelper';
 /**
  * 可能选择多个block，甚至不同类型的block，这种情况要合并处理
  * TODO:
- * 1. 处理多个合并的情况
+ * 1. 处理多个合并的情况，后续移到通用库里
  */
 class PropsbarView extends Component {
     constructor (props) {
@@ -19,11 +19,10 @@ class PropsbarView extends Component {
 
     getBlockProps (props) {
         const {currentBlocks: data} = props;
-        this.blockType = !!data.size && data.getIn([0, 'data', 'type']);
-        if (this.blockType) {
-            const block = configHelper.getBlock(this.blockType);
-            this.propsConfig = block.get('props');
-            this.propsLayout = block.get('propsbar').reverse();
+        if (data.size) {
+            const {props, layout} = configHelper.getBlocksLayout(data)
+            this.propsConfig = props;
+            this.propsLayout = layout.reverse();
         }
     }
 
