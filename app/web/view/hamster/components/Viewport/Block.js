@@ -13,6 +13,9 @@ import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
+import {DragSourceWithHamster} from '../block/decorator/drag';
+import DragSource from '../block/decorator/drag/DragSource';
+import withHamster from '../block/decorator/withHamster';
 import Container from '../block/container';
 import {dispatchMission} from '../../Utils/miaow';
 import Immutable from 'immutable';
@@ -85,22 +88,23 @@ const contentIsComponent = (ContentComponent, props) => {
     </Container>
 }
 
-export const Component = (props) => {
-    const {block} = props;
-    const blockConfig = configHelper.getBlock(block.getIn(['data', 'type']));
-    const contentConfig = blockConfig.get('content');
+@DragSourceWithHamster()
+@blockPraser()
+class Component extends React.Component {
+    static propTypes = {
+        block: PropTypes.any,
+        active: PropTypes.bool
+    }
 
-    // 先判断默认情况即是否是配置对象，否则为自定义
-    return dispatchMission(someOthers, contentIsComponent, contentIsObject)(contentConfig, {...props, handleClick});
-
+    render () {
+        const {block} = this.props;
+        const blockConfig = configHelper.getBlock(block.getIn(['data', 'type']));
+        const contentConfig = blockConfig.get('content');
+        
+        // 先判断默认情况即是否是配置对象，否则为自定义
+        return dispatchMission(someOthers, contentIsComponent, contentIsObject)(contentConfig, {...this.props, handleClick});
+    }
 }
 
-Component.propTypes = {
-    block: PropTypes.any,
-    active: PropTypes.bool
-}
-
-export default blockPraser()(
-    Component
-    // CSSModules(Component, styles, {allowMultiple: true})
-);
+export default Component;
+// CSSModules(Component, styles, {allowMultiple: true})
