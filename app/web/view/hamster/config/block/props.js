@@ -1,6 +1,6 @@
 /**
  * 默认属性配置
- * 备忘：属性未定义component的则不在属性栏中显示
+ * component: string || plainobject || component 所用控件
  */
 const props = {
     width: { // 属性项
@@ -38,11 +38,22 @@ const props = {
     opacity: {
         title: '透明度',
         value: 100,
-        component: 'input' // string || plainobject || component 所用控件
+        component: {
+            type: 'slider_and_number',
+            props: {
+                max: 100
+            }
+        }
     },
     rotation: {
         title: '旋转角度',
-        value: 0
+        value: 0,
+        component: {
+            type: 'slider_and_number',
+            props: {
+                max: 360
+            }
+        }
     },
     animation: {
         widget: 'animation'
