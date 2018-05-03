@@ -33,30 +33,12 @@ const props = {
         }]
     },
     border: {
-        title: '边框',
-        type: 'object',
-        props: {
-            borderStyle: {
-                value: 'none',
-                component: 'select', // string || component 所用控件
-                validator: [{
-                    type: ''
-                }, {
-                    validate: () => {}
-                }], // 验证规则
-            },
-            borderWidth: {
-                value: 0
-            },
-            borderColor: {
-                value: '#fff'
-            }
-        }
+        widget: 'border'
     },
     opacity: {
         title: '透明度',
         value: 100,
-        component: 'input'
+        component: 'input' // string || plainobject || component 所用控件
     },
     rotation: {
         title: '旋转角度',

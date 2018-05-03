@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {is} from 'immutable';
 
-import Color from './Color'
+import ColorItem from '../ColorItem'
 import FontSizeItem from './FontSizeItem'
 import TextAlignItem from './TextAlignItem'
 import LineHeightItem from './LineHeightItem'
@@ -30,7 +30,7 @@ class FontItem extends Component {
             <div>
                 <div>
                     字体颜色
-                    <Color {...this.itemProps('color')} />
+                    <ColorItem {...this.itemProps('color')} />
                 </div>
                 <div>
                     字体大小

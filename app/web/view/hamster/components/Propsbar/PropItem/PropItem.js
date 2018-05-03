@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {capitalize, isString} from 'lodash';
+import {upperFirst, camelCase, isString, isPlainObject} from 'lodash';
+import {Map} from 'immutable'
 import PropsGroupItem from './PropsGroupItem';
 
 class PropItem extends Component {
@@ -17,14 +18,22 @@ class PropItem extends Component {
         onChange && onChange({[config.get('name')]: value})
     }
 
+    loadComp (Comp) {
+        Comp = upperFirst(camelCase(Comp));
+        return import(`./${Comp}Item`).then(module => module.default).catch(e => console.log(e))
+    }
+
     async componentDidMount () {
         const {config} = this.props;
         console.log(21, config.get('props'))
         let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : 'input');
 
-        if (isString(Comp)) {
-            Comp = capitalize(Comp);
-            Comp = await import(`./${Comp}Item`).then(module => module.default).catch(e => console.log(e))
+        if (Map.isMap(Comp)) {
+            let componentProps = Comp.get('props').toJS();
+            let Comps = await this.loadComp(Comp.get('type'));
+            Comp = props => <Comps {...componentProps} {...props} />;
+        } else if (isString(Comp)) {
+            Comp = await this.loadComp(Comp);
         }
 
         this.setState({

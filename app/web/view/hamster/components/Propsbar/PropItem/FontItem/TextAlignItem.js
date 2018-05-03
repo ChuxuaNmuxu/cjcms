@@ -1,9 +1,6 @@
 import React from 'react';
 import {Radio} from 'antd'
 
-import Color from './Color'
-import FontSizeItem from './FontSizeItem'
-
 const TextAlignItem = (props) => {
     const {onChange, value} = props;
     return (
