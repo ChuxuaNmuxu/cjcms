@@ -1,3 +1,6 @@
+import {isFunction} from 'lodash';
+import {isValidElement} from 'react';
+
 /**
  * flow中打印输出debug
  * @param {any} args 
@@ -22,4 +25,10 @@ export const dispatchMission = (...funs) => {
         }
         return undefined;
     }
+}
+
+export const isValidateReactComponent = component => {
+    // TODO: 其他情况判断
+    // 实例化组件，function, 继承自Component的class
+    return isValidElement(component) || isFunction(component) || component.render;
 }

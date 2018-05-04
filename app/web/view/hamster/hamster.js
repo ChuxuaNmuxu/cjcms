@@ -1,7 +1,5 @@
 import React from 'react';
-
 import BlockUtils from './Utils/BlockUtils';
-import DragDropManager from './components/block/decorator/drag/core';
 
 export const HamsterContext = React.createContext();
 
@@ -12,7 +10,6 @@ export const HamsterContext = React.createContext();
 class Hamster {
     constructor (dispatch) {
         this.dispatch = BlockUtils.dispatch = dispatch;
-        this.DragDropManager = new DragDropManager();
     }
 
     /**
@@ -22,12 +19,18 @@ class Hamster {
         BlockUtils.addBlocks([block]);
     }
 
-    /**
-     * 拖拽管理
-    */
-    getDragDropManager () {
-        return this.DragDropManager;
-    }
+    // /**
+    //  * 拖拽管理类
+    // */
+    // setDragDropManager (store) {
+    //     if (this.DragDropManager) return ;
+    //     this.DragDropManager = new DragDropManager(store);
+    // }
+
+    // getDragDropManager () {
+    //     return this.DragDropManager;
+    // }
+
 }
 
 export default Hamster;

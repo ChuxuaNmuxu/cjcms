@@ -7,17 +7,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import CSSModules from 'react-css-modules';
 // import classNames from 'classnames';
-import {isFunction, flowRight} from 'lodash';
+import {flowRight} from 'lodash';
 
 import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
 import {DragSourceWithHamster} from '../block/decorator/drag';
-import DragSource from '../block/decorator/drag/DragSource';
-import withHamster from '../block/decorator/withHamster';
 import Container from '../block/container';
-import {dispatchMission} from '../../Utils/miaow';
+import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable from 'immutable';
 
 const add = values => prop => {
@@ -81,15 +79,31 @@ const contentIsObject = (config, props) => {
 // @config reactComponent 配置組件,默认有容器包裹
 const contentIsComponent = (ContentComponent, props) => {
     // function or class
-    if (!isFunction(ContentComponent)) return undefined;
+    if (!isValidateReactComponent(ContentComponent)) return undefined;
 
     return <Container {...props}>
         <ContentComponent {...props} />
     </Container>
 }
 
-@DragSourceWithHamster()
+const spec = {
+    beginDrag (props, monitor, component) {
+        console.log('beginDrag123: ', props)
+    },
+
+    endDrag (props, monitor, component) {
+        console.log('endDrag123: ', props)
+    }
+}
+
+const collect = (connect, monitor) => {
+    return {
+        monitor
+    }
+}
+
 @blockPraser()
+@DragSourceWithHamster('block', spec, collect)
 class Component extends React.Component {
     static propTypes = {
         block: PropTypes.any,
