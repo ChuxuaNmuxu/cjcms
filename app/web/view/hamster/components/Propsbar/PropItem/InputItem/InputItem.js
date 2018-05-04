@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';;
 
-const onChange = () => {};
-
 class InputItem extends Component {
     constructor (props) {
         super(props);

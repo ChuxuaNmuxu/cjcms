@@ -4,8 +4,7 @@ import {isArray} from 'lodash';
 import {Row, Col} from 'antd';
 import {List} from 'immutable'
 
-import PropsItem from './PropsItem';
-import configHelper from '../../config/configHelper';
+import PropItem from './PropItem';
 
 class PropsPane extends Component {
     constructor(props) {
@@ -19,10 +18,10 @@ class PropsPane extends Component {
     }
 
     renderItem = (item) => {
-        const {value, blockProps} = this.props;
-        return <PropsItem
+        const {value, propsConfig} = this.props;
+        return <PropItem
             value={value.get(item)}
-            config={blockProps.get(item)}
+            config={propsConfig.get(item)}
             onChange={value => this.onChange(value)}
         />;
     }
@@ -53,7 +52,7 @@ class PropsPane extends Component {
 }
 
 PropsPane.propTypes = {
-    blockProps: PropTypes.any,
+    propsConfig: PropTypes.any,
     propsLayout: PropTypes.any,
     value: PropTypes.any,
     onChange: PropTypes.func

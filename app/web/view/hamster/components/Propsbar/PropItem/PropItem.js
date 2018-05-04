@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {capitalize, isString} from 'lodash';
-import Color from '../../../extensions/Blocks/BlockText/Color'
+import {upperFirst, camelCase, isString, isPlainObject} from 'lodash';
+import {Map} from 'immutable'
+import PropsGroupItem from './PropsGroupItem';
 
-class PropsItem extends Component {
+class PropItem extends Component {
     constructor(props) {
         super(props);
 
@@ -17,13 +18,22 @@ class PropsItem extends Component {
         onChange && onChange({[config.get('name')]: value})
     }
 
+    loadComp (Comp) {
+        Comp = upperFirst(camelCase(Comp));
+        return import(`./${Comp}Item`).then(module => module.default).catch(e => console.log(e))
+    }
+
     async componentDidMount () {
         const {config} = this.props;
-        let Comp = config.get('component') || 'input';
+        console.log(21, config.get('props'))
+        let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : 'input');
 
-        if (isString(Comp)) {
-            Comp = capitalize(Comp);
-            Comp = await import(`./${Comp}Item`).then(module => module.default).catch(e => console.log(e))
+        if (Map.isMap(Comp)) {
+            let componentProps = Comp.get('props').toJS();
+            let Comps = await this.loadComp(Comp.get('type'));
+            Comp = props => <Comps {...componentProps} {...props} />;
+        } else if (isString(Comp)) {
+            Comp = await this.loadComp(Comp);
         }
 
         this.setState({
@@ -44,10 +54,10 @@ class PropsItem extends Component {
     }
 }
 
-PropsItem.propTypes = {
+PropItem.propTypes = {
     config: PropTypes.object.isRequired,
     onChange: PropTypes.func,
     value: PropTypes.any,
 };
 
-export default PropsItem;
+export default PropItem;

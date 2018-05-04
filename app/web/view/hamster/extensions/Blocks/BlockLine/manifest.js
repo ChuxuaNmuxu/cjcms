@@ -1,9 +1,17 @@
+import React from 'react'
+
 export default {
     name: 'line', // 名称
     title: '线条', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '点击添加线条', // 描述
-    propsbar: null, // 自定义属性栏
+    propsbar: [
+        {
+            name: 'line',
+            title: '线条',
+            layout: () => <div>自定义属性面板</div>
+        }
+    ], // 自定义属性栏
     data: {
         nodes: [], // 节点信息
         content: '' // HTML
