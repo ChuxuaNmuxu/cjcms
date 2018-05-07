@@ -30,7 +30,7 @@ const DragSource = (type, spec, collect) => {
 
             componentDidMount () {
                 this.node = this.validateNode();
-                // 注册当前source
+                // 注册当前资源对象
                 this.registrySource();
                 // 给node增加drag相关属性和事件监听
                 this.backend.connectSource(this.sourceId ,this.node);
@@ -55,6 +55,10 @@ const DragSource = (type, spec, collect) => {
                 // 接受props的变化
                 // this.register.receiveProps(props);
                 this.sourceId = this.register.addSource(spec);
+            }
+
+            receiveProps (props) {
+
             }
 
             getCurrentState () {

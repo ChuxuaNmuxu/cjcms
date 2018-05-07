@@ -10,26 +10,26 @@ const getId = getNextId(10)
 export default class Registry {
     constructor () {
         this.props = {};
-        this.handles = [];
+        // 保存资源对象，其成员主要是操作过程中的钩子函数
+        this.sources = {};
     }
 
     createId () {
-        // 每个注册的node的ID
         return getId();
     }
 
     addSource (source) {
         const id = this.createId();
         console.log('id: ', id)
-        this.handles[id] = source;
+        this.sources[id] = source;
         return id;
     }
 
     getSource (sourceId) {
-        return  this.handles[sourceId];
+        return  this.sources[sourceId];
     }
 
     unRegistry (sourceId) {
-        delete this.handlers[sourceId]
+        delete this.sources[sourceId]
     }
 }
