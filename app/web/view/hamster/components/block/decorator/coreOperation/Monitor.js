@@ -4,8 +4,7 @@ import Registry from './Registry';
 export default class Monitor {
     constructor (store) {
         this.store = store;
-        this.registry = new Registry();
-        this.props = {};
+        this.registry = new Registry(store);
     }
 
     // 订阅store中drag相关数据的变动
@@ -24,5 +23,9 @@ export default class Monitor {
 
         // 返回解除监听函数
         return this.store.subscribe(handleChange);
+    }
+
+    getState () {
+        return this.store.getState();
     }
 }

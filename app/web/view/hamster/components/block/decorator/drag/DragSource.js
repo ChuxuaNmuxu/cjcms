@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Moniter from './core/Moniter';
 import {isValidateReactComponent} from '../../../../Utils/miaow';
 import DragDropManager from './core';
+import createSource from './createSource';
+import createMonitor from './createMonitor';
 
 const DragSource = (type, spec, collect) => {
     // TODO: params check
@@ -17,7 +18,13 @@ const DragSource = (type, spec, collect) => {
                 this.monitor = this.manager.getMonitor();
                 this.register = this.manager.getRegistry();
                 this.backend = this.manager.backend;
+
+                this.monitorHandle = createMonitor(this.manager);
+                this.sourceHandle = createSource(spec, this.monitorHandle);
+
                 this.sourceId = null;
+
+                this.sourceHandle.receiveProps(props);
             }          
 
             validateNode () {
@@ -30,12 +37,21 @@ const DragSource = (type, spec, collect) => {
 
             componentDidMount () {
                 this.node = this.validateNode();
+
                 // 注册当前资源对象
-                this.registrySource();
+                this.registry();
+                // monitor
+                this.monitorHandle.reveiveSourceId(this.sourceId);
+                // source
+                this.sourceHandle.reveiveComponent(this.node);
                 // 给node增加drag相关属性和事件监听
                 this.backend.connectSource(this.sourceId ,this.node);
                 // 监听数据变化
                 this.unsubscribe = this.monitor.subscribeToStateChange(this.handleChange);
+            }
+
+            componentWillReceiveProps (nextProps) {
+                this.sourceHandle.receiveProps(nextProps);
             }
 
             componentWillUnmount () {
@@ -50,11 +66,9 @@ const DragSource = (type, spec, collect) => {
                 })
             }
 
-            registrySource () {
-                //TODO: 注册spe中的自定义事件
-                // 接受props的变化
-                // this.register.receiveProps(props);
-                this.sourceId = this.register.addSource(spec);
+            registry () {
+                // 注册source对象和monitor
+                this.sourceId = this.register.addSource(this.sourceHandle);
             }
 
             receiveProps (props) {

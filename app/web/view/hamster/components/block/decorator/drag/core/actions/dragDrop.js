@@ -7,13 +7,13 @@ export function beginDrag (
 ) {
 	const { clientOffset, getSourceClientOffset } = options
 
-    const monitor = this.getMonitor();
+    // const monitor = this.getMonitor();
     const registry = this.getRegistry();
 
     // 多个drag对象只处理其中一个即可
 	let sourceId = null
 	for (let i = sourceIds.length - 1; i >= 0; i--) {
-		if (monitor.canDragSource(sourceIds[i])) {
+		if (registry.getSource(sourceIds[i]).canDrag()) {
 			sourceId = sourceIds[i]
 			break
 		}
@@ -25,7 +25,7 @@ export function beginDrag (
 
     const source = registry.getSource(sourceId)
     // 自定义beginDrag回调
-	const item = source.beginDrag(monitor, sourceId)
+	const item = source.beginDrag()
 
     return {
         type: BEGIN_DRAG,
@@ -36,14 +36,15 @@ export function beginDrag (
     }
 }
 
-export function dragEnd (state, action) {
+export function dragEnd () {
     const monitor = this.getMonitor()
 	const registry = this.getRegistry()
     
 	const sourceId = monitor.getSourceId()
 	const source = registry.getSource(sourceId, true)
     // 自定义endDrag回调
-	source.endDrag(monitor, sourceId)
+	// source.endDrag(monitor, sourceId)
+	source.endDrag()
 
 	// registry.unpinSource()
 

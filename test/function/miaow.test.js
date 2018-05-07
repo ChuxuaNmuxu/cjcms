@@ -9,7 +9,7 @@ test('test matching', () => {
     .mockReturnValueOnce('123')
     .mockReturnValueOnce(true)
 
-    const ret = miaow.matching(myMock, myMock, myMock)(12);
+    const ret = miaow.dispatchMission(myMock, myMock, myMock)(12);
 
     expect(myMock.mock.calls).toEqual([[12], [12]])
     expect(ret).toBe('123')

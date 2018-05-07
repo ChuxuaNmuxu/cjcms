@@ -1,17 +1,22 @@
 import Monitor from './Monitor';
 import {createStore} from 'redux';
+// import Registry from './Registry';
+import {extend} from '../../../../Utils/miaow'
 
 /**
  * Manager工厂函数
  * @param {object} 
  */
-const createManager = ({reducers, actions, Monitor = Monitor}) => class Manager {
+const createManager = ({reducers, actions, monitor = {}}) => class Manager {
     constructor (Backend) {
         const store = createStore(reducers);
         this.store = store;
         this.backend = new Backend(this);
-        this.monitor = new Monitor(store);
+
+        const MixMonitor = this.extendMonitor(Monitor, monitor);
+        this.monitor = new MixMonitor(store);
         this.registry = this.monitor.registry;
+        // this.registry = new Registry(store);
 
         this.setupBackend();
     }
@@ -20,8 +25,12 @@ const createManager = ({reducers, actions, Monitor = Monitor}) => class Manager 
         this.backend.setUp();
     }
 
+    extendMonitor () {
+        return extend(Monitor, monitor)
+    }
+
     getBackend () {
-        return this.monitor;
+        return this.backend;
     }
 
     getMonitor () {

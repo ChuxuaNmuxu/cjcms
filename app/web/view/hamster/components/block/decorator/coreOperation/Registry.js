@@ -8,7 +8,7 @@ const getNextId = (init) => {
 const getId = getNextId(10)
 
 export default class Registry {
-    constructor () {
+    constructor (store) {
         this.props = {};
         // 保存资源对象，其成员主要是操作过程中的钩子函数
         this.sources = {};
@@ -18,10 +18,11 @@ export default class Registry {
         return getId();
     }
 
-    addSource (source) {
+    addSource (source, monitor) {
         const id = this.createId();
         console.log('id: ', id)
         this.sources[id] = source;
+        // this.monitors[id] = monitor;
         return id;
     }
 
