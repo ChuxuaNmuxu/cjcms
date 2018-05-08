@@ -8,6 +8,9 @@ import TextAlignItem from './TextAlignItem'
 import LineHeightItem from './LineHeightItem'
 import FontStyleItem from './FontStyleItem'
 
+/**
+ * 字体属性项
+ */
 class FontItem extends Component {
     onChange = (name, v) => {
         const {onChange} = this.props;

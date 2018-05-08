@@ -6,6 +6,9 @@ const SOption = Select.Option;
 
 const onChange = () => {};
 
+/**
+ * 动画属性项
+ */
 class AnimationItem extends Component {
     constructor (props) {
         super(props);

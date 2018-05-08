@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Checkbox} from 'antd'
 
+/**
+ * 字体样式属性项
+ * 包含：加粗、斜体、下划线、删除线
+ */
 class FontStyleItem extends Component {
     onDecorationChange = (type, checked) => {
         const {value, onChange} = this.props;

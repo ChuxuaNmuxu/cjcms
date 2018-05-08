@@ -1,6 +1,10 @@
 import React from 'react';
 import {Radio} from 'antd'
 
+/**
+ * 字体对齐方式属性项
+ * @param {*} props 
+ */
 const TextAlignItem = (props) => {
     const {onChange, value} = props;
     return (
