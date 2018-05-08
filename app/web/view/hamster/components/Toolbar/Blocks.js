@@ -21,7 +21,7 @@ const Block = (props) => {
                   title={block.get('description')}
                   onClick={() => handleClick(block, hamster)}>
                     {
-                        Toolbar ? <Toolbar {...{block, BlockUtils}} /> : <div>
+                        Toolbar ? <Toolbar {...{block, hamster}} /> : <div>
                             <i className={block.get('icon')} /><br />
                             {block.get('title')}&nbsp;
                         </div>
@@ -36,7 +36,7 @@ Block.propTypes = {
     block: PropTypes.object
 }
 
-export const Component = (props) => {
+export const Blocks = (props) => {
     return (
         <div className='blocks'>
             {
@@ -46,8 +46,8 @@ export const Component = (props) => {
     )
 }
 
-Component.propTypes = {
+Blocks.propTypes = {
     onAdd: PropTypes.func
 }
 
-export default Component;
+export default Blocks;
