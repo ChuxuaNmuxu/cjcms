@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 
 import styles from './Viewport.scss';
 import Block from './Block';
+import CustomDragLayer from './CustomDragLayer';
 
 export class Component extends React.Component {
     render () {
@@ -14,6 +15,7 @@ export class Component extends React.Component {
                 <div className='reveal'>
                     <div className='slides'>
                         <section className='section'>
+                            {/* <CustomDragLayer /> */}
                             {
                                 blockIds.map(id =>
                                     <Block

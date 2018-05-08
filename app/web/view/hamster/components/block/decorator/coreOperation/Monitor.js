@@ -25,6 +25,11 @@ export default class Monitor {
         return this.store.subscribe(handleChange);
     }
 
+    // 订阅位置的变动
+    subscribeToOffsetChange (listener, options = {}) {
+        return this.store.subscribe(listener)
+    }
+
     getState () {
         return this.store.getState();
     }
