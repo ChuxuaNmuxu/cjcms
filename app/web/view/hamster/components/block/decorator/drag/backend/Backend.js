@@ -26,7 +26,7 @@ export default class Backend {
         // node.addEventListener('selectstart', handleSelectStart);
 
         return () => {
-            delete this.sourceNodes[sourceId]
+            Reflect.deleteProperty(this.sourceNodes, sourceId);
 
             node.removeEventListener('dragstart', handleDragStart)
             // 兼容IE
@@ -37,9 +37,9 @@ export default class Backend {
 
     connectDragPreview (sourceId, node) {
         this.sourcePreview[sourceId] = node;
-
+        
         return () => {
-            delete this.sourcePreview[sourceId]
+            Reflect.deleteProperty(this.sourcePreview, sourceId);
         }
     }
 
