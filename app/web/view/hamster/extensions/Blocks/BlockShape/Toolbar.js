@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import {Modal} from 'antd';
 
+import ToolbarItem from '../../../components/Toolbar/ToolbarItem';
+
 class Toolbar extends React.Component {
     constructor (props) {
         super(props);
@@ -17,30 +19,26 @@ class Toolbar extends React.Component {
         this.setState({visible: !this.state.visible});
     }
 
-    handleOk = () => {
+    handleSelect = (shapeType) => {
         const {block, hamster} = this.props;
-        const shapeType = 'square';
         hamster.addBlock(block.setIn(['data', 'shapeType'], shapeType))
+        this.setState({visible: !this.state.visible});
     }
 
     render () {
         const {block, hamster} = this.props;
-        return (
-            <div onClick={this.handleClick}>
-                <i className='iconfont icon-liubianxing' /><br />
-                形状&nbsp;
-                <Modal
-                  title="Basic Modal"
-                  visible={this.state.visible}
-                  onOk={this.handleOk}
-                  onCancel={this.handleClick}
-                >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                </Modal>
-            </div>
-        )
+        return (<ToolbarItem block={block} onBtnClick={this.handleClick}>
+            <Modal
+              title="Basic Modal"
+              visible={this.state.visible}
+              footer={null}
+              onCancel={this.handleClick}
+            >
+                <p onClick={() => this.handleSelect('square')}>矩形</p>
+                <p onClick={() => this.handleSelect('circle')}>圆形</p>
+                <p onClick={() => this.handleSelect('star')}>星形</p>
+            </Modal>
+        </ToolbarItem>)
     }
 }
 
