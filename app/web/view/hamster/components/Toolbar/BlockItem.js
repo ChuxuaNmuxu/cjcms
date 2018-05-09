@@ -1,19 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-class ToolbarItem extends React.Component {
+class BlockItem extends React.Component {
     renderBtn = () => {
         let {block, btn: Btn, onBtnClick} = this.props;
         Btn = Btn || <div onClick={onBtnClick}>
             <i className={block.get('icon')} /><br />
-            {block.get('title')}
+            <span>{block.get('title')}</span>
         </div>
         return Btn;
     }
 
     render () {
         const {children} = this.props;
-        return (<div>
+        return (<div className='block-item'>
             {this.renderBtn()}
             <div onClick={e => e.stopPropagation()}>
                 {children}
@@ -22,10 +22,10 @@ class ToolbarItem extends React.Component {
     }
 }
 
-ToolbarItem.propTypes = {
+BlockItem.propTypes = {
     block: PropTypes.any,
     btn: PropTypes.element,
     onBtnClick: PropTypes.func,
 }
 
-export default ToolbarItem;
+export default BlockItem;

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils'
 import {HamsterContext} from '../../hamster';
+import BlockItem from './BlockItem';
 
 const handleClick = (block, hamster) => {
     const onClick = block.get('onClick')
@@ -17,14 +18,11 @@ const Block = (props) => {
         <HamsterContext.Consumer>
             {hamster => (
                 <div
-                  className='block-item'
+                  className='block-item-wrapper'
                   title={block.get('description')}
                   onClick={() => handleClick(block, hamster)}>
                     {
-                        Toolbar ? <Toolbar {...{block, hamster}} /> : <div>
-                            <i className={block.get('icon')} /><br />
-                            {block.get('title')}&nbsp;
-                        </div>
+                        Toolbar ? <Toolbar {...{block, hamster}} /> : <BlockItem block={block} />
                     }
                 </div>
             )}
@@ -36,18 +34,20 @@ Block.propTypes = {
     block: PropTypes.object
 }
 
-export const Blocks = (props) => {
+export const BlockArea = (props) => {
     return (
-        <div className='blocks'>
+        <div className='block-area'>
             {
-                configHelper.blocks.map(block => <Block block={block} key={block.get('name')} />)
+                configHelper.blocks.map(
+                    block => <Block block={block} key={block.get('name')} />
+                )
             }
         </div>
     )
 }
 
-Blocks.propTypes = {
-    onAdd: PropTypes.func
+BlockArea.propTypes = {
+
 }
 
-export default Blocks;
+export default BlockArea;

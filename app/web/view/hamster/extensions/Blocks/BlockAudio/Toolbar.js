@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-import ToolbarItem from '../../../components/Toolbar/ToolbarItem';
+import BlockItem from '../../../components/Toolbar/BlockItem';
 
 class Toolbar extends React.Component {
     handleClick = (e) => {
@@ -18,14 +18,14 @@ class Toolbar extends React.Component {
 
     render () {
         const {block, hamster} = this.props;
-        return (<ToolbarItem block={block} onBtnClick={this.handleClick}>
+        return (<BlockItem block={block} onBtnClick={this.handleClick}>
             <input
               type='file'
               style={{display: 'none'}}
               ref={fileInput => this.fileInput = fileInput}
               onChange={this.handleFileChange}
             />
-        </ToolbarItem>)
+        </BlockItem>)
     }
 }
 

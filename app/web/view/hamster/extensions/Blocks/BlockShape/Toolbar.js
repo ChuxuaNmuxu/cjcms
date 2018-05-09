@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import {Modal} from 'antd';
+import {Modal, Button} from 'antd';
 
-import ToolbarItem from '../../../components/Toolbar/ToolbarItem';
+import BlockItem from '../../../components/Toolbar/BlockItem';
 
 class Toolbar extends React.Component {
     constructor (props) {
@@ -27,18 +27,18 @@ class Toolbar extends React.Component {
 
     render () {
         const {block, hamster} = this.props;
-        return (<ToolbarItem block={block} onBtnClick={this.handleClick}>
+        return (<BlockItem block={block} onBtnClick={this.handleClick}>
             <Modal
               title="Basic Modal"
               visible={this.state.visible}
               footer={null}
               onCancel={this.handleClick}
             >
-                <p onClick={() => this.handleSelect('square')}>矩形</p>
-                <p onClick={() => this.handleSelect('circle')}>圆形</p>
-                <p onClick={() => this.handleSelect('star')}>星形</p>
+                <Button onClick={() => this.handleSelect('square')}>矩形</Button>
+                <Button onClick={() => this.handleSelect('circle')}>圆形</Button>
+                <Button onClick={() => this.handleSelect('star')}>星形</Button>
             </Modal>
-        </ToolbarItem>)
+        </BlockItem>)
     }
 }
 
