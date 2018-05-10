@@ -19,6 +19,10 @@ export class DragMonitor {
         this.sourceId = sourceId
     }
 
+    getOffset () {
+        return this.innerMonitor.getState().dragOffset.clientOffset
+    }
+
     canDragging () {
         return true;
     }

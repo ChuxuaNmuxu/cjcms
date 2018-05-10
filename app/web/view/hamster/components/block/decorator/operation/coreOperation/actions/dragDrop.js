@@ -1,5 +1,6 @@
 export const BEGIN_DRAG = 'BEGIN_DRAG';
 export const END_DRAG = 'END_DRAG';
+export const HOVER = 'hover'
 
 export function beginDrag (
     sourceInfos,
@@ -39,6 +40,13 @@ export function beginDrag (
         clientOffset,
         sourceClientOffset
     }
+}
+
+export function hover ({ clientOffset = null } = {}) {
+	return {
+		type: HOVER,
+		clientOffset
+	}
 }
 
 export function dragEnd () {

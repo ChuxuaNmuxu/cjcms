@@ -53,7 +53,8 @@ export default class Backend {
 
         target.addEventListener('dragstart', this.handleTopDragStart)
 		// target.addEventListener('dragstart', this.handleTopDragStartCapture)
-		target.addEventListener('dragend', this.handleTopDragEnd)
+        target.addEventListener('dragend', this.handleTopDragEnd)
+        target.addEventListener('dragover', this.handleTopDragOver)
     }
 
     handleDragStart (e, sourceId, options) {
@@ -82,6 +83,12 @@ export default class Backend {
 
     handleTopDragEnd = () => {
         this.actions.dragEnd()
+    }
+
+    handleTopDragOver = (e) => {
+        this.actions.hover({
+			clientOffset: this.getEventClientOffset(e),
+		})
     }
 
     getEventClientOffset (e) {

@@ -86,7 +86,7 @@ const resizeSource = (type, spec, collect) => {
             getCurrentState () {
                 return collect && collect(
                     this.handleConnect.connector,
-                    this.monitor
+                    this.monitorHandle
                 );
             }
 

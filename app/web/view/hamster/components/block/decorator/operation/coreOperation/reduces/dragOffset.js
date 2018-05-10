@@ -1,4 +1,5 @@
-import { BEGIN_DRAG } from "../actions/dragDrop";
+import { BEGIN_DRAG, HOVER } from "../actions/dragDrop";
+import {isEqual} from 'lodash';
 
 const initialState = {
 	initialSourceClientOffset: null,
@@ -13,7 +14,15 @@ export default (state = initialState, action) => {
             return {
                 initialSourceClientOffset: sourceClientOffset,
                 initialClientOffset: clientOffset,
-                clientOffset,
+                clientOffset
+            }
+        case HOVER:
+            if (isEqual(state.clientOffset, action.clientOffset)) {
+                return state
+            }
+            return {
+                ...state,
+                clientOffset: action.clientOffset
             }
         default:
             return state;
