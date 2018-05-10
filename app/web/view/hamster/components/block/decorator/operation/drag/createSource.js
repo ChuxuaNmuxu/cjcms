@@ -1,5 +1,10 @@
-// 生成source对象
-class DragSource {
+/**
+ * 为dragSource的回调传递相关参数，便于reduce中使用
+ * @input spec, monitor
+ * @input props
+ * @input component
+ */
+export class DragSource {
     constructor (spec, monitor) {
         this.spec = spec;
         this.props = {};
@@ -19,15 +24,15 @@ class DragSource {
     //     this.monitor = monitor;
     // }
 
-    beginDrag (props, monitor, component) {
+    beginAct (props, monitor, component) {
         this.spec.beginDrag(this.props, this.monitor, this.component)
     }
 
-    canDrag () {
+    canAct () {
         return true;
     }
 
-    endDrag () {
+    endAct () {
         this.spec.endDrag(this.props, this.monitor, this.component)
     }
 

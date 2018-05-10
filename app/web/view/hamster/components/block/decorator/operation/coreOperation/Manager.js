@@ -1,7 +1,7 @@
 import Monitor from './Monitor';
 import {createStore} from 'redux';
 // import Registry from './Registry';
-import {extend} from '../../../../Utils/miaow'
+import {extend} from '../../../../../Utils/miaow'
 
 /**
  * Manager工厂函数

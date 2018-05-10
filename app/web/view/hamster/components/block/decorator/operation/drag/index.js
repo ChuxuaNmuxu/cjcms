@@ -3,7 +3,7 @@
 export {default as DragLayer} from './DragLayer';
 import DragSource from './DragSource';
 // import DropSource from './DropSource';
-import withHamster from '../withHamster';
+import withHamster from '../../withHamster';
 
 export const DragSourceWithHamster = (...args) => WrapComponent => withHamster(DragSource(...args)(WrapComponent));
 

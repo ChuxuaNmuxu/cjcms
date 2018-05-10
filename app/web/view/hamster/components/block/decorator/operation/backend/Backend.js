@@ -5,8 +5,10 @@ export default class Backend {
         // this.registry = manager.getRegistry()
         
         this.sourceNodes = [];
-        this.dragStartSourceIds = [];
+        this.dragStartSource = [];
         this.sourcePreview = [];
+
+        console.log('init Backend')
 
     }
 
@@ -18,7 +20,7 @@ export default class Backend {
     connectSource (sourceId, node, options) {
         this.sourceNodes[sourceId] = node;
 
-		const handleDragStart = e => this.handleDragStart(e, sourceId)
+		const handleDragStart = e => this.handleDragStart(e, sourceId, options)
 		// const handleSelectStart = e => this.handleSelectStart(e, sourceId)
 
         node.setAttribute('draggable', true);
@@ -57,20 +59,19 @@ export default class Backend {
 		target.addEventListener('dragend', this.handleTopDragEnd)
     }
 
-    handleDragStart (e, sourceId) {
+    handleDragStart (e, sourceId, options) {
         // 事件冒泡等同时触发多个drag事件
-        this.dragStartSourceIds.unshift(sourceId)
+        this.dragStartSource.unshift({sourceId, options})
     }
 
     handleTopDragStart = (e) => {
-        const {dragStartSourceIds} = this;
+        const {dragStartSource} = this;
 
-        this.dragStartSourceIds = [];
+        this.dragStartSource = [];
         // 鼠标位置
-        console.log('handleTopDragStart', this)
         const clientOffset = this.getEventClientOffset(e);
 
-        this.actions.beginDrag(dragStartSourceIds, {
+        this.actions.beginDrag(dragStartSource, {
             clientOffset,
             sourceClientOffset: this.getSourceClientOffset
         })

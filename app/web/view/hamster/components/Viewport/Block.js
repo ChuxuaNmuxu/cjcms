@@ -13,7 +13,7 @@ import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
-import {DragSourceWithHamster} from '../block/decorator/drag';
+import {DragSourceWithHamster} from '../block/decorator/operation/drag';
 import Container from '../block/container';
 import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable from 'immutable';

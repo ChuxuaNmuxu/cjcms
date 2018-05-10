@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {isValidateReactComponent} from '../../../../Utils/miaow';
+import {isValidateReactComponent} from '../../../../../Utils/miaow';
 import DragDropManager from './core';
 import createSource from './createSource';
 import createMonitor from './createMonitor';
+import handleConnect from './handleConnect';
 
-const DragSource = (type, spec, collect) => {
+const resizeSource = (type, spec, collect) => {
     // TODO: params check
 
     return DecoratedComponent => {
@@ -21,10 +22,15 @@ const DragSource = (type, spec, collect) => {
 
                 this.monitorHandle = createMonitor(this.manager);
                 this.sourceHandle = createSource(spec, this.monitorHandle);
+                this.handleConnect = handleConnect(this.manager);
 
                 this.sourceId = null;
 
+                // 注册当前资源对象
+                this.registry();
+
                 this.sourceHandle.receiveProps(props);
+                this.state = this.getCurrentState();
             }          
 
             validateNode () {
@@ -38,16 +44,14 @@ const DragSource = (type, spec, collect) => {
             componentDidMount () {
                 this.node = this.validateNode();
 
-                // 注册当前资源对象
-                this.registry();
-                // monitor
-                this.monitorHandle.reveiveSourceId(this.sourceId);
                 // source
                 this.sourceHandle.reveiveComponent(this.node);
                 // 给node增加drag相关属性和事件监听
-                this.backend.connectSource(this.sourceId ,this.node);
+                // this.backend.connectSource(this.sourceId ,this.node);
                 // 监听数据变化
                 this.unsubscribe = this.monitor.subscribeToStateChange(this.handleChange);
+
+                this.handleChange()
             }
 
             componentWillReceiveProps (nextProps) {
@@ -69,6 +73,10 @@ const DragSource = (type, spec, collect) => {
             registry () {
                 // 注册source对象和monitor
                 this.sourceId = this.register.addSource(this.sourceHandle);
+
+                // 需要sourceId的对象
+                this.monitorHandle.reveiveSourceId(this.sourceId);
+                this.handleConnect.receiveId(this.sourceId)
             }
 
             receiveProps (props) {
@@ -76,9 +84,12 @@ const DragSource = (type, spec, collect) => {
             }
 
             getCurrentState () {
-                return collect && collect(this.monitor);
+                return collect && collect(
+                    this.handleConnect.connector,
+                    this.monitor
+                );
             }
-            
+
             render () {
                 return <DecoratedComponent
                     {...this.props}
@@ -90,4 +101,4 @@ const DragSource = (type, spec, collect) => {
     }
 }
 
-export default DragSource;
+export default resizeSource;
