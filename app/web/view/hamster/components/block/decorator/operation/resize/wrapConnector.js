@@ -6,9 +6,6 @@ const cloneWithRef = (element, ref) => {
 
     ref = previousRef ? node => {ref(node), previousRef(node)} : ref
 
-    console.log('ref: ', ref)
-    console.log('element: ', element)
-
     return cloneElement(element, {ref})
 }
 

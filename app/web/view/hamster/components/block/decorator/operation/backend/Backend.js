@@ -7,9 +7,6 @@ export default class Backend {
         this.sourceNodes = [];
         this.dragStartSource = [];
         this.sourcePreview = [];
-
-        console.log('init Backend')
-
     }
 
     get window () {
@@ -61,7 +58,7 @@ export default class Backend {
 
     handleDragStart (e, sourceId, options) {
         // 事件冒泡等同时触发多个drag事件
-        this.dragStartSource.unshift({sourceId, options})
+        this.dragStartSource.push({sourceId, options})
     }
 
     handleTopDragStart = (e) => {

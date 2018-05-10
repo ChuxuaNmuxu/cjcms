@@ -14,6 +14,7 @@ export default function (state=initialState, action) {
         case BEGIN_DRAG:
             return {
 				...state,
+				sourceOptions: action.sourceOptions,
 				itemType: action.itemType,
 				item: action.item,
 				sourceId: action.sourceId,

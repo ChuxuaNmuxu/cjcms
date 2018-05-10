@@ -17,7 +17,7 @@ const DragSource = (type, spec, collect) => {
                 this.manager = DragDropManager;
                 this.monitor = this.manager.getMonitor();
                 this.register = this.manager.getRegistry();
-                this.backend = this.manager.backend;
+                this.backend = this.manager.getBackend();
 
                 this.monitorHandle = createMonitor(this.manager);
                 this.sourceHandle = createSource(spec, this.monitorHandle);

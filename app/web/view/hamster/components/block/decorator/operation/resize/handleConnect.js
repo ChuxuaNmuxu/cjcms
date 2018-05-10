@@ -19,7 +19,6 @@ const handleConnect = (manager) => {
     
     const reConnectSource = (node, options) => {
         // 随props改变，connect函数会被经常触发
-        console.log('reConnectSource: ',  node)
         if (node === currentNode && isEqual(options, currentOptions)) {
             return ;
         }
@@ -47,7 +46,7 @@ const handleConnect = (manager) => {
     const connector = wrapConnector({
         resizeNorth: (node, options) => {
             const currentOptions = {dir: 'north', ...options}
-            reConnectSource(node, options)
+            reConnectSource(node, currentOptions)
         }
     })
 

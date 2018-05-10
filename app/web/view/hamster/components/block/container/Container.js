@@ -7,7 +7,7 @@ import resizeSource from '../decorator/operation/resize'
 
 const spec = {
     beginResize: (props, monitor, component) => {
-        console.log('resizeStart: ', monitor)
+        console.log('resizeStart: ', monitor.innerMonitor.store.getState())
     },
     endResize: (props, monitor, component) => {
         console.log('resizeEnd: ', props)

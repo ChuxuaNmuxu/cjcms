@@ -1,20 +1,27 @@
-import Monitor from './Monitor';
 import {createStore} from 'redux';
 // import Registry from './Registry';
-import {extend} from '../../../../../Utils/miaow'
+
+import Monitor from './Monitor';
+import reducers from './reduces'
+import * as actions from './actions/dragDrop';
+import Backend from '../backend'
+import {extend} from '../../../../../Utils/miaow';
 
 /**
  * Manager工厂函数
  * @param {object} 
  */
-const createManager = ({reducers, actions, monitor = {}}) => class Manager {
+// const createManager = ({reducers, actions, monitor = {}}) => 
+
+class Manager {
     constructor (Backend) {
         const store = createStore(reducers);
         this.store = store;
         this.backend = new Backend(this);
 
-        const MixMonitor = this.extendMonitor(Monitor, monitor);
-        this.monitor = new MixMonitor(store);
+        // const MixMonitor = this.extendMonitor(Monitor, monitor);
+        // this.monitor = new MixMonitor(store);
+        this.monitor  = new Monitor(store);
         this.registry = this.monitor.registry;
         // this.registry = new Registry(store);
 
@@ -25,8 +32,14 @@ const createManager = ({reducers, actions, monitor = {}}) => class Manager {
         this.backend.setUp();
     }
 
-    extendMonitor () {
-        return extend(Monitor, monitor)
+    // manager扩展，目前只支持monitor
+    extend (options={}) {
+        this.extendMonitor(options.Monitor)
+    }
+
+    extendMonitor (monitor = {}) {
+        const MixMonitor = extend(Monitor, monitor);
+        this.monitor = new MixMonitor(this.store);
     }
 
     getBackend () {
@@ -65,4 +78,4 @@ const createManager = ({reducers, actions, monitor = {}}) => class Manager {
     }
 }
 
-export default createManager;
+export default new Manager(Backend);
