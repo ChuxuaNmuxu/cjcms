@@ -3,14 +3,14 @@
  */
 import {DragMonitor} from '../drag/createMonitor';
 
-class ResizeMonitor extends  DragMonitor{
+class RotateMonitor extends DragMonitor{
     constructor (manager) {
        super(manager)
     }
 
-    canResize () {
+    canRotate () {
         return true;
     }
 }
 
-export default (manager) => new ResizeMonitor(manager);
+export default (manager) => new RotateMonitor(manager);

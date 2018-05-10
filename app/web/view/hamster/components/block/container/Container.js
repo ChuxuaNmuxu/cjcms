@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import classNames from 'classnames';
 import styles from './Container.scss';
-import resizeSource from '../decorator/operation/resize'
+import resizeSource from '../decorator/operation/resize';
+import RotateSpin from './RotateSpin';
 
 const spec = {
     beginResize: (props, monitor, component) => {
@@ -18,7 +19,7 @@ const collect = (connect, monitor) => ({
     resizeNorth: connect.resizeNorth()
 })
 
-@resizeSource('contaner', spec, collect)
+@resizeSource('container', spec, collect)
 @CSSModules(styles, {allowMultiple: true})
 class BlockContainer extends Component {
     render() {
@@ -43,6 +44,7 @@ class BlockContainer extends Component {
                         一路向北
                     </div>)
                 }
+                <RotateSpin />
                 {children}
             </div>
         );

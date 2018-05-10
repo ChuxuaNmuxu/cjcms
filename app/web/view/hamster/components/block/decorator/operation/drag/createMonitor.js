@@ -3,7 +3,7 @@
  * @input manager
  * @input sourceId
  */
-class DragMonitor {
+export class DragMonitor {
     constructor (manager) {
         this.sourceId = null;
         this.registry = manager.getRegistry();

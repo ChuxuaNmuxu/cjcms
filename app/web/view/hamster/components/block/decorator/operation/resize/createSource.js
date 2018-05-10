@@ -1,6 +1,6 @@
 import {DragSource} from '../drag/createSource'
 
-class resizeSource extends DragSource {
+class ResizeSource extends DragSource {
     constructor (spec, monitor) {
         super(spec, monitor)
     }
@@ -18,4 +18,4 @@ class resizeSource extends DragSource {
     }
 }
 
-export default (spec, monitor) => new resizeSource(spec, monitor);
+export default (spec, monitor) => new ResizeSource(spec, monitor);

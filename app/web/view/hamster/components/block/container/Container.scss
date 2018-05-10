@@ -7,6 +7,7 @@
     margin: 5px;
     vertical-align: middle;
     overflow: hidden;
+    position: relative;
 
     &.active {
         border-color: red;
