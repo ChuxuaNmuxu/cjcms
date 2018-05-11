@@ -6,7 +6,7 @@ import BlockArea from './BlockArea';
 import LeftArea from './LeftArea';
 import RightArea from './RightArea';
 
-export const Component = (props) => {
+export const Toolbar = (props) => {
     return (
         <div className='toolbar' styleName='toolbar'>
             <LeftArea />
@@ -16,4 +16,4 @@ export const Component = (props) => {
     )
 }
 
-export default CSSModules(Component, styles);
+export default CSSModules(Toolbar, styles);

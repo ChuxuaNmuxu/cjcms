@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import configHelper from '../../config/configHelper';
-import BlockUtils from '../../Utils/BlockUtils'
-import {HamsterContext} from '../../hamster';
-import BlockItem from './BlockItem';
+import {HamsterContext} from '../../../hamster';
+import BlockItem from './BlockItem'
 
 const handleClick = (block, hamster) => {
     const onClick = block.get('onClick')
+    console.log(12, block.toJS())
     onClick && onClick(block, hamster);
 };
 
-const Block = (props) => {
+const BlockWrapper = (props) => {
     const {block} = props;
     const Toolbar = block.get('toolbar');
     return (
@@ -30,24 +29,8 @@ const Block = (props) => {
     );
 }
 
-Block.propTypes = {
+BlockWrapper.propTypes = {
     block: PropTypes.object
 }
 
-export const BlockArea = (props) => {
-    return (
-        <div className='block-area'>
-            {
-                configHelper.blocks.map(
-                    block => <Block block={block} key={block.get('name')} />
-                )
-            }
-        </div>
-    )
-}
-
-BlockArea.propTypes = {
-
-}
-
-export default BlockArea;
+export default BlockWrapper;

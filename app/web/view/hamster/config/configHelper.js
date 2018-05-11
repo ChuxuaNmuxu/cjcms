@@ -6,6 +6,7 @@ import { isString } from 'lodash';
 
 /**
  * 配置管理类
+ * TODO: 移出
  */
 class ConfigHelper {
     blocks;

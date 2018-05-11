@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-import BlockItem from '../../../components/Toolbar/BlockItem';
+import {BlockItem} from '../../../components/Toolbar';
 
 class Toolbar extends React.Component {
     handleClick = (e) => {

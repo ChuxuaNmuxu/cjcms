@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import {Modal, Button} from 'antd';
 
-import BlockItem from '../../../components/Toolbar/BlockItem';
+import {BlockItem} from '../../../components/Toolbar';
 
 class Toolbar extends React.Component {
     constructor (props) {

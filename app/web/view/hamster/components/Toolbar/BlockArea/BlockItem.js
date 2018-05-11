@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
+/**
+ * Toolbar Block项
+ */
 class BlockItem extends React.Component {
     renderBtn = () => {
         let {block, btn: Btn, onBtnClick} = this.props;
