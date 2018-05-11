@@ -15,7 +15,7 @@ const spec = {
     }
 }
 
-const collect = (connect, monitor) => ({
+const collect = (monitor, connect) => ({
     resizeNorth: connect.resizeNorth(),
     offset: monitor.getOffset()
 })
@@ -25,8 +25,6 @@ const collect = (connect, monitor) => ({
 class BlockContainer extends Component {
     render() {
         const {block, active, children, handleClick, resizeNorth} = this.props;
-
-        console.log('offset', this.props.offset)
 
         let classes = ['block'];
         active && classes.push('active');

@@ -96,7 +96,7 @@ const spec = {
     }
 }
 
-const collect = (connect, monitor) => {
+const collect = (monitor, connect) => {
     return {
         monitor
     }

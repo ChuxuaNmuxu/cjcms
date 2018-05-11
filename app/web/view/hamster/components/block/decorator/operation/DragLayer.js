@@ -1,5 +1,5 @@
-import DragDropManager from './core';
-import React from 'react'
+import React from 'react';
+import manager from './coreOperation/Manager';
 
 
 const DragLayer = (collect, options) => DecoratedComponent => {
@@ -7,8 +7,8 @@ const DragLayer = (collect, options) => DecoratedComponent => {
         constructor(props, context) {
             super(props, context);
             
-            this.manager = DragDropManager;
-            this.monitor = DragDropManager.getMonitor();
+            this.manager = manager;
+            this.monitor = this.manager.getMonitor();
 
             this.state = {};
         }

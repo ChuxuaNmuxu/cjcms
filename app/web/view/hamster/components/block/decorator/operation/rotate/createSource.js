@@ -1,6 +1,6 @@
-import {DragSource} from '../drag/createSource'
+import SourceHandles from '../base/SourceHandles';
 
-class RotateSource extends DragSource {
+class RotateSource extends SourceHandles {
     constructor (spec, monitor) {
         super(spec, monitor)
     }

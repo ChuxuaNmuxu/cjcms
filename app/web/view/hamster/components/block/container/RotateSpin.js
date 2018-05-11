@@ -11,7 +11,8 @@ const spec = {
     }
 }
 
-const collect = (monitor) => ({
+const collect = (monitor, connector) => ({
+    rotateSource: connector.connect(),
     canRotate: monitor.canRotate()
 })
 
@@ -19,7 +20,8 @@ const collect = (monitor) => ({
 @rotateSource('container', spec, collect)
 class RotatePin extends Component {
     static propTypes = {
-        canRotate: PropTypes.bool
+        canRotate: PropTypes.bool,
+        rotateSource: PropTypes.func
     }
 
     render() {
@@ -33,10 +35,14 @@ class RotatePin extends Component {
             right: '20px'
         }
 
+        const {rotateSource} = this.props;
+
         return (
-            <div style={style}>
-                旋转吧，地球君
-            </div>
+            rotateSource(
+                <div style={style}>
+                    旋转吧，地球君
+                </div>
+            )
         )
     }
 }

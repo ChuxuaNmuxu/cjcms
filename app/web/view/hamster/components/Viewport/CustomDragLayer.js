@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { DragLayer } from '../block/decorator/operation/drag'
+import DragLayer from '../block/decorator/operation/DragLayer'
 
 @DragLayer((monitor, props) => ({
     monitor,

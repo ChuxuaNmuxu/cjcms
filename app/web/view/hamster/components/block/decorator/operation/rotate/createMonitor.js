@@ -1,9 +1,9 @@
 /**
  * 每生成一个dragSource,都会实例化一个此monitor，并暴露给外部组件
  */
-import {DragMonitor} from '../drag/createMonitor';
+import Monitor from '../base/Monitor';
 
-class RotateMonitor extends DragMonitor{
+class RotateMonitor extends Monitor{
     constructor (manager) {
        super(manager)
     }

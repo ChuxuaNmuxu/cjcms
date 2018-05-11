@@ -4,25 +4,12 @@
  * @input props
  * @input component
  */
-export class DragSource {
+import SourceHandles from '../base/SourceHandles';
+
+class DragSource extends SourceHandles {
     constructor (spec, monitor) {
-        this.spec = spec;
-        this.props = {};
-        this.component = null;
-        this.monitor = monitor;
+       super(spec, monitor)
     }
-
-    receiveProps (props) {
-        this.props = props;
-    }
-
-    reveiveComponent (component) {
-        this.component = component;
-    }
-
-    // receiveMonitor (monitor) {
-    //     this.monitor = monitor;
-    // }
 
     beginAct (props, monitor, component) {
         this.spec.beginDrag(this.props, this.monitor, this.component)
@@ -35,7 +22,6 @@ export class DragSource {
     endAct () {
         this.spec.endDrag(this.props, this.monitor, this.component)
     }
-
 }
 
 export default (spec, monitor) => new DragSource(spec, monitor);
