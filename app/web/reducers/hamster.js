@@ -32,11 +32,15 @@ const merger = (a, b) => {
 
 function handleChangeProps (hamster, action) {
     const {payload} = action;
-    const id = payload.block.get('id');
     // 修改props
-    return hamster.updateIn(
-        ['objects', id, 'data', 'props'],
-        props => props.mergeWith(merger, payload.props)
+    return hamster.update('objects', objects => objects.withMutations(objects => {
+            payload.blocks.forEach(block => {
+                objects.updateIn(
+                    [block.get('id'), 'data', 'props'],
+                    props => props.mergeWith(merger, payload.props)
+                )
+            });
+        })
     )
 }
 

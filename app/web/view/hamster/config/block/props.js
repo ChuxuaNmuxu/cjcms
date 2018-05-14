@@ -1,6 +1,6 @@
 /**
  * 默认属性配置
- * 备忘：属性未定义component的则不在属性栏中显示
+ * component: string || plainobject || component 所用控件
  */
 const props = {
     width: { // 属性项
@@ -33,60 +33,30 @@ const props = {
         }]
     },
     border: {
-        title: '边框',
-        type: 'object',
-        props: {
-            borderStyle: {
-                value: 'none',
-                component: 'select', // string || component 所用控件
-                validator: [{
-                    type: ''
-                }, {
-                    validate: () => {}
-                }], // 验证规则
-            },
-            borderWidth: {
-                value: 0
-            },
-            borderColor: {
-                value: '#fff'
-            }
-        }
+        widget: 'border'
     },
     opacity: {
         title: '透明度',
         value: 100,
-        component: 'input'
+        component: {
+            type: 'slider_and_number',
+            props: {
+                max: 100
+            }
+        }
     },
     rotation: {
         title: '旋转角度',
-        value: 0
-    },
-    animation: {
-        title: '动画',
-        component: 'animation',
-        props: {
-            effect: {
-                title: '效果',
-                value: 'none'
-            },
-            duration: {
-                title: '间隔',
-                value: 0
-            },
-            delay: {
-                title: '延迟',
-                value: 0
-            },
-            index: {
-                title: '播放次序',
-                value: 0,
-            },
-            trigger: {
-                title: '触发方式',
-                value: 'click',
+        value: 0,
+        component: {
+            type: 'slider_and_number',
+            props: {
+                max: 360
             }
         }
+    },
+    animation: {
+        widget: 'animation'
     },
     zIndex: {
         title: '层级',

@@ -16,7 +16,8 @@ const propsbar = [
             ['width', 'height'],
             'opacity',
             'rotation',
-            'zIndex'
+            'zIndex',
+            'border'
         ]
     }
 ]

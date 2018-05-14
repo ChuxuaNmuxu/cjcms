@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Form, Input, Button} from 'antd';
+import {Input, Button} from 'antd';
 import { TwitterPicker } from 'react-color';
 import PropTypes from 'prop-types';
-const FormItem = Form.Item;
 const InputGroup = Input.Group;
 
 const colorConfig = [
@@ -16,19 +15,19 @@ const colorConfig = [
     'transparent'
 ];
 
+/**
+ * 颜色属性项 
+ */
 class Color extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            showColorPicker: false,
+            displayColorPicker: false,
             color: props.value || '#FF8C00'
         };
-
-        this.toggleColorPicker = this.toggleColorPicker.bind(this);
-        this.handleClose = this.handleClose.bind(this);
     }
     
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps (nextProps) {
         if (nextProps.value !== this.props.value) {
             this.setState({
                 color: nextProps.value
@@ -36,34 +35,36 @@ class Color extends Component {
         }
     }
 
-    toggleColorPicker () {
+    /**
+     * 切换颜色选择框
+     */
+    toggleColorPicker = () => {
         this.setState({
-            showColorPicker: !this.state.showColorPicker
+            displayColorPicker: !this.state.displayColorPicker
         })
     }
 
-    handleClose () {
+    /**
+     * 处理关闭事件
+     */
+    handleClose = () => {
         this.setState({
-            showColorPicker: false
+            displayColorPicker: false
         })
     }
 
-    handleColorChange = (color) => {
+    /**
+     * 值变化事件
+     */
+    handleChange = (color) => {
         this.setState({
             color: color.hex
         })
-        this.onChange(color.hex)
-    }
-
-    onChange = (value) => {
         const {onChange} = this.props
-        onChange && onChange(value)
+        onChange && onChange(color.hex)
     }
 
     render () {
-        const formItemProps = {
-            colon: false
-        }
         const {color} = this.state;
         const addonAfter = (
             <Button
@@ -78,14 +79,29 @@ class Color extends Component {
               onClick={this.toggleColorPicker}>
             </Button>
         )
+        const popover = {
+            position: 'absolute',
+            zIndex: '2',
+            right: 4
+        }
+        const cover = {
+            position: 'fixed',
+            top: '0px',
+            right: '0px',
+            bottom: '0px',
+            left: '0px',
+        }
         return (
             <div>
                 <Input value={color} addonAfter={addonAfter} readOnly />
                 {
-                    this.state.showColorPicker &&
-                    <div style={{ position: 'absolute', zIndex: '2', right: 4 }}>
-                        <div style={{position: 'fixed', top: '0px', right: '0px', bottom: '0px', left: '0px'}} onClick={this.handleClose} />
-                        <TwitterPicker onChange={this.handleColorChange} color={color || '#FF8C00'} colors={colorConfig} />
+                    this.state.displayColorPicker &&
+                    <div style={popover}>
+                        <div style={cover} onClick={this.handleClose} />
+                        <TwitterPicker
+                          onChange={this.handleChange}
+                          color={color || '#FF8C00'}
+                          colors={colorConfig} />
                     </div>
                 }
             </div>
@@ -93,10 +109,13 @@ class Color extends Component {
     }
 }
 
-Color.propWs = {
-    type: PropTypes.string,
+Color.propTypes = {
     onChange: PropTypes.func,
     value: PropTypes.string
+}
+
+Color.defaultProps = {
+    value: '#FF8C00'
 }
 
 export default Color;

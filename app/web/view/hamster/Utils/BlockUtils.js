@@ -45,7 +45,7 @@ const BlockUtils = {
             data.set('type', 'block');
             data.setIn(['data', 'type'], block.get('name'));
             data.setIn(['data', 'props'], extractBlockProps(block));
-            data.mergeIn('data', block.get('data'));
+            data.mergeIn(['data'], block.get('data'));
             // TODO：props应该还有校验过程
         })
         return data;

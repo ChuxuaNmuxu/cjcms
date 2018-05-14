@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';;
 
-const onChange = () => {};
-
+/**
+ * 文本框属性项
+ */
 class InputItem extends Component {
     constructor (props) {
         super(props);
