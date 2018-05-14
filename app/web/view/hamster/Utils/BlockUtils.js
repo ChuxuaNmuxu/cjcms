@@ -65,7 +65,6 @@ const BlockUtils = {
      * @param {object} offset 
      */
     moveBlocks (blockIds, offset={}) {
-        console.log('offset: ', offset)
         BlockUtils.dispatch({
             type: HAMSTER.ENTITIES_PROPS_CHANGE,
             payload: {

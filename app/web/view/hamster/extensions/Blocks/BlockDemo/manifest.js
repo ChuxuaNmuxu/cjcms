@@ -20,6 +20,19 @@ export default {
         },
         height: {
             value: 100
+        },
+        border: {
+            props: {
+                borderStyle: {
+                    value: 'solid',
+                },
+                borderWidth: {
+                    value: 1
+                },
+                borderColor: {
+                    value: '#000'
+                }
+            }
         }
     }
 }

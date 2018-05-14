@@ -40,8 +40,15 @@ class BlockContainer extends Component {
             background: 'orange'
         }
 
+        // 临时状态，权重更高
+        const currentStyle = {
+            borderColor: active ? 'red' : style.borderColor
+        }
+
+        const containerStyle = Object.assign({}, style, currentStyle);
+
         return (
-            <div className={classes} styleName={classes} style={style}  onClick={e => handleClick(e, block)} >
+            <div className={classes} styleName={classes} style={containerStyle} onClick={e => handleClick(e, block)} >
                 block容器
                 {
                     resizeNorth(<div style={resizeStyle}>
