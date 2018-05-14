@@ -7,18 +7,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import CSSModules from 'react-css-modules';
 // import classNames from 'classnames';
-import {isFunction, flowRight} from 'lodash';
+import {flowRight} from 'lodash';
 
 import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
+import {DragSource} from '../block/decorator/operation/drag';
 import Container from '../block/container';
-import {dispatchMission} from '../../Utils/miaow';
-import Immutable from 'immutable';
+import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
+import Immutable, { fromJS } from 'immutable';
+import withHamster from '../block/decorator/withHamster';
 
-const add = values => prop => {
-    console.log('props: ', prop.concat(values))
+// TODO: 暂时放在这儿
+export const add = values => prop => {
     return prop.concat(values);
 }
 
@@ -72,35 +74,64 @@ const contentIsObject = (config, props) => {
     if (!Immutable.Map.isMap(config)) return undefined;
 
     // 先校验component是否为null(这是默认配置，说明没有第三方自定义)，在处理容器的配置
-    return dispatchMission(noContainer, containerConfigured, componentIsNull)(config, props);
+    return dispatchMission(
+        componentIsNull,
+        containerConfigured,
+        noContainer
+    )(config, props);
 }
 
 // @config reactComponent 配置組件,默认有容器包裹
 const contentIsComponent = (ContentComponent, props) => {
     // function or class
-    if (!isFunction(ContentComponent)) return undefined;
+    if (!isValidateReactComponent(ContentComponent)) return undefined;
 
     return <Container {...props}>
         <ContentComponent {...props} />
     </Container>
 }
 
-export const Component = (props) => {
-    const {block} = props;
-    const blockConfig = configHelper.getBlock(block.getIn(['data', 'type']));
-    const contentConfig = blockConfig.get('content');
+const spec = {
+    beginDrag (props, monitor, component) {
+        console.log('beginDrag123: ', props)
+    },
 
-    // 先判断默认情况即是否是配置对象，否则为自定义
-    return dispatchMission(someOthers, contentIsComponent, contentIsObject)(contentConfig, {...props, handleClick});
+    endDrag (props, monitor, component) {
+        const {x: left, y: top} = monitor.getOffset();
 
+        const {hamster} = props;
+        BlockUtils.moveBlocks(hamster.getActivedBlockIds(), fromJS({left, top}));
+    }
 }
 
-Component.propTypes = {
-    block: PropTypes.any,
-    active: PropTypes.bool
+const collect = (monitor, connect) => {
+    return {
+        monitor
+    }
 }
 
-export default blockPraser()(
-    Component
-    // CSSModules(Component, styles, {allowMultiple: true})
-);
+@withHamster()
+@blockPraser()
+@DragSource('block', spec, collect)
+class Component extends React.Component {
+    static propTypes = {
+        block: PropTypes.any,
+        active: PropTypes.bool
+    }
+
+    render () {
+        const {block} = this.props;
+        const blockConfig = configHelper.getBlock(block.getIn(['data', 'type']));
+        const contentConfig = blockConfig.get('content');
+        
+        // 先判断默认情况即是否是配置对象，否则为自定义
+        return dispatchMission(
+            contentIsObject,
+            contentIsComponent,
+            someOthers
+        )(contentConfig, {...this.props, handleClick});
+    }
+}
+
+export default Component;
+// CSSModules(Component, styles, {allowMultiple: true})

@@ -15,5 +15,24 @@ export default {
         //     validator: [] // 验证规则
         //     // ……
         // }
+        width: {
+            value: 100
+        },
+        height: {
+            value: 100
+        },
+        border: {
+            props: {
+                borderStyle: {
+                    value: 'solid',
+                },
+                borderWidth: {
+                    value: 1
+                },
+                borderColor: {
+                    value: '#000'
+                }
+            }
+        }
     }
 }

@@ -1,7 +1,8 @@
-import {fromJS, Map} from 'immutable';
+import {fromJS, Map, List} from 'immutable';
 import uuid from 'uuid';
 
 import {HAMSTER} from '../../../actions/actionTypes'
+import {add} from '../Utils/miaow'
 
 /**
  * 递归提取block属性
@@ -56,6 +57,24 @@ const BlockUtils = {
      */
     activateBlock (blockIds) {
         BlockUtils.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
+    },
+    
+    /**
+     * 移动blocks
+     * @param {Array} blockIds 
+     * @param {object} offset 
+     */
+    moveBlocks (blockIds, offset={}) {
+        BlockUtils.dispatch({
+            type: HAMSTER.ENTITIES_PROPS_CHANGE,
+            payload: {
+                blockIds,
+                operations: fromJS({
+                    'data.props.top': add(offset.get('top')), 
+                    'data.props.left': add(offset.get('left'))
+                })
+            }
+        })
     }
 }
 
