@@ -8,11 +8,12 @@ export const HamsterContext = React.createContext();
  * 1. 初始化配置
  */
 class Hamster {
-    store; // redux store
     configResolve; // 配置处理器
-
-    constructor (dispatch) {
-        this.dispatch = BlockUtils.dispatch = dispatch;
+    
+    constructor (store) {
+        // redux store
+        this.store = store;
+        this.dispatch = BlockUtils.dispatch = store.dispatch;
     }
 
     /**
@@ -21,6 +22,27 @@ class Hamster {
     addBlock (block) {
         BlockUtils.addBlocks([block]);
     }
+
+    // /**
+    //  * 拖拽管理类
+    // */
+    // setDragDropManager (store) {
+    //     if (this.DragDropManager) return ;
+    //     this.DragDropManager = new DragDropManager(store);
+    // }
+
+    // getDragDropManager () {
+    //     return this.DragDropManager;
+    // }
+
+    getState () {
+        return this.store.getState();
+    }
+
+    getActivedBlockIds () {
+        return this.getState().hamster.getIn(['current', 'blocks'])
+    }
+
 }
 
 export default Hamster;
