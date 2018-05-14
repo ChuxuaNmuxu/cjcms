@@ -6,6 +6,9 @@ import {List} from 'immutable'
 
 import PropItem from './PropItem';
 
+/**
+ * 属性面板，用于显示单个面板的属性配置
+ */
 class PropsPane extends Component {
     constructor(props) {
         super(props);

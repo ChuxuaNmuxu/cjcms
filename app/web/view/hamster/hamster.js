@@ -8,6 +8,9 @@ export const HamsterContext = React.createContext();
  * 1. 初始化配置
  */
 class Hamster {
+    store; // redux store
+    configResolve; // 配置处理器
+
     constructor (dispatch) {
         this.dispatch = BlockUtils.dispatch = dispatch;
     }

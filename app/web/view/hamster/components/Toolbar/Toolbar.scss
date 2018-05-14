@@ -4,18 +4,34 @@
     padding: 4px;
 
     :global {
-        .blocks {
+        .block-area, .left-area, .right-area {
+            height: 100%;
+        }
+
+        .block-area {
             display: inline-block;
 
-            .block-item {
+            .block-item-wrapper {
                 display: inline-block;
-                padding: 0 5px;
+                margin: 0 5px;
                 cursor: pointer;
 
                 &:hover {
                     box-shadow: 1px 1px 2px 2px #ddd inset;
                 }
             }
+        }
+
+        .left-area, .right-area {
+            background: #fd3499;
+        }
+
+        .left-area {
+            float: left;
+        }
+
+        .right-area {
+            float: right;
         }
     }
 }

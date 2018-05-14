@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { isObject } from 'lodash';
 
+/**
+ * 下拉框属性项
+ */
 class SelectItem extends Component {
     constructor (props) {
         super(props);

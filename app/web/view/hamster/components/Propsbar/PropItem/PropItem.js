@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {upperFirst, camelCase, isString, isPlainObject} from 'lodash';
+import {upperFirst, camelCase, isString} from 'lodash';
 import {Map} from 'immutable'
+import InputItem from './InputItem';
 import PropsGroupItem from './PropsGroupItem';
 
+/**
+ * 用于处理属性项
+ * 1. 加载对应的类型的属性项
+ * 2. 向外传递加工后的属性值
+ */
 class PropItem extends Component {
     constructor(props) {
         super(props);
@@ -12,12 +18,20 @@ class PropItem extends Component {
             Item: null
         }
     }
-    
+
+    /**
+     * 属性值变化事件
+     * 向外输出的结构：{propName: propValue}
+     */
     onChange = (value) => {
         const {onChange, config} = this.props;
         onChange && onChange({[config.get('name')]: value})
     }
 
+    /**
+     * 动态加载组件
+     * @param {*} Comp 
+     */
     loadComp (Comp) {
         Comp = upperFirst(camelCase(Comp));
         return import(`./${Comp}Item`).then(module => module.default).catch(e => console.log(e))
@@ -26,7 +40,8 @@ class PropItem extends Component {
     async componentDidMount () {
         const {config} = this.props;
         console.log(21, config.get('props'))
-        let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : 'input');
+        // 优先级：配置的组件 -> 默认组件
+        let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : InputItem);
 
         if (Map.isMap(Comp)) {
             let componentProps = Comp.get('props').toJS();

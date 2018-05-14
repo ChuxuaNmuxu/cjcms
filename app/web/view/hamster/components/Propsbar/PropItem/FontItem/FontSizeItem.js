@@ -1,6 +1,10 @@
 import React from 'react';
 import {Select} from 'antd'
 
+/**
+ * 字体大小属性项
+ * @param {*} props 
+ */
 const FontSizeItem = (props) => {
     const {onChange, value} = props;
     return(

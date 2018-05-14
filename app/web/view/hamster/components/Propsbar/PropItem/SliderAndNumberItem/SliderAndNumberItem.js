@@ -9,6 +9,10 @@ const commonProps = ({min, max, step, value, onChange}) => ({
     onChange
 })
 
+/**
+ * 滑块与数字组合属性项
+ * @param {*} props 
+ */
 export const SliderAndNumberItem = (props) => {
     return (
         <Row>

@@ -3,7 +3,7 @@ import React from 'react'
 export default {
     name: 'line', // 名称
     title: '线条', // 标题
-    icon: 'iconfont icon-wenben', // 图标
+    icon: 'iconfont icon-xiantiao', // 图标
     description: '点击添加线条', // 描述
     propsbar: [
         {

@@ -1,3 +1,3 @@
-import Toolbar from './Toolbar';
+export {default as BlockItem} from './BlockArea/BlockItem'
 
-export default Toolbar;
+export {default as default} from './Toolbar';
