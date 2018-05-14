@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {isEqual} from 'lodash';
+
 import {isValidateReactComponent, extend} from '../../../../../Utils/miaow';
 // import DragDropManager from './core';
 // import createSource from './createSource';
@@ -73,6 +75,7 @@ const decorateSource = ({
 
             handleChange = () => {
                 const state = this.getCurrentState();
+                if (isEqual(state.rotateSource, this.state.rotateSource)) return;
                 this.setState({
                     ...state
                 })

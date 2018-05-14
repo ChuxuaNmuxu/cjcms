@@ -86,6 +86,7 @@ export default class Backend {
     }
 
     handleTopDragOver = (e) => {
+        console.log('handleTopDragOver')
         this.actions.hover({
 			clientOffset: this.getEventClientOffset(e),
 		})

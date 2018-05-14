@@ -24,8 +24,6 @@ const collect = (monitor, connect) => ({
 @CSSModules(styles, {allowMultiple: true})
 class BlockContainer extends Component {
     render() {
-        console.log('this.props: ', this.props)
-
         const {block, active, children, handleClick, resizeNorth, style={}} = this.props;
 
         let classes = ['block'];
