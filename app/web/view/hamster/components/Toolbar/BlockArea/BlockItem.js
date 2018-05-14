@@ -18,7 +18,7 @@ class BlockItem extends React.Component {
         const {children} = this.props;
         return (<div className='block-item'>
             {this.renderBtn()}
-            <div onClick={e => e.stopPropagation()}>
+            <div style={{position: 'relative'}} onClick={e => e.stopPropagation()}>
                 {children}
             </div>
         </div>)
