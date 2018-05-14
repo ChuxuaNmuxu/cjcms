@@ -5,6 +5,7 @@ import DragSource from './DragSource';
 // import DropSource from './DropSource';
 import withHamster from '../../withHamster';
 
+export {DragSource};
 export const DragSourceWithHamster = (...args) => WrapComponent => withHamster(DragSource(...args)(WrapComponent));
 
-export const DropSourceWithHamster = (...args) => WrapComponent => withHamster(DropSource(...args)(WrapComponent));
+// export const DropSourceWithHamster = (...args) => WrapComponent => withHamster(DropSource(...args)(WrapComponent));

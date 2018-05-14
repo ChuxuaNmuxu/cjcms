@@ -8,8 +8,9 @@ export const HamsterContext = React.createContext();
  * 1. 初始化配置
  */
 class Hamster {
-    constructor (dispatch) {
-        this.dispatch = BlockUtils.dispatch = dispatch;
+    constructor (store) {
+        this.store = store;
+        this.dispatch = BlockUtils.dispatch = store.dispatch;
     }
 
     /**
@@ -30,6 +31,14 @@ class Hamster {
     // getDragDropManager () {
     //     return this.DragDropManager;
     // }
+
+    getState () {
+        return this.store.getState();
+    }
+
+    getActivedBlockIds () {
+        return this.getState().hamster.getIn(['current', 'blocks'])
+    }
 
 }
 

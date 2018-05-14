@@ -13,16 +13,16 @@ import Hamster, {HamsterContext} from './hamster';
 import {Button} from 'antd'
 
 class Editor extends React.Component {
-    // static contextTypes = {
-    //     store: PropTypes.object
-    // };
+    static contextTypes = {
+        store: PropTypes.object
+    };
 
     state = {}
 
     constructor (props, context) {
         super(props, context);
 
-        this.hamster = new Hamster(props.dispatch);
+        this.hamster = new Hamster(context.store);
         // if (this.context.store) this.hamster.setDragDropManager(this.context.store);
         this.handlePropsChange = this.handlePropsChange.bind(this);
     }

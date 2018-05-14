@@ -1,4 +1,5 @@
 import * as miaow from '../../app/web/view/hamster/Utils/miaow';
+import Immutable from 'immutable';
 
 test('test matching', () => {
     // 模拟函数返回
@@ -44,3 +45,33 @@ test('test matching', () => {
 
 //     expect(miaow.extend(C, AA).displayName).toBe('A')
 // })
+
+test('test add', () => {
+    const myMock = jest.fn();
+
+    const add1 = miaow.add(1);
+
+    const addArray = miaow.add([1])
+
+    const addMap = miaow.add(Immutable.Map({
+        a: 1
+    }))
+
+    const addObject =  miaow.add({
+        a: 1
+    })
+
+    expect(add1(2)).toBe(3)
+    expect(addArray([5])).toEqual([5, 1])
+    expect(addMap(Immutable.Map({b: 2}))).toEqual(Immutable.Map({
+        a: 1,
+        b: 2
+    }))
+    expect(addObject({b: 2})).toEqual({
+        a: 1,
+        b: 2
+    })
+
+    expect(miaow.add(2)({a: 2})).toEqual('[object Object]2')
+    expect(miaow.add(2)(Immutable.Map({a: 2}))).toEqual('Map { \"a\": 2 }2')
+})

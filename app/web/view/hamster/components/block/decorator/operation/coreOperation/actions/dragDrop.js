@@ -57,7 +57,7 @@ export function dragEnd () {
 	const source = registry.getSource(sourceId, true)
     // 自定义endDrag回调
 	// source.endDrag(monitor, sourceId)
-	source.beginAct()
+	source.endAct()
 
 	// registry.unpinSource()
 

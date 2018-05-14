@@ -13,13 +13,13 @@ import styles from './Block.scss';
 import configHelper from '../../config/configHelper';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
-import {DragSourceWithHamster} from '../block/decorator/operation/drag';
+import {DragSource} from '../block/decorator/operation/drag';
 import Container from '../block/container';
 import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
-import Immutable from 'immutable';
+import Immutable, { fromJS } from 'immutable';
+import withHamster from '../block/decorator/withHamster';
 
-const add = values => prop => {
-    console.log('props: ', prop.concat(values))
+export const add = values => prop => {
     return prop.concat(values);
 }
 
@@ -73,7 +73,11 @@ const contentIsObject = (config, props) => {
     if (!Immutable.Map.isMap(config)) return undefined;
 
     // 先校验component是否为null(这是默认配置，说明没有第三方自定义)，在处理容器的配置
-    return dispatchMission(noContainer, containerConfigured, componentIsNull)(config, props);
+    return dispatchMission(
+        componentIsNull,
+        containerConfigured,
+        noContainer
+    )(config, props);
 }
 
 // @config reactComponent 配置組件,默认有容器包裹
@@ -92,7 +96,10 @@ const spec = {
     },
 
     endDrag (props, monitor, component) {
-        console.log('endDrag123: ', props)
+        const {x: left, y: top} = monitor.getOffset();
+
+        const {hamster} = props;
+        BlockUtils.moveBlocks(hamster.getActivedBlockIds(), fromJS({left, top}));
     }
 }
 
@@ -102,8 +109,9 @@ const collect = (monitor, connect) => {
     }
 }
 
+@withHamster()
 @blockPraser()
-@DragSourceWithHamster('block', spec, collect)
+@DragSource('block', spec, collect)
 class Component extends React.Component {
     static propTypes = {
         block: PropTypes.any,
@@ -116,7 +124,11 @@ class Component extends React.Component {
         const contentConfig = blockConfig.get('content');
         
         // 先判断默认情况即是否是配置对象，否则为自定义
-        return dispatchMission(someOthers, contentIsComponent, contentIsObject)(contentConfig, {...this.props, handleClick});
+        return dispatchMission(
+            contentIsObject,
+            contentIsComponent,
+            someOthers
+        )(contentConfig, {...this.props, handleClick});
     }
 }
 

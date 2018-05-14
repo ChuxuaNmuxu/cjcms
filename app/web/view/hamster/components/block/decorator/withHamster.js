@@ -1,11 +1,11 @@
 import React from 'react'
 import {HamsterContext} from '../../../hamster';
 
-const withHamster = Component => {
+const withHamster = () => Component => {
     return props => (
         <HamsterContext.Consumer>
             {
-                Hamster => <Component {...props} Hamster={Hamster} />
+                hamster => <Component {...props} hamster={hamster} />
             }
         </HamsterContext.Consumer>
     )

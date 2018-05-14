@@ -24,13 +24,15 @@ const collect = (monitor, connect) => ({
 @CSSModules(styles, {allowMultiple: true})
 class BlockContainer extends Component {
     render() {
-        const {block, active, children, handleClick, resizeNorth} = this.props;
+        console.log('this.props: ', this.props)
+
+        const {block, active, children, handleClick, resizeNorth, style={}} = this.props;
 
         let classes = ['block'];
         active && classes.push('active');
         classes = classNames(...classes);
 
-        const style={
+        const resizeStyle={
             width: '20px',
             height: '20px',
             position: 'absolute',
@@ -39,10 +41,10 @@ class BlockContainer extends Component {
         }
 
         return (
-            <div className={classes} styleName={classes} onClick={e => handleClick(e, block)} >
+            <div className={classes} styleName={classes} style={style}  onClick={e => handleClick(e, block)} >
                 block容器
                 {
-                    resizeNorth(<div style={style}>
+                    resizeNorth(<div style={resizeStyle}>
                         一路向北
                     </div>)
                 }

@@ -15,5 +15,11 @@ export default {
         //     validator: [] // 验证规则
         //     // ……
         // }
+        width: {
+            value: 100
+        },
+        height: {
+            value: 100
+        }
     }
 }

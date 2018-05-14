@@ -40,6 +40,26 @@ function handleChangeProps (hamster, action) {
     )
 }
 
+function handleEntitiesChanges (hamster, action) {
+    const {payload} = action;
+
+    console.log('payload: ', payload)
+    console.log('hamster: ', hamster.toJS())
+
+    const {blockIds, operations} = payload;
+
+    if (!blockIds) return hamster;
+
+    return hamster.update('objects', objects => {
+        return blockIds.reduce((objects, id) => {
+            return operations.reduce((objects, operate, path) => {
+                const objectPath = [id].concat(path.split('.'))
+                return objects.updateIn(objectPath, prop => operate(prop))
+            }, objects)
+        }, objects);
+    })
+}
+
 // reducer生成函数，减少样板代码
 const createReducer = (initialState, handlers) => {
     return (state, action) => {
@@ -54,7 +74,8 @@ const createReducer = (initialState, handlers) => {
 const hamster = {
     BLOCK_ADD: handleAddBlock,
     BLOCK_ACTIVATE: handleActivateBlock,
-    BLOCK_PROPS_CHANGE: handleChangeProps
+    BLOCK_PROPS_CHANGE: handleChangeProps,
+    ENTITIES_PROPS_CHANGE: handleEntitiesChanges
 }
 
 export default createReducer(initialState, hamster);
