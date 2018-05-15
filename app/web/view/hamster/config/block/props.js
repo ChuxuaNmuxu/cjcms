@@ -5,14 +5,14 @@
 const props = {
     width: { // 属性项
         title: '宽度', // 标题，可支持自定义模板
-        value: 0, // 值
+        value: 120, // 值
         validator: [{
             type: 'number'
         }]
     },
     height: {
         title: '长度', // 标题，可支持自定义模板
-        value: 0, // 值
+        value: 120, // 值
         validator: [{
             type: 'number'
         }]
