@@ -20,9 +20,19 @@ class BlockMoreToolbar extends React.Component {
         e.stopPropagation();
         this.setState({visible: !this.state.visible});
     }
+    
+    showModal = e => {
+        e.stopPropagation();
+        this.setState({visible: true});
+    }
+
+    hideModal = e => {
+        e.stopPropagation();
+        this.setState({visible: false});
+    }
 
     renderBtn () {
-        return <div onClick={this.toggleModal}>
+        return <div onMouseOver={this.showModal} onMouseOut={this.hideModal}>
             <i className='iconfont icon-liubianxing' />
             <div>更多</div>
         </div>
@@ -32,18 +42,23 @@ class BlockMoreToolbar extends React.Component {
         const {block} = this.props;
         const blocks = block.get('blocks');
         return (<BlockItem btn={this.renderBtn()}>
-            <Modal
-              title="Basic Modal"
-              visible={this.state.visible}
-              footer={null}
-              onCancel={this.toggleModal}
-            >
-                {
-                    blocks.map(
-                        block => <BlockWrapper block={block} key={block.get('name')} />
-                    )
-                }
-            </Modal>
+            <div style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                border: '1px solid #e8e8e8',
+                padding: 15,
+                width: 255,
+                zIndex: 1000,
+                textAlign: 'left',
+                display: this.state.visible ? 'block': 'none'
+            }} onMouseOver={this.showModal} onMouseOut={this.hideModal}>
+            {
+                blocks.map(
+                    block => <BlockWrapper block={block} key={block.get('name')} />
+                )
+            }
+            </div>
         </BlockItem>);
     }
 }

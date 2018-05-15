@@ -9,7 +9,7 @@ import BlockMore from './BlockMore'
 import BlockWrapper from './BlockWrapper';
 
 // TODO：后续转移到集中配置的地方
-const more = ['audio']
+const more = ['test', 'test2', 'test3', 'test4', 'test5']
 
 /**
  * Toolbar blocks区域
