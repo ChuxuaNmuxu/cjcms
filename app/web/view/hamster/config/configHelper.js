@@ -37,17 +37,24 @@ class ConfigHelper {
      * @param {*} blocks 
      */
     getBlocksProps (blocks) {
+        let prevBlockType;
         let props = blocks.reduce((memo, block) => {
-            const currentProps = this.getBlock(block.getIn(['data', 'type'])).get('props');
+            const blockType = block.getIn(['data', 'type']);
+            const currentProps = this.getBlock(blockType).get('props');
+            if (blockType === prevBlockType) {
+                return memo;
+            }
             if (!memo) {
                 memo = currentProps;
             } else {
                 // 取出有相同widget的属性
                 memo = memo.filter(item => {
                     const widget = item.get('widget');
+
                     return widget && currentProps.find(prop => prop.get('widget') === widget)
                 })
             }
+            prevBlockType = blockType;
             return memo;
         }, null);
         // 跟默认属性合并
@@ -88,6 +95,7 @@ class ConfigHelper {
         return v.reduce((reduction, v, k) => {
             switch (k) {
                 case 'value':
+                case 'widget':
                     reduction = reduction.set(k, v);
                     break;
                 case 'props':

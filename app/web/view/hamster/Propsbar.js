@@ -39,10 +39,12 @@ class PropsbarView extends Component {
     }
 
     render() {
+        const {currentBlocks} = this.props;
         return (
             <Propsbar
               onPropsChange={this.handlePropsChange}
-              data={this.props.currentBlocks}
+              data={currentBlocks.getIn([0, 'data', 'props'])}
+              k={currentBlocks.reduce((k, v) => k += v.get('id').substr(-3), '')}
               propsLayout={this.propsLayout}
               propsConfig={this.propsConfig}
             />
