@@ -1,4 +1,4 @@
-import {List, Map} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 
 import * as extensions from './extensions';
 import * as config from './config';
@@ -82,6 +82,22 @@ class ConfigHelper {
     }
 
     /**
+     * 捡出value属性
+     */
+    pickValueProps = (v) => {
+        return v.reduce((reduction, v, k) => {
+            switch (k) {
+                case 'value':
+                    reduction = reduction.set(k, v);
+                    break;
+                case 'props':
+                    reduction = reduction.set(k, v.map(this.pickValueProps));
+            }
+            return reduction;
+        }, Map())
+    }
+
+    /**
      * 递归处理block属性
      * @param {*} block 
      */
@@ -91,9 +107,9 @@ class ConfigHelper {
             let widget = v.get('widget')
             if (widget) {
                 if (isString(widget)) {
-                    widget = require(`../Widget/props/${widget}`).default
+                    widget = require(`../widget/props/${widget}`).default
                 }
-                v = v.mergeDeep(widget)
+                v = fromJS(widget).mergeDeep(this.pickValueProps(v))
             }
             if (v.has('props')) {
                 v = v.update('props', this.handleBlockProps);
