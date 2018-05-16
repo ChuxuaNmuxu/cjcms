@@ -24,20 +24,19 @@ class Propsbar extends React.Component {
         const props = {
             propsConfig,
             propsLayout: Layout,
-            value: data.getIn([0, 'data', 'props']),
+            value: data,
             onChange: v => onPropsChange(v)
         }
         return List.isList(Layout) ? <PropsPane {...props} /> : <Layout {...props} />
     }
 
     render () {
-        const {data, propsLayout} = this.props;
-        const key = data.reduce((k, v) => k += v.get('id').substr(-3), '')
+        const {data, propsLayout, k} = this.props;
         return (
             <div className='propsbar' styleName='propsbar'>
-                {data.size ?
+                {data ?
                 <Tabs
-                  key={key}
+                  key={k}
                   defaultActiveKey={`.$${propsLayout.getIn([0, 'name'])}`}
                   style={{height: '100%'}}>
                     {propsLayout.map(item => (

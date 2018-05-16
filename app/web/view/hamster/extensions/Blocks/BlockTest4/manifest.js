@@ -9,7 +9,6 @@ export default {
         console.log(62, '自定义点击事件', block.toJS())
         BlockUtils.addBlock(block);
     },
-    toolbar: Toolbar, // 自定义工具栏
     propsbar: null, // 自定义属性栏
     props: { // 属性
         // propA: { // 属性项
