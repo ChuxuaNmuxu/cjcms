@@ -125,6 +125,7 @@ class Component extends React.Component {
         const contentConfig = blockConfig.get('content');
         
         // 先判断默认情况即是否是配置对象，否则为自定义
+        //TODO: 高阶组件不建议放在render中
         return dispatchMission(
             contentIsObject,
             contentIsComponent,
