@@ -75,3 +75,34 @@ test('test add', () => {
     expect(miaow.add(2)({a: 2})).toEqual('[object Object]2')
     expect(miaow.add(2)(Immutable.Map({a: 2}))).toEqual('Map { \"a\": 2 }2')
 })
+
+test('test minus', () => {
+    const minus1 = miaow.minus(1);
+
+    const minusArray = miaow.minus([5])
+
+    const minusMap = miaow.minus(Immutable.Map({
+        a: 1
+    }))
+
+    const minusObject =  miaow.minus({
+        a: 1
+    })
+
+    expect(minus1(2)).toBe(1)
+    expect(minusArray([5, 1])).toEqual([1])
+})
+
+test('test and', () => {
+    const myMock = jest.fn();
+
+    myMock
+    .mockReturnValueOnce(1)
+    .mockReturnValueOnce('123')
+    .mockReturnValueOnce(true)
+
+    const func = () => true
+
+    expect(miaow.and(func, false, func)()).toBe(true)
+})
+

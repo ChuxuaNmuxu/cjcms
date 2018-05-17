@@ -1,36 +1,91 @@
-import {isFunction, reduce, isObject, merge, isNumber} from 'lodash';
+import lodash, {isNumber} from 'lodash';
 import {isValidElement} from 'react';
-import {Map} from 'immutable';
+import Immutable, {Map} from 'immutable';
 
 /**
  * 加
- * @param {any} addEnd 被加数
+ * @param {any} addend 被加数
  */
-export function add (addEnd) {
-    if (!existy(addEnd)) throw new Error('addEnd is not existy');
+export function add (addend) {
+    if (!existy(addend)) throw new Error('addend is not existy');
     
     const checkedArray = prevCheck(value => value.concat && value.pop);
     
-    const checkoutMap = prevCheck(value => addEnd.merge && value.merge);
+    const checkoutMap = prevCheck(value => addend.merge && value.merge);
     
     const checkedPlainObject = prevCheck(
-        () => isObject(addEnd),
-        isObject
+        () => lodash.isObject(addend),
+        lodash.isObject
     );
     
     const checkedNumber = prevCheck(
-        () => isNumber(addEnd),
-        isNumber
+        () => lodash.isNumber(addend),
+        lodash.isNumber
     )
     
-    const defaultAdd = value => `${value}${addEnd}`;
+    const defaultAdd = value => `${value}${addend}`;
 
     return dispatchMission(
-        checkedArray(value => value.concat(addEnd)),
-        checkoutMap(value => value.merge(addEnd)),
-        checkedPlainObject(value => merge({}, value, addEnd)),
-        checkedNumber(value => value + addEnd),
+        checkedArray(value => value.concat(addend)),
+        checkoutMap(value => value.merge(addend)),
+        checkedPlainObject(value => lodash.merge({}, value, addend)),
+        checkedNumber(value => value + addend),
         defaultAdd
+    )
+}
+
+/**
+ * 减
+ * @param {*} minuend 被减数
+ */
+export function minus (minuend) {
+    if (!existy(minuend)) throw new Error('minuend is not existy');
+
+    const minuends = Immutable.List().concat(minuend);
+    
+    const checkedFilter = prevCheck(value => value.filter);
+    
+    const checkedPlainObject = prevCheck(
+        () => lodash.isObject(minuend),
+        lodash.isObject
+    );
+    
+    const checkedNumber = prevCheck(
+        () => lodash.isNumber(minuend),
+        lodash.isNumber
+    )
+    
+    // TODO: 待优化
+    return value => minuends.reduce((value, minuend) => {
+        return dispatchMission(
+            checkedFilter(value => value.filter(item => item !== minuend)),
+            checkedPlainObject(object => Reflect.deleteProperty(object, minuend)),
+            checkedNumber(value => value - minuend),
+            lodash.identity
+        )(value)
+    }, value)
+}
+
+/**
+ * 列表化
+ * @param {*} value 
+ */
+export function makeList (value) {
+    return Immutable.List().concat(value);
+}
+
+/**
+ * 重置
+ * @param {*} value 
+ */
+export function reset (value) {
+    return dispatchMission(
+        prevCheck(value => value.clear)(value => value.clear()),
+        prevCheck(lodash.isObject)(() => {}),
+        prevCheck(lodash.isArray)(() => []),
+        prevCheck(lodash.isNumber)(() => 0),
+        prevCheck(lodash.isString)(() => ''),
+        () => null
     )
 }
 
@@ -60,8 +115,9 @@ function existy (value) {
  * @param {Array} funcs 
  */
 export function and (funcs) {
-    return (...args) => reduce(funcs, (accu, func) => {
-        return accu && func.apply(func, args)
+    return (...args) => lodash.reduce(funcs, (accu, func) => {
+        if (!lodash.isFunction(func)) func = () => !!func;
+        return accu && func.apply(func, args);
     }, true);
 }
 
@@ -94,7 +150,7 @@ export function dispatchMission (...funs) {
 export const isValidateReactComponent = component => {
     // TODO: 其他情况判断
     // 实例化组件，function, 继承自Component的class
-    return isValidElement(component) || isFunction(component) || component.render;
+    return isValidElement(component) || lodash.isFunction(component) || component.render;
 }
 
 /**

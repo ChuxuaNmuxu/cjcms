@@ -1,6 +1,11 @@
 import {fromJS, List} from 'immutable';
+import lodash from 'lodash'
 
 import initialState from './initialState';
+import * as miaow from '../view/hamster/Utils/miaow';
+import * as helper from './helper';
+import Subscriber from '../view/hamster/Subscriber';
+const subscriber = new Subscriber();
 
 function handleAddBlock (hamster, action) {
     const {payload} = action;
@@ -14,13 +19,17 @@ function handleAddBlock (hamster, action) {
     return hamster;
 }
 
-function handleActivateBlock (hamster, action) {
-    // 添加blocks
-    const {payload} = action;
-    // 修改current
-    const handleBlockIds = payload.blockIds;
-    hamster = hamster.updateIn(['current', 'blocks'], handleBlockIds)
-    return hamster;
+// 点击元素
+function handleClickBlock (hamster, action) {
+    // 激活元素
+    const {payload: {event, blockId}} = action;
+    const activeIds = this.getActivedBlockIds();
+
+    if (event.ctrlKey) {
+        if (activeIds.includes(blockId)) return helper.handleCancelActivateBlocks(hamster, blockId)
+        return helper.handleActivateBlock(hamster, blockId)
+    };
+    return helper.handleReactivateBlocks(hamster, blockId);
 }
 
 const merger = (a, b) => {
@@ -44,14 +53,13 @@ function handleChangeProps (hamster, action) {
     )
 }
 
-function handleEntitiesChanges (hamster, action) {
-    const {payload} = action;
-
-    console.log('payload: ', payload)
-    console.log('hamster: ', hamster.toJS())
-
-    const {blockIds, operations} = payload;
-
+/**
+ * objects数据增删改
+ * @param {*} hamster 
+ * @param {*} param1 
+ */
+function handleEntitiesChanges (hamster, actions) {
+    const {blockIds, operations={}} = actions.payload;
     if (!blockIds) return hamster;
 
     return hamster.update('objects', objects => {
@@ -69,7 +77,8 @@ const createReducer = (initialState, handlers) => {
     return (state, action) => {
         state = state ? (state.toJS ? state : fromJS(state)) : fromJS(initialState.hamster)
         if (handlers.hasOwnProperty(action.type)) {
-            state = handlers[action.type](state, action);
+            subscriber.setState(state)
+            state = handlers[action.type].call(subscriber, state, action);
         }
         return state;
     }
@@ -77,9 +86,10 @@ const createReducer = (initialState, handlers) => {
 
 const hamster = {
     BLOCK_ADD: handleAddBlock,
-    BLOCK_ACTIVATE: handleActivateBlock,
+    // BLOCK_ACTIVATE: handleActivateBlock,
     BLOCK_PROPS_CHANGE: handleChangeProps,
-    ENTITIES_PROPS_CHANGE: handleEntitiesChanges
+    ENTITIES_PROPS_CHANGE: handleEntitiesChanges,
+    BLOCK_CLICK: handleClickBlock
 }
 
 export default createReducer(initialState, hamster);

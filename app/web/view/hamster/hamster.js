@@ -2,6 +2,7 @@ import React from 'react';
 import BlockUtils from './Utils/BlockUtils';
 
 export const HamsterContext = React.createContext();
+import Subscriber from './Subscriber';
 
 /**
  * 集中处理类，将hamster注入组件中
@@ -14,6 +15,7 @@ class Hamster {
         // redux store
         this.store = store;
         this.dispatch = BlockUtils.dispatch = store.dispatch;
+        this.subscriber = new Subscriber(store);
     }
 
     /**
@@ -35,12 +37,8 @@ class Hamster {
     //     return this.DragDropManager;
     // }
 
-    getState () {
-        return this.store.getState();
-    }
-
-    getActivedBlockIds () {
-        return this.getState().hamster.getIn(['current', 'blocks'])
+    getSubscriber () {
+        return this.subscriber;
     }
 
 }
