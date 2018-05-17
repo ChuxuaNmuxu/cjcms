@@ -2,67 +2,7 @@ import {fromJS, List} from 'immutable';
 
 import initialState from './initialState';
 
-function handleAddBlock (hamster, action) {
-    const {payload} = action;
-    const blockIds = payload.blocks.map(block => block.get('id'));
-    // 添加blocks
-    hamster = hamster.updateIn(['index', 'blocks'], blocks => blocks.concat(blockIds));
-    // 添加object
-    hamster = hamster.update('objects', objects => payload.blocks.reduce((acc, block) => objects.set(block.get('id'), block), objects));
-    // 修改current
-    hamster = hamster.updateIn(['current', 'blocks'], blocks => blocks.clear().concat(blockIds))
-    return hamster;
-}
-
-function handleActivateBlock (hamster, action) {
-    // 添加blocks
-    const {payload} = action;
-    // 修改current
-    const handleBlockIds = payload.blockIds;
-    hamster = hamster.updateIn(['current', 'blocks'], handleBlockIds)
-    return hamster;
-}
-
-const merger = (a, b) => {
-    if (a && a.mergeWith && !List.isList(a) && !List.isList(b)) {
-        return a.mergeWith(merger, b)
-    }
-    return b
-}
-
-function handleChangeProps (hamster, action) {
-    const {payload} = action;
-    // 修改props
-    return hamster.update('objects', objects => objects.withMutations(objects => {
-            payload.blocks.forEach(block => {
-                objects.updateIn(
-                    [block.get('id'), 'data', 'props'],
-                    props => props.mergeWith(merger, payload.props)
-                )
-            });
-        })
-    )
-}
-
-function handleEntitiesChanges (hamster, action) {
-    const {payload} = action;
-
-    console.log('payload: ', payload)
-    console.log('hamster: ', hamster.toJS())
-
-    const {blockIds, operations} = payload;
-
-    if (!blockIds) return hamster;
-
-    return hamster.update('objects', objects => {
-        return blockIds.reduce((objects, id) => {
-            return operations.reduce((objects, operate, path) => {
-                const objectPath = [id].concat(path.split('.'))
-                return objects.updateIn(objectPath, prop => operate(prop))
-            }, objects)
-        }, objects);
-    })
-}
+// 这里处理Hamster数据获取和保存
 
 // reducer生成函数，减少样板代码
 const createReducer = (initialState, handlers) => {
@@ -76,10 +16,7 @@ const createReducer = (initialState, handlers) => {
 }
 
 const hamster = {
-    BLOCK_ADD: handleAddBlock,
-    BLOCK_ACTIVATE: handleActivateBlock,
-    BLOCK_PROPS_CHANGE: handleChangeProps,
-    ENTITIES_PROPS_CHANGE: handleEntitiesChanges
+    
 }
 
 export default createReducer(initialState, hamster);

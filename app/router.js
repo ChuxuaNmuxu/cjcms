@@ -3,7 +3,7 @@ module.exports = app => {
     // app.redirect('/', '/ssr', 302);
     // app.get('/(editor|editor/.*|courseEntry)?', app.controller.spa.ssr);
     // app.get('/editor(/.+)?', app.controller.spa.editor);
-    app.get('/', app.controller.spa.ssr);
+    app.get('*', app.controller.spa.ssr);
     // app.get('/redux(/.+)?', app.controller.spa.redux);
     // app.get('/client(/.+)?', app.controller.spa.client);
 };

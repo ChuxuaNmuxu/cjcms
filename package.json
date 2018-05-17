@@ -39,7 +39,9 @@
     "react-router-config": "^1.0.0-beta.4",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
-    "redux": "^3.7.2"
+    "reduce-reducers": "^0.3.0",
+    "redux": "^3.7.2",
+    "redux-actions": "^2.3.2"
   },
   "devDependencies": {
     "autod-egg": "^1.0.0",
@@ -80,6 +82,7 @@
     "immutable": "^3.8.2",
     "invariant": "^2.2.4",
     "ip": "^1.1.5",
+    "jest": "^22.4.3",
     "js-cookie": "^2.2.0",
     "jsdom": "^11.7.0",
     "nzh": "^1.0.3",

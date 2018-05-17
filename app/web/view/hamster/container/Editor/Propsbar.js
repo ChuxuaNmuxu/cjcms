@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import {HAMSTER} from '../../actions/actionTypes';
-import Propsbar from './components/Propsbar';
-import configHelper from './config/configHelper';
+import blockActions from '../../actions/block'
+import Propsbar from '../../components/Propsbar';
+import configHelper from '../../config/configHelper';
 
 /**
  * 可能选择多个block，甚至不同类型的block，这种情况要合并处理
@@ -32,10 +32,7 @@ class PropsbarView extends Component {
 
     handlePropsChange = (value) => {
         const {dispatch, currentBlocks} = this.props;
-        dispatch({
-            type: HAMSTER.BLOCK_PROPS_CHANGE,
-            payload: {blocks: currentBlocks, props: value}
-        });
+        dispatch(blockActions.propsChange({blocks: currentBlocks, props: value}))
     }
 
     render() {

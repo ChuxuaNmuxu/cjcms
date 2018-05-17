@@ -2,6 +2,7 @@ import {fromJS, Map, List} from 'immutable';
 import uuid from 'uuid';
 
 import {HAMSTER} from '../../../actions/actionTypes'
+import blockActions from '../actions/block'
 import {add} from '../Utils/miaow'
 
 /**
@@ -30,7 +31,7 @@ const BlockUtils = {
     addBlocks: function (blocks) {
         blocks = fromJS(blocks);
         blocks = blocks.map(this.extractBlockData);
-        BlockUtils.dispatch({type: HAMSTER.BLOCK_ADD, payload: {blocks}});
+        BlockUtils.dispatch(blockActions.add({blocks}));
         // addBlock时会生成唯一id
     },
 
@@ -56,7 +57,7 @@ const BlockUtils = {
      * @param {*} blockIds
      */
     activateBlock (blockIds) {
-        BlockUtils.dispatch({type: HAMSTER.BLOCK_ACTIVATE, payload: {blockIds}})
+        BlockUtils.dispatch(blockActions.activate({blockIds}))
     },
     
     /**
@@ -65,16 +66,13 @@ const BlockUtils = {
      * @param {object} offset 
      */
     moveBlocks (blockIds, offset={}) {
-        BlockUtils.dispatch({
-            type: HAMSTER.ENTITIES_PROPS_CHANGE,
-            payload: {
-                blockIds,
-                operations: fromJS({
-                    'data.props.top': add(offset.get('top')), 
-                    'data.props.left': add(offset.get('left'))
-                })
-            }
-        })
+        BlockUtils.dispatch(blockActions.entitiesChange({
+            blockIds,
+            operations: fromJS({
+                'data.props.top': add(offset.get('top')),
+                'data.props.left': add(offset.get('left'))
+            })
+        }))
     }
 }
 

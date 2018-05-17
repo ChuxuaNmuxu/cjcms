@@ -3,6 +3,16 @@ import BlockUtils from './Utils/BlockUtils';
 
 export const HamsterContext = React.createContext();
 
+export const withHamster = () => Component => {
+    return props => (
+        <HamsterContext.Consumer>
+            {
+                hamster => <Component {...props} hamster={hamster} />
+            }
+        </HamsterContext.Consumer>
+    )
+}
+
 /**
  * 集中处理类，将hamster注入组件中
  * 1. 初始化配置

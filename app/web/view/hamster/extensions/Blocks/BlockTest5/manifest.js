@@ -5,7 +5,7 @@ export default {
     title: '测试5', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '这是测试阻止事件且自定义模板', // 描述
-    onClick: null,
+    onClick: null, // 禁掉了onClick事件
     propsbar: null, // 自定义属性栏
     props: { // 属性
         propB: { // 属性项

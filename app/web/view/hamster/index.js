@@ -1,3 +1,3 @@
-import Editor from './Editor';
+export {default as Editor} from './container/Editor';
 
-export default Editor;
+export {default as Player} from './container/Player';

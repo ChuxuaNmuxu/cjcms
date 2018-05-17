@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import {connect} from 'react-redux';
+import {Button} from 'antd' 
 
 import styles from './Editor.scss';
-import Toolbar from './components/Toolbar';
+import Toolbar from '../../components/Toolbar';
 import Propsbar from './Propsbar';
-import Navbar from './components/Navbar';
-import Viewport from './components/Viewport';
-import {HAMSTER} from '../../actions/actionTypes';
-import Hamster, {HamsterContext} from './hamster';
-import {Button} from 'antd'
+import Navbar from '../../components/Navbar';
+import Viewport from '../../components/Viewport';
+import Hamster, {HamsterContext} from '../../hamster';
+import createProvider from '../../Utils/tmp'
 
 class Editor extends React.Component {
     static contextTypes = {
@@ -24,12 +24,6 @@ class Editor extends React.Component {
 
         this.hamster = new Hamster(context.store);
         // if (this.context.store) this.hamster.setDragDropManager(this.context.store);
-        this.handlePropsChange = this.handlePropsChange.bind(this);
-    }
-
-    handlePropsChange (value, block) {
-        const {dispatch} = this.props;
-        dispatch({type: HAMSTER.BLOCK_PROPS_CHANGE, payload: {block, props: value}});
     }
 
     render () {
@@ -67,4 +61,4 @@ const mapStateToProps = ({hamster}) => ({
     current: hamster.get('current'),
 });
 
-export default connect(mapStateToProps)(CSSModules(Editor, styles));
+export default createProvider(connect(mapStateToProps)(CSSModules(Editor, styles)));
