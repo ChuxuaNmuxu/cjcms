@@ -9,7 +9,8 @@ const actionCreaters = createActions({
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
         'PROPS_CHANGE': pmCreater,
-        'ENTITIES_CHANGE': pmCreater
+        'ENTITIES_CHANGE': pmCreater,
+        'CLICK': pmCreater
     }
 })
 

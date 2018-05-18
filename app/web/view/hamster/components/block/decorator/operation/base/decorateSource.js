@@ -75,7 +75,7 @@ const decorateSource = ({
 
             handleChange = () => {
                 const state = this.getCurrentState();
-                if (isEqual(state.rotateSource, this.state.rotateSource)) return;
+                if (isEqual(state, this.state)) return;
                 this.setState({
                     ...state
                 })

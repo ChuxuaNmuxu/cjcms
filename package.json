@@ -88,7 +88,7 @@
     "nzh": "^1.0.3",
     "raw-loader": "^0.5.1",
     "react-color": "^2.14.0",
-    "react-css-modules": "^4.7.2",
+    "react-css-modules": "git+ssh://git@github.com/cjfed/react-css-modules.git",
     "react-custom-scrollbars": "^4.2.1",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",

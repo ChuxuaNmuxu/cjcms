@@ -22,6 +22,19 @@ export default {
     props: { // 属性
         font: {
             widget: 'font'
+        },
+        border: {
+            props: {
+                borderStyle: {
+                    value: 'solid',
+                },
+                borderWidth: {
+                    value: 1,
+                },
+                borderColor: {
+                    value: '#333',
+                }
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ import uuid from 'uuid';
 
 import {HAMSTER} from '../../../actions/actionTypes'
 import blockActions from '../actions/block'
-import {add} from '../Utils/miaow'
+import * as miaow from '../Utils/miaow'
 
 /**
  * 递归提取block属性
@@ -52,27 +52,28 @@ const BlockUtils = {
         return data;
     },
 
-    /**
-     * 激活blocks
-     * @param {*} blockIds
-     */
-    activateBlock (blockIds) {
-        BlockUtils.dispatch(blockActions.activate({blockIds}))
+    clickBlock (payload) {
+        BlockUtils.dispatch(blockActions.click(payload))
     },
-    
+
     /**
      * 移动blocks
      * @param {Array} blockIds 
-     * @param {object} offset 
+     * @param {object} offset
      */
     moveBlocks (blockIds, offset={}) {
         BlockUtils.dispatch(blockActions.entitiesChange({
             blockIds,
             operations: fromJS({
-                'data.props.top': add(offset.get('top')),
-                'data.props.left': add(offset.get('left'))
+                'data.props.top': miaow.add(offset.get('top')),
+                'data.props.left': miaow.add(offset.get('left'))
             })
         }))
+    },
+
+    // 组合元素
+    unite () {
+        BlockUtils.dispatch(blockActions.unite())
     }
 }
 

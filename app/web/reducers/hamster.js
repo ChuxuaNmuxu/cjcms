@@ -1,4 +1,4 @@
-import {fromJS, List} from 'immutable';
+import {fromJS} from 'immutable';
 
 import initialState from './initialState';
 
