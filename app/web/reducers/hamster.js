@@ -71,7 +71,40 @@ function handleEntitiesChanges (hamster, actions) {
                 return objects.updateIn(objectPath, prop => operate(prop))
             }, objects)
         }, objects);
-    })
+    }) 
+}
+
+/**
+ * 组合元素
+ * @param {*} blockIds 
+ */
+function handleUnite (hamster, actions) {
+    const blockIds = Shortcut.getActivatedBlockIds(hamster);
+    // TODO: 处理嵌套的情况
+
+    // 生成defaultObject
+    const objectId = helper.createId('block-');
+    hamster = helper.createDefaultBlockObjects(hamster, objectId);
+
+    // 修改children属性
+    hamster = helper.handleEntitiesChanges(hamster, fromJS({
+        ids: objectId,
+        operations: {'data.children': miaow.add(blockIds)}
+    }))
+
+    // 加入indexs
+    hamster = hamster.updateIn(['index', 'blocks'], blocks => blocks.concat(objectId));
+
+    // 修改blocks的parents属性
+    hamster = helper.handleEntitiesChanges(hamster, fromJS({
+        ids: objectId,
+        operations: {'data.parents': miaow.add(objectId)}
+    }))
+
+    // 重激活组合元素
+    hamster = helper.handleReactivateBlocks(hamster, objectId);
+
+    return hamster;
 }
 
 // reducer生成函数，减少样板代码
@@ -90,7 +123,8 @@ const hamster = {
     // BLOCK_ACTIVATE: handleActivateBlock,
     BLOCK_PROPS_CHANGE: handleChangeProps,
     ENTITIES_PROPS_CHANGE: handleEntitiesChanges,
-    BLOCK_CLICK: handleClickBlock
+    BLOCK_CLICK: handleClickBlock,
+    BLOCK_UNITE: handleUnite
 }
 
 export default createReducer(initialState, hamster);

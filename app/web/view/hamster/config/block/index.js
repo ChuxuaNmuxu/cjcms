@@ -41,6 +41,10 @@ const block = {
     toolbar: null, // 自定义工具栏
     propsbar, // 自定义属性栏
     props, // 属性，支持简单编排和自定义组件
+    data: {
+        children: [],
+        parents: []
+    }
 }
 
 export default block;

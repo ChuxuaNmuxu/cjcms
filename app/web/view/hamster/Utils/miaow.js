@@ -70,8 +70,17 @@ export function minus (minuend) {
  * 列表化
  * @param {*} value 
  */
-export function makeList (value) {
+export function toList (value) {
     return Immutable.List().concat(value);
+}
+
+/**
+ * 浅解构
+ * @param {*} data 
+ * @param {*} args 
+ */
+export function destruction (data, ...args) {
+    return args.map(path => data.get(path))
 }
 
 /**

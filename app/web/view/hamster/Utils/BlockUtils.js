@@ -71,6 +71,11 @@ const BlockUtils = {
                 })
             }
         })
+    },
+
+    // 组合元素
+    unite () {
+        BlockUtils.dispatch({type: HAMSTER.BLOCK_UNITE})
     }
 }
 

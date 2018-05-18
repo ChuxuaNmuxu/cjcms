@@ -1,5 +1,14 @@
 import lodash from 'lodash';
+import uuid from 'uuid';
+
 import * as miaow from '../../view/hamster/Utils/miaow';
+import BlockUtils from '../../view/hamster/Utils/BlockUtils';
+import {defaultBlockConfig} from '../../view/hamster/config/config'
+
+// 生成ID
+export function createId (prefix='', suffix='') {
+    return prefix + uuid.v4() + suffix
+}
 
 // 激活元素
 export function handleActivateBlock (hamster, blockIds) {
@@ -17,4 +26,38 @@ export function handleCancelActivateBlocks (hamster, blockIds) {
 export function handleReactivateBlocks (hamster, blockIds) {
     hamster = hamster.updateIn(['current', 'blocks'], lodash.flow(miaow.reset, miaow.flowDebug, miaow.add(blockIds)))
     return hamster;
+}
+
+// // 组合
+// export function handleUniteBlocks (hamster, blockIds) {
+//     blockIds = miaow.toList(blockIds);
+
+//     return hamster;
+// }
+
+// 生成新的blockObject
+export function createDefaultBlockObjects (hamster, id) {
+    console.log('defaultBlockConfig: ', defaultBlockConfig.toJS())
+    const defaultBlockData = BlockUtils.extractBlockData(defaultBlockConfig);
+    console.log('defaultBlockData: ', defaultBlockData.toJS())
+    return hamster.update('objects', objects => objects.set(id, defaultBlockData));
+}
+
+/**
+ * objects数据增删改
+ * @param {*} hamster 
+ * @param {*} payload 
+ */
+export function handleEntitiesChanges (hamster, payload) {
+    const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');
+
+    const objectIds = miaow.toList(ids);
+    return hamster.update('objects', objects => {
+        return objectIds.reduce((objects, id) => {
+            return operations.reduce((objects, operate, path) => {
+                const objectPath = [id].concat(path.split('.'))
+                return objects.updateIn(objectPath, prop => operate(prop))
+            }, objects)
+        }, objects);
+    }) 
 }
