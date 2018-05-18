@@ -6,7 +6,6 @@ import React from 'react';
 import {Map} from 'immutable';
 import {isFunction} from 'lodash';
 
-import configHelper from '../../../config/configHelper';
 import styleParser from './style/styleParser';
 
 const parser = config => Component => class extends React.Component {

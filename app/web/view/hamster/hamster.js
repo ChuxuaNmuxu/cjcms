@@ -1,58 +1,7 @@
-import React from 'react';
-import BlockUtils from './Utils/BlockUtils';
+import hamster, {HamsterContext, withHamster} from './manager'
 
-export const HamsterContext = React.createContext();
-
-export const withHamster = () => Component => {
-    return props => (
-        <HamsterContext.Consumer>
-            {
-                hamster => <Component {...props} hamster={hamster} />
-            }
-        </HamsterContext.Consumer>
-    )
+export {
+    HamsterContext,
+    withHamster
 }
-
-/**
- * 集中处理类，将hamster注入组件中
- * 1. 初始化配置
- */
-class Hamster {
-    configResolve; // 配置处理器
-    
-    constructor (store) {
-        // redux store
-        this.store = store;
-        this.dispatch = BlockUtils.dispatch = store.dispatch;
-    }
-
-    /**
-     * 添加
-     */
-    addBlock (block) {
-        BlockUtils.addBlocks([block]);
-    }
-
-    // /**
-    //  * 拖拽管理类
-    // */
-    // setDragDropManager (store) {
-    //     if (this.DragDropManager) return ;
-    //     this.DragDropManager = new DragDropManager(store);
-    // }
-
-    // getDragDropManager () {
-    //     return this.DragDropManager;
-    // }
-
-    getState () {
-        return this.store.getState();
-    }
-
-    getActivedBlockIds () {
-        return this.getState().hamster.getIn(['current', 'blocks'])
-    }
-
-}
-
-export default Hamster;
+export default hamster

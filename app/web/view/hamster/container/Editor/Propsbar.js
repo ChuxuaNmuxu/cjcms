@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import blockActions from '../../actions/block'
 import Propsbar from '../../components/Propsbar';
-import configHelper from '../../config/configHelper';
+import configManager from '../../manager/ConfigManager';
 
 /**
  * 可能选择多个block，甚至不同类型的block，这种情况要合并处理
@@ -20,7 +20,7 @@ class PropsbarView extends Component {
     getBlockProps (props) {
         const {currentBlocks: data} = props;
         if (data.size) {
-            const {props, layout} = configHelper.getBlocksLayout(data)
+            const {props, layout} = configManager.getBlocksLayout(data)
             this.propsConfig = props;
             this.propsLayout = layout.reverse();
         }

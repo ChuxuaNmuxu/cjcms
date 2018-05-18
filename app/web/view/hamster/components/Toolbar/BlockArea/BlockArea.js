@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Map} from 'immutable';
 import {Modal, Button} from 'antd'
 
-import configHelper from '../../../config/configHelper';
+import configManager from '../../../manager/ConfigManager';
 
 import BlockMore from './BlockMore'
 import BlockWrapper from './BlockWrapper';
@@ -15,7 +15,7 @@ const more = ['test', 'test2', 'test3', 'test4', 'test5']
  * Toolbar blocks区域
  */
 export const BlockArea = (props) => {
-    const blocks = configHelper.blocks.groupBy(
+    const blocks = configManager.blocks.groupBy(
         block => Number(more.indexOf(block.get('name')) > -1)
     );
     return (

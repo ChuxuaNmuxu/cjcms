@@ -10,14 +10,14 @@ import PropTypes from 'prop-types';
 import {flowRight} from 'lodash';
 
 import styles from './Block.scss';
-import configHelper from '../../config/configHelper';
+import configManager from '../../manager/ConfigManager';
 import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
 import {DragSource} from '../block/decorator/operation/drag';
 import Container from '../block/container';
 import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable, { fromJS } from 'immutable';
-import withHamster from '../block/decorator/withHamster';
+import {withHamster} from '../../hamster';
 
 // TODO: 暂时放在这儿
 export const add = values => prop => {
@@ -121,7 +121,7 @@ class Component extends React.Component {
 
     render () {
         const {block} = this.props;
-        const blockConfig = configHelper.getBlock(block.getIn(['data', 'type']));
+        const blockConfig = configManager.getBlock(block.getIn(['data', 'type']));
         const contentConfig = blockConfig.get('content');
         
         // 先判断默认情况即是否是配置对象，否则为自定义
