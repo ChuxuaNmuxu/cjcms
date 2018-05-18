@@ -1,15 +1,13 @@
 import {List, Map, fromJS} from 'immutable';
-
-import * as extensions from './extensions';
-import * as config from './config';
 import { isString } from 'lodash';
+
+import config, {extensions} from '../config';
 
 /**
  * 配置管理类
- * TODO: 移出
  */
-class ConfigHelper {
-    blocks;
+class ConfigManager {
+    blocks; // 加工好的block配置列表
 
     constructor () {
         this.init();
@@ -135,4 +133,4 @@ class ConfigHelper {
     }
 }
 
-export default new ConfigHelper();
+export default new ConfigManager();

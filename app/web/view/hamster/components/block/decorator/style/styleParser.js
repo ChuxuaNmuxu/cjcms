@@ -1,4 +1,3 @@
-import configHelper from '../../../../config/configHelper';
 import styleConfig, {add} from './styleConfig';
 import {isFunction, reduce, flowRight, curryRight, curry, values, keys, join, filter, pickBy} from 'lodash';
 import {Map, fromJS} from 'immutable';

@@ -9,7 +9,8 @@
 // import Play from 'view/courseware/play';
 // import Editor from 'view/courseware/editor';
 // import CourseEntry from 'view/courseware/courseEntry';
-import Hamster from 'view/hamster';
+import Editor from 'view/Editor';
+import Player from 'view/Player';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import initialState from '../reducers/initialState';
@@ -31,7 +32,13 @@ const NotFound = () => {
 const routes = [
     {
         path: '/',
-        component: Hamster,
+        component: Editor,
+        exact: true,
+        fetch: () => Promise.resolve(initialState)
+    },
+    {
+        path: '/player',
+        component: Player,
         exact: true,
         fetch: () => Promise.resolve(initialState)
     },

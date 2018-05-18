@@ -1,7 +1,7 @@
 /**
  * hamster功能子集
  */
-import Shortcut from '../../reducers/helper/Shortcut';
+import Shortcut from '../reducers/helper/Shortcut';
 
 export default class Subscriber {
     constructor (store) {

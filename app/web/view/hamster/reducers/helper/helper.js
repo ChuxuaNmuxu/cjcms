@@ -1,9 +1,9 @@
 import lodash from 'lodash';
 import uuid from 'uuid';
 
-import * as miaow from '../../view/hamster/Utils/miaow';
-import BlockUtils from '../../view/hamster/Utils/BlockUtils';
-import {defaultBlockConfig} from '../../view/hamster/config/config'
+import * as miaow from '../../Utils/miaow';
+import BlockUtils from '../../Utils/BlockUtils';
+import {defaultBlockConfig} from '../../config/config'
 
 // 生成ID
 export function createId (prefix='', suffix='') {
