@@ -1,22 +1,27 @@
 /**
- * store操作类
- * 实例化时传入store或每次使用前使用setState更新state
+ * hamster功能子集
  */
+import Shortcut from '../../reducers/helper/Shortcut';
+
 export default class Subscriber {
     constructor (store) {
         this.store = store;
-        this.state = {};
     }
 
-    setState (state) {
-        this.state = state
+    getStore () {
+        return this.store;
     }
 
-    getState () {
-        return this.store ? this.store.getState() : this.state;
+    getState (stateName) {
+        const state = this.store.getState()
+        return stateName ? state[stateName] : state;
+    }
+
+    getHamster () {
+        return this.getState('hamster');
     }
 
     getActivatedBlockIds () {
-        return this.getState().hamster.getIn(['current', 'blocks'])
+        return Shortcut.getActivatedBlockIds(this.getHamster());
     }
 }

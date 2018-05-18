@@ -1,6 +1,6 @@
-import lodash, {isNumber} from 'lodash';
+import lodash from 'lodash';
 import {isValidElement} from 'react';
-import Immutable, {Map} from 'immutable';
+import Immutable from 'immutable';
 
 /**
  * 加
@@ -78,16 +78,14 @@ export function makeList (value) {
  * 重置
  * @param {*} value 
  */
-export function reset (value) {
-    return dispatchMission(
-        prevCheck(value => value.clear)(value => value.clear()),
-        prevCheck(lodash.isObject)(() => {}),
-        prevCheck(lodash.isArray)(() => []),
-        prevCheck(lodash.isNumber)(() => 0),
-        prevCheck(lodash.isString)(() => ''),
-        () => null
-    )
-}
+export const reset = dispatchMission(
+    prevCheck(value => value.clear)(value => value.clear()),
+    prevCheck(lodash.isObject)(() => {}),
+    prevCheck(lodash.isArray)(() => []),
+    prevCheck(lodash.isNumber)(() => 0),
+    prevCheck(lodash.isString)(() => ''),
+    () => null
+)
 
 /**
  * 参数预校验
@@ -125,8 +123,8 @@ export function and (funcs) {
  * flow中打印输出debug
  * @param {any} args 
  */
-const flowDebug = (args) => {
-    console.log(args);
+export const flowDebug = (args) => {
+    console.log('flowDebug', args);
     return args;
 }
 
@@ -139,7 +137,13 @@ export function dispatchMission (...funs) {
     const size = funs.length;
     return (...args) => {
         for (let i = 0; i < size; i++) {
-            const fun = funs.shift();
+            /**
+             * 函数尽量不改变输入值
+             * @issue: reset 在直接使用dispatchMission时以闭包的形式保存了funcs,如果用shift消耗掉了参数funcs,
+             * 那么第二次使用时funcs就是个已消耗的数组
+             * */
+            // const fun = funs.shift();
+            const fun = funs[i];
             const ret = fun.apply(null, args);
             if (ret != null) return ret;
         }

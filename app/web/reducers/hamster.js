@@ -3,9 +3,8 @@ import lodash from 'lodash'
 
 import initialState from './initialState';
 import * as miaow from '../view/hamster/Utils/miaow';
-import * as helper from './helper';
-import Subscriber from '../view/hamster/Subscriber';
-const subscriber = new Subscriber();
+import * as helper from './helper/helper';
+import Shortcut from './helper/Shortcut';
 
 function handleAddBlock (hamster, action) {
     const {payload} = action;
@@ -22,11 +21,14 @@ function handleAddBlock (hamster, action) {
 // 点击元素
 function handleClickBlock (hamster, action) {
     // 激活元素
-    const {payload: {event, blockId}} = action;
-    const activeIds = this.getActivedBlockIds();
+    const {payload: {event={}, blockId}} = action;
+    const activeIds = Shortcut.getActivatedBlockIds(hamster);
 
     if (event.ctrlKey) {
-        if (activeIds.includes(blockId)) return helper.handleCancelActivateBlocks(hamster, blockId)
+        if (activeIds.includes(blockId)) {
+            if (activeIds.size === 1) return hamster;
+            return helper.handleCancelActivateBlocks(hamster, blockId)
+        }
         return helper.handleActivateBlock(hamster, blockId)
     };
     return helper.handleReactivateBlocks(hamster, blockId);
@@ -77,8 +79,7 @@ const createReducer = (initialState, handlers) => {
     return (state, action) => {
         state = state ? (state.toJS ? state : fromJS(state)) : fromJS(initialState.hamster)
         if (handlers.hasOwnProperty(action.type)) {
-            subscriber.setState(state)
-            state = handlers[action.type].call(subscriber, state, action);
+            state = handlers[action.type](state, action);
         }
         return state;
     }
