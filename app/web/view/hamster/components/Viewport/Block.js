@@ -19,21 +19,9 @@ import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable, { fromJS } from 'immutable';
 import withHamster from '../block/decorator/withHamster';
 
-// TODO: 暂时放在这儿
-export const add = values => prop => {
-    return prop.concat(values);
-}
-
-const deleteProps = values => props => props.filterNot(item => values.includes(item || item.get(id)));
-
-const clear = props => props.clear();
-
 const handleClick = (e, block) => {
-    if (e.ctrlKey) {
-        BlockUtils.activateBlock(add([block.get('id')]))
-        return ;
-    };
-    BlockUtils.activateBlock(flowRight(add([block.get('id')]), clear));
+    const blockId = block.get('id');
+    BlockUtils.clickBlock({event: e, blockId});
 }
 
 // 其他情况
@@ -99,8 +87,8 @@ const spec = {
     endDrag (props, monitor, component) {
         const {x: left, y: top} = monitor.getOffset();
 
-        const {hamster} = props;
-        BlockUtils.moveBlocks(hamster.getActivedBlockIds(), fromJS({left, top}));
+        const subscriber = props.hamster.getSubscriber();
+        BlockUtils.moveBlocks(subscriber.getActivatedBlockIds(), fromJS({left, top}));
     }
 }
 
@@ -125,6 +113,7 @@ class Component extends React.Component {
         const contentConfig = blockConfig.get('content');
         
         // 先判断默认情况即是否是配置对象，否则为自定义
+        //TODO: 高阶组件不建议放在render中
         return dispatchMission(
             contentIsObject,
             contentIsComponent,

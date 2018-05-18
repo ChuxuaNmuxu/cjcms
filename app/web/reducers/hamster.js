@@ -1,6 +1,10 @@
 import {fromJS, List} from 'immutable';
+import lodash from 'lodash'
 
 import initialState from './initialState';
+import * as miaow from '../view/hamster/Utils/miaow';
+import * as helper from './helper/helper';
+import Shortcut from './helper/Shortcut';
 
 function handleAddBlock (hamster, action) {
     const {payload} = action;
@@ -14,13 +18,20 @@ function handleAddBlock (hamster, action) {
     return hamster;
 }
 
-function handleActivateBlock (hamster, action) {
-    // 添加blocks
-    const {payload} = action;
-    // 修改current
-    const handleBlockIds = payload.blockIds;
-    hamster = hamster.updateIn(['current', 'blocks'], handleBlockIds)
-    return hamster;
+// 点击元素
+function handleClickBlock (hamster, action) {
+    // 激活元素
+    const {payload: {event={}, blockId}} = action;
+    const activeIds = Shortcut.getActivatedBlockIds(hamster);
+
+    if (event.ctrlKey) {
+        if (activeIds.includes(blockId)) {
+            if (activeIds.size === 1) return hamster;
+            return helper.handleCancelActivateBlocks(hamster, blockId)
+        }
+        return helper.handleActivateBlock(hamster, blockId)
+    };
+    return helper.handleReactivateBlocks(hamster, blockId);
 }
 
 const merger = (a, b) => {
@@ -44,14 +55,13 @@ function handleChangeProps (hamster, action) {
     )
 }
 
-function handleEntitiesChanges (hamster, action) {
-    const {payload} = action;
-
-    console.log('payload: ', payload)
-    console.log('hamster: ', hamster.toJS())
-
-    const {blockIds, operations} = payload;
-
+/**
+ * objects数据增删改
+ * @param {*} hamster 
+ * @param {*} param1 
+ */
+function handleEntitiesChanges (hamster, actions) {
+    const {blockIds, operations={}} = actions.payload;
     if (!blockIds) return hamster;
 
     return hamster.update('objects', objects => {
@@ -61,7 +71,40 @@ function handleEntitiesChanges (hamster, action) {
                 return objects.updateIn(objectPath, prop => operate(prop))
             }, objects)
         }, objects);
-    })
+    }) 
+}
+
+/**
+ * 组合元素
+ * @param {*} blockIds 
+ */
+function handleUnite (hamster, actions) {
+    const blockIds = Shortcut.getActivatedBlockIds(hamster);
+    // TODO: 处理嵌套的情况
+
+    // 生成defaultObject
+    const objectId = helper.createId('block-');
+    hamster = helper.createDefaultBlockObjects(hamster, objectId);
+
+    // 修改children属性
+    hamster = helper.handleEntitiesChanges(hamster, fromJS({
+        ids: objectId,
+        operations: {'data.children': miaow.add(blockIds)}
+    }))
+
+    // 加入indexs
+    hamster = hamster.updateIn(['index', 'blocks'], blocks => blocks.concat(objectId));
+
+    // 修改blocks的parents属性
+    hamster = helper.handleEntitiesChanges(hamster, fromJS({
+        ids: objectId,
+        operations: {'data.parents': miaow.add(objectId)}
+    }))
+
+    // 重激活组合元素
+    hamster = helper.handleReactivateBlocks(hamster, objectId);
+
+    return hamster;
 }
 
 // reducer生成函数，减少样板代码
@@ -77,9 +120,11 @@ const createReducer = (initialState, handlers) => {
 
 const hamster = {
     BLOCK_ADD: handleAddBlock,
-    BLOCK_ACTIVATE: handleActivateBlock,
+    // BLOCK_ACTIVATE: handleActivateBlock,
     BLOCK_PROPS_CHANGE: handleChangeProps,
-    ENTITIES_PROPS_CHANGE: handleEntitiesChanges
+    ENTITIES_PROPS_CHANGE: handleEntitiesChanges,
+    BLOCK_CLICK: handleClickBlock,
+    BLOCK_UNITE: handleUnite
 }
 
 export default createReducer(initialState, hamster);
