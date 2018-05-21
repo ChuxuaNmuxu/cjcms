@@ -2,7 +2,7 @@ import lodash from 'lodash';
 import uuid from 'uuid';
 
 import * as miaow from '../../Utils/miaow';
-import BlockUtils from '../../Utils/BlockUtils';
+import {extractBlockData} from '../../utils/BlockUtils';
 import {defaultBlockConfig} from '../../config/config'
 
 // 生成ID
@@ -38,7 +38,7 @@ export function handleReactivateBlocks (hamster, blockIds) {
 // 生成新的blockObject
 export function createDefaultBlockObjects (hamster, id) {
     console.log('defaultBlockConfig: ', defaultBlockConfig.toJS())
-    const defaultBlockData = BlockUtils.extractBlockData(defaultBlockConfig);
+    const defaultBlockData = extractBlockData(defaultBlockConfig);
     console.log('defaultBlockData: ', defaultBlockData.toJS())
     return hamster.update('objects', objects => objects.set(id, defaultBlockData));
 }

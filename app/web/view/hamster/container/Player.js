@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import createProvider from '../Utils/tmp'
+import StoreProvider from '../core/StoreProvider'
 
+@StoreProvider
 class Player extends Component {
     render() {
         return (
@@ -17,4 +18,4 @@ Player.propTypes = {
 
 };
 
-export default createProvider(Player);
+export default Player;

@@ -4,6 +4,7 @@ import uuid from 'uuid';
 import {HAMSTER} from '../../../actions/actionTypes'
 import blockActions from '../actions/block'
 import * as miaow from '../Utils/miaow'
+import {createEntity} from './EntityUtils'
 
 /**
  * 递归提取block属性
@@ -17,64 +18,18 @@ const extractBlockProps = (block) => {
         )
 }
 
-const BlockUtils = {
-    /**
-     * 添加
-     */
-    addBlock: function (block) {
-        this.addBlocks([block]);
-    },
+/**
+ * 从配置中提取数据
+ */
+const extractBlockData = (block) => {
+    let data = (block.get('data') || Map()).merge({
+        type: block.get('name'),
+        props: extractBlockProps(block)
+    });
 
-    /**
-     * 添加多个
-     */
-    addBlocks: function (blocks) {
-        blocks = fromJS(blocks);
-        blocks = blocks.map(this.extractBlockData);
-        BlockUtils.dispatch(blockActions.add({blocks}));
-        // addBlock时会生成唯一id
-    },
-
-    /**
-     * 从配置中提取数据
-     * @param {*} block
-     */
-    extractBlockData (block) {
-        let data = Map();
-        data = data.withMutations(data => {
-            data.set('id', 'block-' + uuid.v4());
-            data.set('type', 'block');
-            data.setIn(['data', 'type'], block.get('name'));
-            data.setIn(['data', 'props'], extractBlockProps(block));
-            data.mergeIn(['data'], block.get('data'));
-            // TODO：props应该还有校验过程
-        })
-        return data;
-    },
-
-    clickBlock (payload) {
-        BlockUtils.dispatch(blockActions.click(payload))
-    },
-
-    /**
-     * 移动blocks
-     * @param {Array} blockIds 
-     * @param {object} offset
-     */
-    moveBlocks (blockIds, offset={}) {
-        BlockUtils.dispatch(blockActions.entitiesChange({
-            blockIds,
-            operations: fromJS({
-                'data.props.top': miaow.add(offset.get('top')),
-                'data.props.left': miaow.add(offset.get('left'))
-            })
-        }))
-    },
-
-    // 组合元素
-    unite () {
-        BlockUtils.dispatch(blockActions.unite())
-    }
+    return createEntity('block', data);
 }
 
-export default BlockUtils;
+export {
+    extractBlockData
+}

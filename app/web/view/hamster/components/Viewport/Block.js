@@ -11,18 +11,12 @@ import {flowRight} from 'lodash';
 
 import styles from './Block.scss';
 import configManager from '../../manager/ConfigManager';
-import BlockUtils from '../../Utils/BlockUtils';
 import blockPraser from '../block/decorator/blockParse';
 import {DragSource} from '../block/decorator/operation/drag';
 import Container from '../block/container';
 import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable, { fromJS } from 'immutable';
 import {withHamster} from '../../hamster';
-
-const handleClick = (e, block) => {
-    const blockId = block.get('id');
-    BlockUtils.clickBlock({event: e, blockId});
-}
 
 // 其他情况
 const someOthers = (error, props) => {
@@ -107,6 +101,12 @@ class Component extends React.Component {
         active: PropTypes.bool
     }
 
+    handleClick = (e, block) => {
+        const blockId = block.get('id');
+        const {hamster} = this.props;
+        hamster.blockManager.clickBlock({event: e, blockId});
+    }
+
     render () {
         const {block} = this.props;
         const blockConfig = configManager.getBlock(block.getIn(['data', 'type']));
@@ -118,7 +118,7 @@ class Component extends React.Component {
             contentIsObject,
             contentIsComponent,
             someOthers
-        )(contentConfig, {...this.props, handleClick});
+        )(contentConfig, {...this.props, handleClick: this.handleClick});
     }
 }
 
