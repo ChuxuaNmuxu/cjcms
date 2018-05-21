@@ -3,7 +3,9 @@ import uuid from 'uuid';
 
 import * as miaow from '../../Utils/miaow';
 import BlockUtils from '../../Utils/BlockUtils';
-import {defaultBlockConfig} from '../../config/config'
+import {defaultBlockConfig} from '../../config/config';
+import ConfigManager from '../../manager/ConfigManager';
+import * as entityHelper from './entity';
 
 // 生成ID
 export function createId (prefix='', suffix='') {
@@ -37,16 +39,16 @@ export function handleReactivateBlocks (hamster, blockIds) {
 
 // 生成新的blockObject
 export function createDefaultBlockObjects (hamster, id) {
-    console.log('defaultBlockConfig: ', defaultBlockConfig.toJS())
-    const defaultBlockData = BlockUtils.extractBlockData(defaultBlockConfig);
-    console.log('defaultBlockData: ', defaultBlockData.toJS())
+    const groupConfig = ConfigManager.getBlock('group');
+    // 默认group数据，并修改ID
+    const defaultBlockData = BlockUtils.extractBlockData(groupConfig).set('id', id);
     return hamster.update('objects', objects => objects.set(id, defaultBlockData));
 }
 
 /**
  * objects数据增删改
  * @param {*} hamster 
- * @param {*} payload 
+ * @param {*} payload
  */
 export function handleEntitiesChanges (hamster, payload) {
     const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');

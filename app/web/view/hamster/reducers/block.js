@@ -4,6 +4,7 @@ import initialState from './initialState';
 import Shortcut from './helper/Shortcut'
 import * as helper from './helper/helper';
 import * as miaow from '../Utils/miaow';
+import * as nodeHelper from './helper/node';
 
 function handleAddBlock (hamster, action) {
     console.log(5, action)
@@ -88,6 +89,16 @@ function handleEntitiesChanges (hamster, action) {
 function handleClickBlock (hamster, action) {
     // 激活元素
     const {payload: {event={}, blockId}} = action;
+    /**
+     * TODO: 处理嵌套
+     * 1. 非叶子节点元素，不做处理
+     * 2. 嵌套树的所有节点没有被激活元素，激活祖先元素
+     * 3. 嵌套树的所有节点中有被激活元素，激活节点元素
+    */
+    if (nodeHelper.getChildrendIds(hamster, blockId).size) return hamster;
+
+    // const leafBlocks = nodeHelper.getLeafNodes();
+
     const activeIds = Shortcut.getActivatedBlockIds(hamster);
 
     if (event.ctrlKey) {
@@ -102,10 +113,9 @@ function handleClickBlock (hamster, action) {
 
 /**
  * 组合元素
- * @param {*} blockIds 
  */
 function handleUnite (hamster, actions) {
-    const blockIds = Shortcut.getActivatedBlockIds(hamster);
+    const activeblockIds = Shortcut.getActivatedBlockIds(hamster);
     // TODO: 处理嵌套的情况
 
     // 生成defaultObject
@@ -115,15 +125,15 @@ function handleUnite (hamster, actions) {
     // 修改children属性
     hamster = helper.handleEntitiesChanges(hamster, fromJS({
         ids: objectId,
-        operations: {'data.children': miaow.add(blockIds)}
+        operations: {'data.children': miaow.add(activeblockIds)}
     }))
 
     // 加入indexs
-    hamster = hamster.updateIn(['index', 'blocks'], blocks => blocks.concat(objectId));
+    hamster = hamster.updateIn(['index', 'blocks'], miaow.add(objectId));
 
     // 修改blocks的parents属性
     hamster = helper.handleEntitiesChanges(hamster, fromJS({
-        ids: objectId,
+        ids: activeblockIds,
         operations: {'data.parents': miaow.add(objectId)}
     }))
 
@@ -152,7 +162,7 @@ const block = {
     [blockType('PROPS_CHANGE')]: handleChangeProps,
     [blockType('ENTITIES_CHANGE')]: handleEntitiesChanges,
     [blockType('CLICK')]: handleClickBlock,
-    [blockType('UNITE')]: handleUnite,
+    [blockType('GROUP_UNITE')]: handleUnite,
 }
 
 export default createReducer(initialState.hamster, block);

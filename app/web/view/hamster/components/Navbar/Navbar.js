@@ -6,7 +6,7 @@ import styles from './Navbar.scss';
 import BlockUtils from '../../Utils/BlockUtils';
 
 const handleUnite = () => {
-    BlockUtils.unite()
+    BlockUtils.groupUnite()
 }
 
 export const Component = (props) => {

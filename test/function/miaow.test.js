@@ -106,3 +106,6 @@ test('test and', () => {
     expect(miaow.and(func, false, func)()).toBe(true)
 })
 
+test('test cat', () => {
+    expect(miaow.cat(1, Immutable.List([3, 4]), 2, Immutable.List([2, 3]))).toEqual(Immutable.List([1, 3, 4, 2, 2, 3]))
+})

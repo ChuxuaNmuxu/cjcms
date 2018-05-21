@@ -1,5 +1,10 @@
 import {fromJS} from 'immutable';
 
-export const xx = (hamster, payload) => {
-    return hamster
+/**
+ * 获取特定id的entity
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function getEntity (hamster, id) {
+    return hamster.getIn(['objects', id]);
 }

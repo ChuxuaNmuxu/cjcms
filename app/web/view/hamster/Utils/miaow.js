@@ -80,7 +80,7 @@ export function toList (value) {
  * @param {*} args 
  */
 export function destruction (data, ...args) {
-    return args.map(path => data.get(path))
+    return args.map(path => data.get && data.get(path))
 }
 
 /**
@@ -196,4 +196,14 @@ export function copyProperties(target, source) {
             Object.defineProperty(target, key, desc);
         }
     }
+}
+
+/******* immutable *********/
+
+/**
+ * 数组连接
+ * @param {*} args 
+ */
+export function cat (...args) {
+    return lodash.reduce(args, (accu, arg) => accu.concat(arg), Immutable.List())
 }

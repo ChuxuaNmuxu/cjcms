@@ -72,8 +72,8 @@ const BlockUtils = {
     },
 
     // 组合元素
-    unite () {
-        BlockUtils.dispatch(blockActions.unite())
+    groupUnite () {
+        BlockUtils.dispatch(blockActions.groupUnite())
     }
 }
 
