@@ -8,7 +8,7 @@ import CustomDragLayer from './CustomDragLayer';
 
 export class Viewport extends React.Component {
     render () {
-        const {blockIds, currentBlocks, objects} = this.props;
+        const {blockIds, currentBlocks, entities} = this.props;
         return (
             <div className='viewport' styleName='viewport'>
                 <div className='reveal'>
@@ -19,7 +19,7 @@ export class Viewport extends React.Component {
                                 blockIds.map(id =>
                                     <Block
                                       key={id}
-                                      block={objects.get(id)}
+                                      block={entities.get(id)}
                                       active={currentBlocks.includes(id)}
                                     />
                                 )
@@ -34,7 +34,7 @@ export class Viewport extends React.Component {
 
 Viewport.propTypes = {
     blockIds: PropTypes.any,
-    blocks: PropTypes.any,
+    entities: PropTypes.any,
     currentBlocks: PropTypes.any
 }
 

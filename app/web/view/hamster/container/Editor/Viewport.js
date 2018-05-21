@@ -7,7 +7,7 @@ import Viewport from '../../components/Viewport'
 
 class ViewportView extends Component {
     render() {
-        const props = pick(this.props, ['blockIds', 'objects', 'currentBlocks']);
+        const props = pick(this.props, ['blockIds', 'entities', 'currentBlocks']);
         return (
             <Viewport {...props} />
         );
@@ -16,14 +16,14 @@ class ViewportView extends Component {
 
 ViewportView.propTypes = {
     blockIds: PropTypes.any,
-    blocks: PropTypes.any,
+    entities: PropTypes.any,
     currentBlocks: PropTypes.any
 };
 
 const mapStateToProps = ({hamster}) => {
     return {
         blockIds: hamster.getIn(['index', 'blocks']),
-        objects: hamster.get('objects'),
+        entities: hamster.get('entities'),
         currentBlocks: hamster.getIn(['current', 'blocks']),
     }
 }
