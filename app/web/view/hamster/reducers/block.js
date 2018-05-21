@@ -3,7 +3,7 @@ import {fromJS, List} from 'immutable'
 import initialState from './initialState';
 import Shortcut from './helper/Shortcut'
 import * as helper from './helper/helper';
-import * as miaow from '../Utils/miaow';
+import * as miaow from '../utils/miaow';
 
 function handleAddBlock (hamster, action) {
     console.log(5, action)

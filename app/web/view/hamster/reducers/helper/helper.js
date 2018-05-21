@@ -1,8 +1,8 @@
 import lodash from 'lodash';
 import uuid from 'uuid';
 
-import * as miaow from '../../Utils/miaow';
-import {extractBlockData} from '../../utils/BlockUtils';
+import * as miaow from '../../utils/miaow';
+import {extractBlockData} from '../../utils/block';
 import {defaultBlockConfig} from '../../config/config'
 
 // 生成ID

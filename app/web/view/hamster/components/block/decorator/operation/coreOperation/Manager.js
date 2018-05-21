@@ -5,7 +5,7 @@ import Monitor from './Monitor';
 import reducers from './reduces'
 import * as actions from './actions/dragDrop';
 import Backend from '../backend'
-import {extend} from '../../../../../Utils/miaow';
+import {extend} from '../../../../../utils/miaow';
 
 /**
  * Manager工厂函数
