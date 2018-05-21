@@ -51,8 +51,8 @@ class PropsbarView extends Component {
 
 function mapStateToProps({hamster}) {
     const currentBlockIds = hamster.getIn(['current', 'blocks'])
-    const objects = hamster.get('objects')
-    const currentBlocks = currentBlockIds.map(id => objects.get(id));
+    const entities = hamster.get('entities')
+    const currentBlocks = currentBlockIds.map(id => entities.get(id));
     return {
         currentBlocks
     };

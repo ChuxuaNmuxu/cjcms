@@ -1,8 +1,8 @@
 import lodash from 'lodash';
 import uuid from 'uuid';
 
-import * as miaow from '../../Utils/miaow';
-import BlockUtils from '../../Utils/BlockUtils';
+import * as miaow from '../../utils/miaow';
+import {extractBlockData} from '../../utils/block';
 import {defaultBlockConfig} from '../../config/config'
 
 // 生成ID
@@ -38,13 +38,13 @@ export function handleReactivateBlocks (hamster, blockIds) {
 // 生成新的blockObject
 export function createDefaultBlockObjects (hamster, id) {
     console.log('defaultBlockConfig: ', defaultBlockConfig.toJS())
-    const defaultBlockData = BlockUtils.extractBlockData(defaultBlockConfig);
+    const defaultBlockData = extractBlockData(defaultBlockConfig);
     console.log('defaultBlockData: ', defaultBlockData.toJS())
-    return hamster.update('objects', objects => objects.set(id, defaultBlockData));
+    return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
 
 /**
- * objects数据增删改
+ * entities数据增删改
  * @param {*} hamster 
  * @param {*} payload 
  */
@@ -52,12 +52,12 @@ export function handleEntitiesChanges (hamster, payload) {
     const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');
 
     const objectIds = miaow.toList(ids);
-    return hamster.update('objects', objects => {
-        return objectIds.reduce((objects, id) => {
-            return operations.reduce((objects, operate, path) => {
+    return hamster.update('entities', entities => {
+        return objectIds.reduce((entities, id) => {
+            return operations.reduce((entities, operate, path) => {
                 const objectPath = [id].concat(path.split('.'))
-                return objects.updateIn(objectPath, prop => operate(prop))
-            }, objects)
-        }, objects);
+                return entities.updateIn(objectPath, prop => operate(prop))
+            }, entities)
+        }, entities);
     }) 
 }

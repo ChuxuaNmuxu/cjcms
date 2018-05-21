@@ -5,9 +5,9 @@ export default {
     title: '测试4', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '这是测试自定义事件自定义模板', // 描述
-    onClick: function (block, BlockUtils) {
+    onClick: function (block, hamster) {
         console.log(62, '自定义点击事件', block.toJS())
-        BlockUtils.addBlock(block);
+        hamster.addBlock(block);
     },
     propsbar: null, // 自定义属性栏
     props: { // 属性

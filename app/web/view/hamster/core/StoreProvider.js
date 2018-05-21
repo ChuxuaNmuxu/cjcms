@@ -7,7 +7,7 @@ import initialState from '../reducers/initialState'
 
 const stateKeys = Object.keys(initialState);
 
-const createProvider = Component => {
+const StoreProvider = Component => {
     return class extends React.Component {
         render () {
             const store = createStore(pick(this.props, stateKeys))
@@ -20,4 +20,4 @@ const createProvider = Component => {
     }
 }
 
-export default createProvider;
+export default StoreProvider;

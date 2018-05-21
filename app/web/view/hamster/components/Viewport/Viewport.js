@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
-import {connect} from 'react-redux';
 
 import styles from './Viewport.scss';
 import Block from './Block';
 import CustomDragLayer from './CustomDragLayer';
 
-export class Component extends React.Component {
+export class Viewport extends React.Component {
     render () {
-        const {blockIds, currentBlocks, objects} = this.props;
+        const {blockIds, currentBlocks, entities} = this.props;
         return (
             <div className='viewport' styleName='viewport'>
                 <div className='reveal'>
@@ -20,7 +19,7 @@ export class Component extends React.Component {
                                 blockIds.map(id =>
                                     <Block
                                       key={id}
-                                      block={objects.get(id)}
+                                      block={entities.get(id)}
                                       active={currentBlocks.includes(id)}
                                     />
                                 )
@@ -33,16 +32,10 @@ export class Component extends React.Component {
     }
 }
 
-Component.propTypes = {
-    blocks: PropTypes.any,
+Viewport.propTypes = {
+    blockIds: PropTypes.any,
+    entities: PropTypes.any,
     currentBlocks: PropTypes.any
 }
 
-const mapStateToProps = ({hamster}) => {
-    return {
-        currentBlocks: hamster.getIn(['current', 'blocks']),
-        objects: hamster.get('objects')
-    }
-}
-
-export default connect(mapStateToProps)(CSSModules(Component, styles));
+export default CSSModules(Viewport, styles);

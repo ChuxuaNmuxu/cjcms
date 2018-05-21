@@ -3,8 +3,8 @@ export default {
     title: '测试3', // 标题
     icon: 'iconfont icon-wenben', // 图标
     description: '这是测试自定义事件默认模板', // 描述
-    onClick: function (block, BlockUtils) {
-        BlockUtils.addBlock(block);
+    onClick: function (block, hamster) {
+        hamster.addBlock(block);
     },
     toolbar: null, // 自定义工具栏
     propsbar: null, // 自定义属性栏
