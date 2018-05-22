@@ -43,7 +43,7 @@ const block = {
     props, // 属性，支持简单编排和自定义组件
     data: {
         children: [],
-        parents: []
+        parent: null
     }
 }
 

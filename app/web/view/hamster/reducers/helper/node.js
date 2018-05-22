@@ -4,7 +4,7 @@ import * as miaow from '../../Utils/miaow';
 import * as entityHelper from './entity';
 
 /**
- * 节点存在
+ * 节点数组存在
  * @param {Array} ids 
  */
 function nodesExist (ids) {
@@ -16,7 +16,7 @@ function nodesExist (ids) {
  * @param {*} hamster 
  * @param {*} id 
  */
-export function getChildrendIds (hamster, id) {
+export function getChildrenIds (hamster, id) {
     const entity = entityHelper.getEntity(hamster, id); 
     return entity && entity.getIn(['data', 'children']);
 }
@@ -32,12 +32,12 @@ export function getParentId (hamster, id) {
 }
 
 /**
- * 获取元素的祖先节点id 
+ * 获取元素的祖先节点id
  * @param {*} hamster 
  * @param {*} id 
  */
 // 无祖先返回当前节点
-const getAncestorOrCurrentId = (hamster, id) => {
+export const getAncestorOrCurrentId = (hamster, id) => {
     const parentId = getParentId(hamster, id);
     if (!parentId) return id;
     return getAncestorOrCurrentId(hamster, parentId)
@@ -64,7 +64,7 @@ export function getLeafIds (hamster, id, seen) {
     const head = ids.first();
     const rest = ids.delete(0);
 
-    const children = getChildrendIds(hamster, head);
+    const children = getChildrenIds(hamster, head);
 
     // 满足条件，seen累加id(head)，消耗ids的size
     if (!nodesExist(children)) return getLeafIds(hamster, rest, miaow.cat(seen, head));
@@ -80,4 +80,22 @@ export function getLeafIds (hamster, id, seen) {
 export function getAllLeafIds (hamster, id) {
     const ancestorId = getAncestorId(hamster, id);
     return getLeafIds(hamster, ancestorId)
+}
+
+/**
+ * 是否是一个嵌套结构
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function isInTree (hamster, id) {
+    return getChildrenIds(hamster, id).size > 0 || getParentId(hamster, id);
+}
+
+/**
+ * 是否是叶子节点
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function isLeaf (hamster, id) {
+    return isInTree(hamster, id) && getChildrenIds(hamster, id).size === 0
 }

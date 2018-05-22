@@ -3,7 +3,7 @@ import uuid from 'uuid';
 
 import HamsterManager from './HamsterManager';
 import blockActions from '../actions/block';
-import {getActivedBlockIds} from '../reducers/helper/current'
+import {getActivatedBlockIds} from '../reducers/helper/current'
 
 /**
  * 递归提取block属性
@@ -59,8 +59,8 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.activate({blockIds}))
     }
 
-    getActivedBlockIds () {
-        return getActivedBlockIds(this.getState('hamster'))
+    getActivatedBlockIds () {
+        return getActivatedBlockIds(this.getState('hamster'))
     }
 }
 

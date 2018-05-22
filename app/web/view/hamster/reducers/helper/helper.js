@@ -13,7 +13,7 @@ export function createId (prefix='', suffix='') {
 }
 
 // 激活元素
-export function handleActivateBlock (hamster, blockIds) {
+export function handleActivateBlocks (hamster, blockIds) {
     hamster = hamster.updateIn(['current', 'blocks'], miaow.add(blockIds))
     return hamster;
 }

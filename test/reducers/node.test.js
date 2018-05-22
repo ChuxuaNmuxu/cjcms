@@ -55,7 +55,7 @@ const hamster = Immutable.fromJS({
   })
 
 test('test getChildrendIds', () => {
-    expect(nodeHelper.getChildrendIds(hamster, '1')).toEqual(Immutable.List(['2', '3']))
+    expect(nodeHelper.getChildrenIds(hamster, '1')).toEqual(Immutable.List(['2', '3']))
 })
 
 test('test getParentIds', () => {

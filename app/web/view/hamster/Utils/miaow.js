@@ -66,6 +66,11 @@ export function minus (minuend) {
     }, value)
 }
 
+//
+export function replaceAs (value) {
+    return () => value
+}
+
 /**
  * 列表化
  * @param {*} value 
@@ -206,4 +211,24 @@ export function copyProperties(target, source) {
  */
 export function cat (...args) {
     return lodash.reduce(args, (accu, arg) => accu.concat(arg), Immutable.List())
+}
+
+/**
+ * 取交集
+ * @param {*} args 
+ */
+export function getIntersection (...args) {
+    const [head, ...rest1] = args;
+
+    if (rest1.length === 0) return Immutable.List();
+
+    const [second, ...rest2] = rest1;
+
+    // 两个数组取交集
+    const intersection = head.reduce((accu, v) => {
+        if (second.includes(v) && !accu.includes(v)) return accu.push(v)
+        return accu;
+    }, Immutable.List())
+
+    return getIntersection(intersection, ...rest2);
 }

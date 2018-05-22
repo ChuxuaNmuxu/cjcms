@@ -109,3 +109,7 @@ test('test and', () => {
 test('test cat', () => {
     expect(miaow.cat(1, Immutable.List([3, 4]), 2, Immutable.List([2, 3]))).toEqual(Immutable.List([1, 3, 4, 2, 2, 3]))
 })
+
+test('test getIntersection', () => {
+    expect(miaow.getIntersection(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]), Immutable.List([1, 2, 8]))).toEqual(Immutable.List([1, 2]))
+})

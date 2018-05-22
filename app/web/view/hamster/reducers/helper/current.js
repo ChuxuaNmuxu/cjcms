@@ -1,3 +1,3 @@
-export const getActivedBlockIds = (hamster) => {
+export const getActivatedBlockIds = (hamster) => {
     return hamster.getIn(['current', 'blocks'])
 }
