@@ -3,7 +3,7 @@ import uuid from 'uuid';
 
 import {HAMSTER} from '../../../actions/actionTypes'
 import blockActions from '../actions/block'
-import * as miaow from '../utils/miaow'
+import * as miaow from '../Utils/miaow'
 import {createEntity} from './entity'
 
 /**

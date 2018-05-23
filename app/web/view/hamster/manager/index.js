@@ -47,8 +47,8 @@ class Hamster extends StoreManager {
         this.blockManager.addBlock(block)
     }
 
-    getActivedBlockIds () {
-        return this.blockManager.getActivedBlockIds()
+    getActivatedBlockIds () {
+        return this.blockManager.getActivatedBlockIds()
     }
 
     getSubscriber () {
