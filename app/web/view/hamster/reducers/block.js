@@ -1,9 +1,10 @@
-import {fromJS, List} from 'immutable'
+import Immutable from 'immutable';
 
 import initialState from './initialState';
-import Shortcut from './helper/Shortcut'
 import * as helper from './helper/helper';
-import * as miaow from '../utils/miaow';
+import * as miaow from '../Utils/miaow';
+import * as nodeHelper from './helper/node';
+import * as currentHelper from './helper/current'
 
 function handleAddBlock (hamster, action) {
     console.log(5, action)
@@ -42,7 +43,7 @@ function handleActivateBlock (hamster, action) {
 }
 
 const merger = (a, b) => {
-    if (a && a.mergeWith && !List.isList(a) && !List.isList(b)) {
+    if (a && a.mergeWith && !Immutable.List.isList(a) && !Immutable.List.isList(b)) {
         return a.mergeWith(merger, b)
     }
     return b
@@ -67,9 +68,6 @@ function handleChangeProps (hamster, action) {
 function handleEntitiesChanges (hamster, action) {
     const {payload} = action;
 
-    console.log('payload: ', payload)
-    console.log('hamster: ', hamster.toJS())
-
     const {blockIds, operations} = payload;
 
     if (!blockIds) return hamster;
@@ -88,43 +86,86 @@ function handleEntitiesChanges (hamster, action) {
 function handleClickBlock (hamster, action) {
     // 激活元素
     const {payload: {event={}, blockId}} = action;
-    const activeIds = Shortcut.getActivatedBlockIds(hamster);
+    /**
+     * 处理嵌套
+     * @description 嵌套元素是个虚拟的元素，在被激活之后，对节点的操作将没有影响，
+     * 在未激活状态时，优先激活祖先元素；节点元素激活，祖先元素必然处于激活状态
+     * 1. 非叶子节点元素，不做处理
+     * 2. 祖先节点未激活，激活祖先元素
+     * 3. 节点元素激活，祖先元素必然处于激活状态
+     * 4. ctrl点击，只有自己和祖先节点处于激活状态时，不取消激活
+    */
+    const activeIds = currentHelper.getActivatedBlockIds(hamster);
 
+    /**
+     * 具体实现
+     * 1. 判断出待激活的节点
+     * 2. activeIds中去除ancestorid,在不考虑ancestor的情况下处理，在结束时再补充
+     * 3. 按普通激活逻辑处理
+    */
+    let toAcitivateId = blockId;
+    let realActiveIds = Immutable.List();
+
+    if (nodeHelper.isInTree(hamster, blockId)) {
+        if (!nodeHelper.isLeaf(hamster, blockId)) return hamster;
+
+        const ancestorId = nodeHelper.getAncestorId(hamster, blockId);
+        if (!activeIds.includes(ancestorId)) toAcitivateId = ancestorId;
+
+        realActiveIds = activeIds.filter(id => id !== ancestorId);
+    }
+
+    // 激活节点
+    // TODO: 优化为不直接return，而是给hamster赋值
     if (event.ctrlKey) {
-        if (activeIds.includes(blockId)) {
-            if (activeIds.size === 1) return hamster;
-            return helper.handleCancelActivateBlocks(hamster, blockId)
+        if (realActiveIds.includes(toAcitivateId)) {
+            if (realActiveIds.size === 1) return hamster;
+            return helper.handleCancelActivateBlocks(hamster, toAcitivateId)
         }
-        return helper.handleActivateBlock(hamster, blockId)
+        return helper.handleActivateBlocks(hamster, toAcitivateId);
     };
-    return helper.handleReactivateBlocks(hamster, blockId);
+    hamster = helper.handleReactivateBlocks(hamster, toAcitivateId);
+
+    // 保证ancestorId被激活
+    const ancestor = nodeHelper.getAncestorId(hamster, toAcitivateId);
+    if (ancestor) return helper.handleActivateBlocks(hamster, ancestor);
+
+    return hamster; 
 }
 
 /**
  * 组合元素
- * @param {*} blockIds 
  */
 function handleUnite (hamster, actions) {
-    const blockIds = Shortcut.getActivatedBlockIds(hamster);
-    // TODO: 处理嵌套的情况
+    const activeblockIds = currentHelper.getActivatedBlockIds(hamster);
+    /**
+     * 处理嵌套的情况
+     * 1. 嵌套取祖先元素
+    */
+    // 孤立节点与祖先节点
+    const ancestorIdsInCurrent = currentHelper.getAncestorInCurrent(hamster);
+    // TODO: 有必要的话可以抽取出来
+    const orphanIdsInCurrent = activeblockIds.filter(id => nodeHelper.isOrphan(hamster, id));
 
-    // 生成defaultObject
+    const childrenIds = miaow.cat(ancestorIdsInCurrent, orphanIdsInCurrent);
+
+    // 生成defaultGroupObject
     const objectId = helper.createId('block-');
     hamster = helper.createDefaultBlockObjects(hamster, objectId);
 
     // 修改children属性
-    hamster = helper.handleEntitiesChanges(hamster, fromJS({
+    hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: objectId,
-        operations: {'data.children': miaow.add(blockIds)}
+        operations: {'data.children': miaow.replaceAs(childrenIds)}
     }))
 
     // 加入indexs
-    hamster = hamster.updateIn(['index', 'blocks'], blocks => blocks.concat(objectId));
+    hamster = hamster.updateIn(['index', 'blocks'], miaow.add(objectId));
 
-    // 修改blocks的parents属性
-    hamster = helper.handleEntitiesChanges(hamster, fromJS({
-        ids: objectId,
-        operations: {'data.parents': miaow.add(objectId)}
+    // 修改blocks的parent属性
+    hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: childrenIds,
+        operations: {'data.parent': miaow.replaceAs(objectId)}
     }))
 
     // 重激活组合元素
@@ -136,7 +177,7 @@ function handleUnite (hamster, actions) {
 // reducer生成函数，减少样板代码
 const createReducer = (initialState, handlers) => {
     return (state, action) => {
-        state = state ? (state.toJS ? state : fromJS(state)) : fromJS(initialState)
+        state = state ? (state.toJS ? state : Immutable.fromJS(state)) : Immutable.fromJS(initialState)
         if (handlers.hasOwnProperty(action.type)) {
             state = handlers[action.type](state, action);
         }
@@ -152,7 +193,7 @@ const block = {
     [blockType('PROPS_CHANGE')]: handleChangeProps,
     [blockType('ENTITIES_CHANGE')]: handleEntitiesChanges,
     [blockType('CLICK')]: handleClickBlock,
-    [blockType('UNITE')]: handleUnite,
+    [blockType('GROUP_UNITE')]: handleUnite,
 }
 
 export default createReducer(initialState.hamster, block);

@@ -1,5 +1,6 @@
 import * as miaow from '../../app/web/view/hamster/Utils/miaow';
 import Immutable from 'immutable';
+import _ from 'lodash';
 
 test('test matching', () => {
     // 模拟函数返回
@@ -106,3 +107,21 @@ test('test and', () => {
     expect(miaow.and(func, false, func)()).toBe(true)
 })
 
+test('test cat', () => {
+    expect(miaow.cat(1, Immutable.List([3, 4]), 2, Immutable.List([2, 3]))).toEqual(Immutable.List([1, 3, 4, 2, 2, 3]))
+})
+
+test('test getIntersection', () => {
+    expect(miaow.getIntersection(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]), Immutable.List([1, 2, 8]))).toEqual(Immutable.List([1, 2]))
+})
+
+test('test getComplement', () => {
+    // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
+    expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2]))).toEqual(Immutable.List([3]))
+})
+
+test('test getDefference', () => {
+    // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
+    expect(miaow.getDefference(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2]))).toEqual(Immutable.List([3]))
+    expect(miaow.getDefference(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toEqual(Immutable.List([3]))
+})

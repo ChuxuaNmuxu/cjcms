@@ -14,7 +14,7 @@ import configManager from '../../manager/ConfigManager';
 import blockPraser from '../block/decorator/blockParse';
 import {DragSource} from '../block/decorator/operation/drag';
 import Container from '../block/container';
-import {dispatchMission, isValidateReactComponent} from '../../utils/miaow';
+import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable, { fromJS } from 'immutable';
 import {withHamster} from '../../hamster';
 

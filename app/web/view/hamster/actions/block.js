@@ -11,7 +11,7 @@ const actionCreaters = createActions({
         'PROPS_CHANGE': pmCreater,
         'ENTITIES_CHANGE': pmCreater,
         'CLICK': pmCreater,
-        'UNITE': pmCreater
+        'GROUP_UNITE': pmCreater
     }
 })
 
