@@ -18,10 +18,10 @@ function handleAddBlock (hamster, action) {
         );
         // 添加object
         hamster.update(
-            'objects',
-            objects => blocks.reduce(
-                (acc, block) => objects.set(block.get('id'), block),
-                objects
+            'entities',
+            entities => blocks.reduce(
+                (acc, block) => entities.set(block.get('id'), block),
+                entities
             )
         );
         // 修改current
@@ -53,10 +53,10 @@ function handleChangeProps (hamster, action) {
     const {payload} = action;
     // 修改props
     return hamster.update(
-        'objects',
-        objects => objects.withMutations(objects => {
+        'entities',
+        entities => entities.withMutations(entities => {
             payload.blocks.forEach(block => {
-                objects.updateIn(
+                entities.updateIn(
                     [block.get('id'), 'data', 'props'],
                     props => props.mergeWith(merger, payload.props)
                 )
@@ -72,13 +72,13 @@ function handleEntitiesChanges (hamster, action) {
 
     if (!blockIds) return hamster;
 
-    return hamster.update('objects', objects => {
-        return blockIds.reduce((objects, id) => {
-            return operations.reduce((objects, operate, path) => {
+    return hamster.update('entities', entities => {
+        return blockIds.reduce((entities, id) => {
+            return operations.reduce((entities, operate, path) => {
                 const objectPath = [id].concat(path.split('.'))
-                return objects.updateIn(objectPath, prop => operate(prop))
-            }, objects)
-        }, objects);
+                return entities.updateIn(objectPath, prop => operate(prop))
+            }, entities)
+        }, entities);
     })
 }
 
@@ -149,7 +149,7 @@ function handleUnite (hamster, actions) {
 
     const childrenIds = miaow.cat(ancestorIdsInCurrent, orphanIdsInCurrent);
 
-    // 生成defaultObject
+    // 生成defaultGroupObject
     const objectId = helper.createId('block-');
     hamster = helper.createDefaultBlockObjects(hamster, objectId);
 

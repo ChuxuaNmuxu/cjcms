@@ -16,7 +16,7 @@ class EditorPage extends Component {
 }
 
 EditorPage.propTypes = {
-    hamster: PropTypes.any.isRequired
+    hamster: PropTypes.any
 };
 
 const mapStateToProps = (state, ownProps) => {

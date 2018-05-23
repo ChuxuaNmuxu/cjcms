@@ -2,10 +2,11 @@ import lodash from 'lodash';
 import uuid from 'uuid';
 
 import * as miaow from '../../Utils/miaow';
-import BlockUtils from '../../Utils/BlockUtils';
-import {defaultBlockConfig} from '../../config/config';
+// import BlockUtils from '../../Utils/BlockUtils';
+// import {defaultBlockConfig} from '../../config/config';
 import ConfigManager from '../../manager/ConfigManager';
 import * as entityHelper from './entity';
+import {extractBlockData} from '../../utils/block';
 
 // 生成ID
 export function createId (prefix='', suffix='') {
@@ -37,16 +38,16 @@ export function handleReactivateBlocks (hamster, blockIds) {
 //     return hamster;
 // }
 
-// 生成新的blockObject
+// 生成新的blockGroupObject
 export function createDefaultBlockObjects (hamster, id) {
     const groupConfig = ConfigManager.getBlock('group');
     // 默认group数据，并修改ID
-    const defaultBlockData = BlockUtils.extractBlockData(groupConfig).set('id', id);
-    return hamster.update('objects', objects => objects.set(id, defaultBlockData));
+    const defaultBlockData = extractBlockData(groupConfig).set('id', id);
+    return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
 
 /**
- * objects数据增删改
+ * entities数据增删改
  * @param {*} hamster 
  * @param {*} payload
  */
@@ -54,12 +55,12 @@ export function handleEntitiesChanges (hamster, payload) {
     const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');
 
     const objectIds = miaow.toList(ids);
-    return hamster.update('objects', objects => {
-        return objectIds.reduce((objects, id) => {
-            return operations.reduce((objects, operate, path) => {
+    return hamster.update('entities', entities => {
+        return objectIds.reduce((entities, id) => {
+            return operations.reduce((entities, operate, path) => {
                 const objectPath = [id].concat(path.split('.'))
-                return objects.updateIn(objectPath, prop => operate(prop))
-            }, objects)
-        }, objects);
+                return entities.updateIn(objectPath, prop => operate(prop))
+            }, entities)
+        }, entities);
     }) 
 }

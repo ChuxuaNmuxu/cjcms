@@ -9,7 +9,7 @@ export const getActivatedBlockIds = (hamster) => {
 // 获取激活元素中的祖先元素
 export const getAncestorInCurrent = (hamster) => {
     const activatedIds = getActivatedBlockIds(hamster);
-    const ancestorIds = activatedIds.map(lodash.curry(nodeHelper.getAncestorId)(hamster));
+    const ancestorIds = activatedIds.map(lodash.curry(nodeHelper.getAncestorIdSecurely)(hamster));
 
     return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
 }

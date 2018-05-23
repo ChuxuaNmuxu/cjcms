@@ -1,12 +1,12 @@
 import React from 'react';
 
-import BlockUtils from '../Utils/BlockUtils';
 import configManager from './ConfigManager';
 import EntityManager from './EntityManager'
 import SourceManager from './SourceManager'
 import StoreManager from './StoreManager'
 import BlockManager from './BlockManager'
 import Subscriber from './Subscriber';
+import hamster from '.';
 
 export const HamsterContext = React.createContext();
 
@@ -38,7 +38,6 @@ class Hamster extends StoreManager {
         this.sourceManager = new SourceManager(this);
         this.blockManager = new BlockManager(this);
         this.subscriber = new Subscriber(store);
-        BlockUtils.dispatch = this.dispatch;
     }
 
     /**

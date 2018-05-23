@@ -6,5 +6,5 @@ import {fromJS} from 'immutable';
  * @param {*} id 
  */
 export function getEntity (hamster, id) {
-    return hamster.getIn(['objects', id]);
+    return hamster.getIn(['entities', id]);
 }

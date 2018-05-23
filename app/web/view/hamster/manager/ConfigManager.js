@@ -27,7 +27,11 @@ class ConfigManager {
     }
 
     getBlock (name) {
-        return this.blocks.find(block => block.get('name') === name)
+        const block = this.blocks.find(block => block.get('name') === name)
+        if (!block) {
+            throw new Error('找不到该类型的block');
+        }
+        return block;
     }
 
     /**
@@ -78,7 +82,7 @@ class ConfigManager {
                 layout: customLayout
             }))
         } else {
-            layout = this.getBlock(blocks.getIn([0, 'data', 'type'])).get('propsbar');
+            layout = this.getBlock(blocks.getIn([0, 'data', 'type'])).get('propsbar'); 
         }
         return {
             props,
