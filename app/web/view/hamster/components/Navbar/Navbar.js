@@ -11,7 +11,7 @@ import { withHamster } from '../../manager';
 class Navbar extends Component {
     handleUnite = () => {
         const {hamster} = this.props;
-        hamster.blockManager.unite()
+        hamster.blockManager.groupUnite()
     }
 
     render() {

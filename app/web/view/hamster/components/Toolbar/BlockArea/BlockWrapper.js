@@ -21,7 +21,7 @@ const BlockWrapper = (props) => {
                   title={block.get('description')}
                   onClick={() => handleClick(block, hamster)}>
                     {
-                        Toolbar ? <Toolbar {...{block, hamster}} /> : <BlockItem block={block} />
+                        Toolbar === 'default' ? <BlockItem block={block} /> : <Toolbar {...{block, hamster}} />
                     }
                 </div>
             )}

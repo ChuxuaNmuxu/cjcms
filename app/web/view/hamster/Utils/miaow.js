@@ -66,6 +66,11 @@ export function minus (minuend) {
     }, value)
 }
 
+//
+export function replaceAs (value) {
+    return () => value
+}
+
 /**
  * 列表化
  * @param {*} value 
@@ -80,7 +85,7 @@ export function toList (value) {
  * @param {*} args 
  */
 export function destruction (data, ...args) {
-    return args.map(path => data.get(path))
+    return args.map(path => data.get && data.get(path))
 }
 
 /**
@@ -196,4 +201,70 @@ export function copyProperties(target, source) {
             Object.defineProperty(target, key, desc);
         }
     }
+}
+
+/******* immutable *********/
+
+/**
+ * 数组连接
+ * @param {*} args 
+ */
+export function cat (...args) {
+    return lodash.reduce(args, (accu, arg) => accu.concat(arg), Immutable.List())
+}
+
+/**
+ * 数组取交集
+ * @param {*} args 
+ */
+export function getIntersection (...args) {
+    const [head, ...rest1] = args;
+
+    if (rest1.length === 0) return head;
+
+    const [second, ...rest2] = rest1;
+
+    // 两个数组取交集
+    const intersection = head.reduce((accu, v) => {
+        if (second.includes(v) && !accu.includes(v)) return accu.push(v)
+        return accu;
+    }, Immutable.List())
+
+    return getIntersection(intersection, ...rest2);
+}
+
+/**
+ * 数组取补集
+ * @description b为a的子集
+*/
+export function getComplement (a, b) {
+    if (!b.isSubset(a)) throw new Error('to be relationship of subset');
+
+    return a.reduce((accu, v) => {
+        if (b.includes(v)) return accu;
+        return accu.push(v)
+    }, Immutable.List())
+}
+
+/**
+ * 取差异的部分
+ * @description a不包含b的部分
+*/
+export function getDefference (a, b) {
+    const intersection = getIntersection(a, b);
+    return getComplement(a, intersection);
+}
+
+/**
+ * 去重
+ */
+export function uniq (a) {
+    return a.toSet().toList()
+}
+
+/**
+ * 去null和undefined
+ */
+export function effect (a) {
+    return a.filter(v => existy(v))
 }

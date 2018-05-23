@@ -38,12 +38,18 @@ const block = {
             */
         component: null
     }, // 组件，必需
-    toolbar: null, // 自定义工具栏
+    /**
+     * @config 自定义工具栏
+     * {*} null 不显示属性栏
+     * {node} Component 自定义组件
+     * {string} default 使用默认属性栏
+     * */
+    toolbar: 'default',
     propsbar, // 自定义属性栏
     props, // 属性，支持简单编排和自定义组件
     data: {
         children: [],
-        parents: []
+        parent: null
     }
 }
 

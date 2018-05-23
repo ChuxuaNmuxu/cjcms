@@ -1,9 +1,12 @@
 import lodash from 'lodash';
 import uuid from 'uuid';
 
-import * as miaow from '../../utils/miaow';
+import * as miaow from '../../Utils/miaow';
+// import BlockUtils from '../../Utils/BlockUtils';
+// import {defaultBlockConfig} from '../../config/config';
+import ConfigManager from '../../manager/ConfigManager';
+import * as entityHelper from './entity';
 import {extractBlockData} from '../../utils/block';
-import {defaultBlockConfig} from '../../config/config'
 
 // 生成ID
 export function createId (prefix='', suffix='') {
@@ -11,7 +14,7 @@ export function createId (prefix='', suffix='') {
 }
 
 // 激活元素
-export function handleActivateBlock (hamster, blockIds) {
+export function handleActivateBlocks (hamster, blockIds) {
     hamster = hamster.updateIn(['current', 'blocks'], miaow.add(blockIds))
     return hamster;
 }
@@ -35,18 +38,18 @@ export function handleReactivateBlocks (hamster, blockIds) {
 //     return hamster;
 // }
 
-// 生成新的blockObject
+// 生成新的blockGroupObject
 export function createDefaultBlockObjects (hamster, id) {
-    console.log('defaultBlockConfig: ', defaultBlockConfig.toJS())
-    const defaultBlockData = extractBlockData(defaultBlockConfig);
-    console.log('defaultBlockData: ', defaultBlockData.toJS())
+    const groupConfig = ConfigManager.getBlock('group');
+    // 默认group数据，并修改ID
+    const defaultBlockData = extractBlockData(groupConfig).set('id', id);
     return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
 
 /**
  * entities数据增删改
  * @param {*} hamster 
- * @param {*} payload 
+ * @param {*} payload
  */
 export function handleEntitiesChanges (hamster, payload) {
     const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');

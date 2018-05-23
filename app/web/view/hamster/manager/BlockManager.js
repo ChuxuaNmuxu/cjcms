@@ -3,9 +3,9 @@ import uuid from 'uuid';
 
 import HamsterManager from './HamsterManager';
 import blockActions from '../actions/block';
-import {getActivedBlockIds} from '../reducers/helper/current'
+import {getActivatedBlockIds} from '../reducers/helper/current'
 import {extractBlockData} from '../utils/block'
-import * as miaow from '../utils/miaow'
+import * as miaow from '../Utils/miaow'
 
 class BlockManager extends HamsterManager {
     /**
@@ -37,8 +37,28 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.click(payload))
     }
 
-    getActivedBlockIds () {
-        return getActivedBlockIds(this.getState('hamster'))
+    getActivatedBlockIds () {
+        return getActivatedBlockIds(this.getState('hamster'))
+    }
+
+    /**
+     * 移动blocks
+     * @param {Array} blockIds 
+     * @param {object} offset
+     */
+    moveBlocks (blockIds, offset={}) {
+        this.dispatch(blockActions.entitiesChange({
+            blockIds,
+            operations: fromJS({
+                'data.props.top': miaow.add(offset.get('top')),
+                'data.props.left': miaow.add(offset.get('left'))
+            })
+        }))
+    }
+
+    // 组合元素
+    groupUnite () {
+        this.dispatch(blockActions.groupUnite())
     }
 
     /**
