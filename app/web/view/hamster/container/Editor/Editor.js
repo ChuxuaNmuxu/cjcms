@@ -38,7 +38,7 @@ class Editor extends React.Component {
                         <Toolbar />
                     </header>
                     <main>
-                        {/* <Propsbar /> */}
+                        <Propsbar />
                         <Navbar />
                         <Viewport blockIds={blockIds} />
                         <Button />
