@@ -45,11 +45,11 @@ class Editor extends React.Component {
 }
 
 Editor.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func
 }
 
 const mapStateToProps = ({hamster}) => ({
-
+    
 });
 
 export default StoreProvider(connect(mapStateToProps)(CSSModules(Editor, styles)));

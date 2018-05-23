@@ -2,7 +2,8 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {fromJS} from 'immutable';
+import Immutable, {fromJS} from 'immutable';
+import installDevTools from 'immutable-devtools';
 import createSagaMiddleware from 'redux-saga'
 
 import rootReducer from '../reducers';
