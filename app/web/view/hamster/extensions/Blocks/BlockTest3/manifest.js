@@ -6,7 +6,7 @@ export default {
     onClick: function (block, BlockUtils) {
         BlockUtils.addBlock(block);
     },
-    toolbar: null, // 自定义工具栏
+    toolbar: 'default', // 自定义工具栏
     propsbar: null, // 自定义属性栏
     props: { // 属性
         // propA: { // 属性项

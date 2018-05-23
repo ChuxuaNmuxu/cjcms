@@ -5,7 +5,7 @@ export default {
     title: '演示', // 标题
     icon: 'iconfont icon-shoucang', // 图标
     description: '这是演示元素', // 描述
-    toolbar: null, // 自定义工具栏
+    toolbar: 'default', // 自定义工具栏
     propsbar: null, // 自定义属性栏
     content: Demo, // 自定义组件
     props: { // 属性

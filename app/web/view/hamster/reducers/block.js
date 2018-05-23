@@ -144,6 +144,7 @@ function handleUnite (hamster, actions) {
     */
     // 孤立节点与祖先节点
     const ancestorIdsInCurrent = currentHelper.getAncestorInCurrent(hamster);
+    // TODO: 有必要的话可以抽取出来
     const orphanIdsInCurrent = activeblockIds.filter(id => nodeHelper.isOrphan(hamster, id));
 
     const childrenIds = miaow.cat(ancestorIdsInCurrent, orphanIdsInCurrent);

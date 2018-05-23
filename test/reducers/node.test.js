@@ -88,7 +88,7 @@ test('test getLeafIds', () => {
     expect(nodeHelper.getLeafIds(hamster, '6')).toEqual(Immutable.List())
 })
 
-test.only('test getAllLeafIds', () => {
+test('test getAllLeafIds', () => {
     expect(nodeHelper.getAllLeafIds(hamster, '6')).toEqual(Immutable.List(['4', '5', '6']))
     expect(nodeHelper.getAllLeafIds(hamster, '8')).toEqual(Immutable.List([]))
     // expect(nodeHelper.getAllLeafIds(hamster, '7')).toEqual(Immutable.List())

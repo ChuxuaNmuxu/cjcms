@@ -15,7 +15,11 @@ const more = ['test', 'test2', 'test3', 'test4', 'test5']
  * Toolbar blocks区域
  */
 export const BlockArea = (props) => {
-    const blocks = configManager.blocks.groupBy(
+    // 过滤不显示的toolbar
+    const blocksConfig =  configManager.blocks.filter(block => !!block.get('toolbar'));
+    console.log('blocksConfig: ', blocksConfig.toJS())
+
+    const blocks = blocksConfig.groupBy(
         block => Number(more.indexOf(block.get('name')) > -1)
     );
     return (
