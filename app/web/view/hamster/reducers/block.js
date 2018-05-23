@@ -1,4 +1,4 @@
-import Immutable from 'immutable'
+import Immutable from 'immutable';
 
 import initialState from './initialState';
 import * as helper from './helper/helper';
@@ -68,9 +68,6 @@ function handleChangeProps (hamster, action) {
 function handleEntitiesChanges (hamster, action) {
     const {payload} = action;
 
-    console.log('payload: ', payload)
-    console.log('hamster: ', hamster.toJS())
-
     const {blockIds, operations} = payload;
 
     if (!blockIds) return hamster;
@@ -119,6 +116,7 @@ function handleClickBlock (hamster, action) {
     }
 
     // 激活节点
+    // TODO: 优化为不直接return，而是给hamster赋值
     if (event.ctrlKey) {
         if (realActiveIds.includes(toAcitivateId)) {
             if (realActiveIds.size === 1) return hamster;
@@ -140,7 +138,15 @@ function handleClickBlock (hamster, action) {
  */
 function handleUnite (hamster, actions) {
     const activeblockIds = currentHelper.getActivatedBlockIds(hamster);
-    // TODO: 处理嵌套的情况
+    /**
+     * 处理嵌套的情况
+     * 1. 嵌套取祖先元素
+    */
+    // 孤立节点与祖先节点
+    const ancestorIdsInCurrent = currentHelper.getAncestorInCurrent(hamster);
+    const orphanIdsInCurrent = activeblockIds.filter(id => nodeHelper.isOrphan(hamster, id));
+
+    const childrenIds = miaow.cat(ancestorIdsInCurrent, orphanIdsInCurrent);
 
     // 生成defaultObject
     const objectId = helper.createId('block-');
@@ -149,7 +155,7 @@ function handleUnite (hamster, actions) {
     // 修改children属性
     hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: objectId,
-        operations: {'data.children': miaow.replaceAs(activeblockIds)}
+        operations: {'data.children': miaow.replaceAs(childrenIds)}
     }))
 
     // 加入indexs
@@ -157,7 +163,7 @@ function handleUnite (hamster, actions) {
 
     // 修改blocks的parent属性
     hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
-        ids: activeblockIds,
+        ids: childrenIds,
         operations: {'data.parent': miaow.replaceAs(objectId)}
     }))
 

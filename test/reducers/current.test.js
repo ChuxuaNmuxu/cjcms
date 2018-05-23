@@ -1,14 +1,26 @@
-import * as nodeHelper from '../../app/web/view/hamster/reducers/helper/node';
+import * as currentHelper from '../../app/web/view/hamster/reducers/helper/current';
 import Immutable from 'immutable';
 
 const hamster = Immutable.fromJS({
+    "current": {
+        "blocks": [
+            "1",
+            "4",
+            "7",
+            "8",
+            "9",
+        ]
+        // "blocks": [
+        //     "7",
+        // ]
+    },
     "objects": {
       "1": {
         "id": "1",
         "type": "block",
         "data": {
             "children": ['2', '3'],
-            "parent": null,
+            "parent": '',
         }
       },
       "2": {
@@ -56,40 +68,34 @@ const hamster = Immutable.fromJS({
         "type": "block",
         "data": {
           "children": [],
-          "parent": '3',
+          "parent": null,
         }
       },
       "8": {
         "id": "8",
         "type": "block",
         "data": {
-          "children": [],
+          "children": ['9'],
           "parent": null,
         }
-      }
+      },
+      "9": {
+        "id": "9",
+        "type": "block",
+        "data": {
+          "children": [],
+          "parent": '8',
+        }
+      },
     }
   })
 
 test('test getChildrendIds', () => {
-    expect(nodeHelper.getChildrenIds(hamster, '1')).toEqual(Immutable.List(['2', '3']))
+    expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List(['1', '8']))
+    // expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List([]))
 })
 
-test('test getParentIds', () => {
-    expect(nodeHelper.getParentId(hamster, '2')).toEqual('1')
-})
-
-test('test getAncestorId', () => {
-    expect(nodeHelper.getAncestorId(hamster, '6')).toEqual('1')
-    expect(nodeHelper.getAncestorId(hamster, '1')).toBe(undefined)
-})
-
-test('test getLeafIds', () => {
-    expect(nodeHelper.getLeafIds(hamster, '1')).toEqual(Immutable.List(['4', '5', '6']))
-    expect(nodeHelper.getLeafIds(hamster, '6')).toEqual(Immutable.List())
-})
-
-test.only('test getAllLeafIds', () => {
-    expect(nodeHelper.getAllLeafIds(hamster, '6')).toEqual(Immutable.List(['4', '5', '6']))
-    expect(nodeHelper.getAllLeafIds(hamster, '8')).toEqual(Immutable.List([]))
-    // expect(nodeHelper.getAllLeafIds(hamster, '7')).toEqual(Immutable.List())
+test('test removeAncestorInCurrent', () => {
+    expect(currentHelper.removeAncestorInCurrent(hamster)).toEqual(Immutable.List(['4', '7', '9']))
+    // expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List([]))
 })

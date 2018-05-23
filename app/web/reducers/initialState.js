@@ -8,6 +8,10 @@ export default {
                 "id": "block-d33a0f09-7a64-4fe4-8bbb-6a48349c92b6",
                 "type": "block",
                 "data": {
+                    "children": [
+          
+                    ],
+                    "parent": null,
                     "type": "text",
                     "props": {
                         "animation": {

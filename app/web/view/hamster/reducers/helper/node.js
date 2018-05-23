@@ -37,14 +37,14 @@ export function getParentId (hamster, id) {
  * @param {*} id 
  */
 // 无祖先返回当前节点
-export const getAncestorOrCurrentId = (hamster, id) => {
+export const getAncestorIdSecurely = (hamster, id) => {
     const parentId = getParentId(hamster, id);
     if (!parentId) return id;
-    return getAncestorOrCurrentId(hamster, parentId)
+    return getAncestorIdSecurely(hamster, parentId)
 }
 // 无祖先节点返回undefined
 export function getAncestorId (hamster, id) {
-    const ancestorId = getAncestorOrCurrentId(hamster, id);
+    const ancestorId = getAncestorIdSecurely(hamster, id);
     if (ancestorId === id) return;
     return ancestorId;
 }
@@ -55,7 +55,8 @@ export function getAncestorId (hamster, id) {
  * @param {*} id 单个id或id数组
  * @param {*} seen 累加器，主要作用是为记录回调的结果，一般使用不需要传值；传值则为初始的叶子节点数组
  */
-export function getLeafIds (hamster, id, seen) {
+// 没有children时会返回包含自己的数组
+export function getLeafIdsSecurely (hamster, id, seen) {
     seen = seen || Immutbale.List();
     const ids = miaow.toList(id);
 
@@ -67,9 +68,15 @@ export function getLeafIds (hamster, id, seen) {
     const children = getChildrenIds(hamster, head);
 
     // 满足条件，seen累加id(head)，消耗ids的size
-    if (!nodesExist(children)) return getLeafIds(hamster, rest, miaow.cat(seen, head));
+    if (!nodesExist(children)) return getLeafIdsSecurely(hamster, rest, miaow.cat(seen, head));
     // 否则，children和余下的id都满足可能产生叶子节点
-    return getLeafIds(hamster, miaow.cat(rest, children), seen);
+    return getLeafIdsSecurely(hamster, miaow.cat(rest, children), seen);
+}
+// 没有children返回空数组
+export function getLeafIds (hamster, id) {
+    const ids = miaow.toList(id);
+    const leafs = getLeafIdsSecurely(hamster, ids);
+    return leafs.filter(leafId => leafId !== id);
 }
 
 /**
@@ -78,7 +85,7 @@ export function getLeafIds (hamster, id, seen) {
  * @param {*} id 
  */
 export function getAllLeafIds (hamster, id) {
-    const ancestorId = getAncestorId(hamster, id);
+    const ancestorId = getAncestorIdSecurely(hamster, id);
     return getLeafIds(hamster, ancestorId)
 }
 
@@ -89,6 +96,15 @@ export function getAllLeafIds (hamster, id) {
  */
 export function isInTree (hamster, id) {
     return getChildrenIds(hamster, id).size > 0 || getParentId(hamster, id);
+}
+
+/**
+ * 孤立节点
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function isOrphan (hamster, id) {
+    return !isInTree(hamster, id)
 }
 
 /**

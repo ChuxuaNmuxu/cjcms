@@ -214,13 +214,13 @@ export function cat (...args) {
 }
 
 /**
- * 取交集
+ * 数组取交集
  * @param {*} args 
  */
 export function getIntersection (...args) {
     const [head, ...rest1] = args;
 
-    if (rest1.length === 0) return Immutable.List();
+    if (rest1.length === 0) return head;
 
     const [second, ...rest2] = rest1;
 
@@ -231,4 +231,40 @@ export function getIntersection (...args) {
     }, Immutable.List())
 
     return getIntersection(intersection, ...rest2);
+}
+
+/**
+ * 数组取补集
+ * @description b为a的子集
+*/
+export function getComplement (a, b) {
+    if (!b.isSubset(a)) throw new Error('to be relationship of subset');
+
+    return a.reduce((accu, v) => {
+        if (b.includes(v)) return accu;
+        return accu.push(v)
+    }, Immutable.List())
+}
+
+/**
+ * 取差异的部分
+ * @description a不包含b的部分
+*/
+export function getDefference (a, b) {
+    const intersection = getIntersection(a, b);
+    return getComplement(a, intersection);
+}
+
+/**
+ * 去重
+ */
+export function uniq (a) {
+    return a.toSet().toList()
+}
+
+/**
+ * 去null和undefined
+ */
+export function effect (a) {
+    return a.filter(v => existy(v))
 }
