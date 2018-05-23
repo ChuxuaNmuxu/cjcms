@@ -60,6 +60,26 @@ class BlockManager extends HamsterManager {
     groupUnite () {
         this.dispatch(blockActions.groupUnite())
     }
+
+    /**
+     * 移动blocks
+     * @param {Array} blockIds 
+     * @param {object} offset
+     */
+    moveBlocks (blockIds, offset={}) {
+        this.dispatch(blockActions.entitiesChange({
+            blockIds,
+            operations: fromJS({
+                'data.props.top': miaow.add(offset.get('top')),
+                'data.props.left': miaow.add(offset.get('left'))
+            })
+        }))
+    }
+
+    // 组合元素
+    unite () {
+        this.dispatch(blockActions.unite())
+    }
 }
 
 export default BlockManager
