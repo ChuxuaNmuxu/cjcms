@@ -1,0 +1,31 @@
+.rotate-wrap {
+    width: 6px;
+    height: 12px;
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translate(-50%);
+
+    :global {
+        .axle {
+            height: 13px;
+            width: 2px;
+            background: #5aabee;
+            position: absolute;
+            bottom: 0;
+            left: 2px;
+        }
+
+        .handle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            top: -11px;
+            left: 0;
+            transform: translateX(-2px);
+            border: 1px solid #5aabee;
+        }
+    }
+}

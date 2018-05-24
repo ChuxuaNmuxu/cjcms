@@ -19,23 +19,31 @@ const block = {
      *  {Object}: 配置对象
     */
     content: {
+        /**
+         * @config container 配置
+         * {bool} 带所有功能的container | 关闭container
+         * {object} { // 单项配置
+                editable: true, // 可编辑
+                draggable: true, // 可拖拽的
+                    @config draggable 配置
+                    {bool} 开启 | 关闭
+                    {function} (props) => Component 自定义组件
+                rotatable: true, // 可旋转的
+                    @config rotatable 配置
+                    {bool} 开启 | 关闭
+                    {function} (props) => Component 自定义组件
+                resizable: true, // 可变尺寸
+                    @config resizable 配置
+                    {bool} 开启 | 关闭
+                    {array} [n, e, s, w, ne, nw, se, sw]
+                animationEnable: true, // 可以附加动画
+                questionEnable: true, // 可以转成习题
+                groupEnable: true, // 可以组合
+                contextMenu: {}, // 右键菜单
+            }
+        *  {function} (props) => Component 自定义组件
+        */
         container: true,
-            /**
-             * @config container 配置
-             * {bool} 带所有功能的container | 关闭container
-             * {object} {
-                    editable: true, // 可编辑
-                    rotatable: true, // 可旋转的
-                    resizable: true, // 可变尺寸
-                        @config resizable 配置
-                        {bool} 开启 | 关闭
-                        {array} [n, e, s, w, ne, nw, se, sw]
-                    animationEnable: true, // 可以附加动画
-                    questionEnable: true, // 可以转成习题
-                    groupEnable: true, // 可以组合
-                    contextMenu: {}, // 右键菜单
-                }
-            */
         component: null
     }, // 组件，必需
     /**

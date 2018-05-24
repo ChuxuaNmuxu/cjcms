@@ -25,14 +25,6 @@ class BlockManager extends HamsterManager {
         // addBlock时会生成唯一id
     }
 
-    /**
-     * 激活blocks
-     * @param {*} blockIds
-     */
-    activateBlock (blockIds) {
-        this.dispatch(blockActions.activate({blockIds}))
-    }
-
     clickBlock (payload) {
         this.dispatch(blockActions.click(payload))
     }

@@ -1,0 +1,63 @@
+$size: 10px;
+$halfSize: $size / 2;
+
+@mixin node {
+    position: absolute;
+    width: $size;
+    height: $size;
+    border: 1px solid #5aabee;
+    background: #fff;
+}
+
+.north {
+    @include node;
+    left: 50%;
+    transform: translate(-50%);
+    top: -$halfSize;
+}
+
+.south {
+    @include node;
+    left: 50%;
+    transform: translate(-50%);
+    bottom: -$halfSize;
+}
+
+.east {
+    @include node;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -$halfSize;
+}
+
+.west {
+    @include node;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -$halfSize;
+}
+
+.NW {
+    @include node;
+    top: -$halfSize;
+    left: -$halfSize;
+
+}
+
+.NE {
+    @include node;
+    top: -$halfSize;
+    right: -$halfSize;
+}
+
+.SW {
+    @include node;
+    bottom: -$halfSize;
+    left: -$halfSize;
+}
+
+.SE {
+    @include node;
+    bottom: -$halfSize;
+    right: -$halfSize;
+}
