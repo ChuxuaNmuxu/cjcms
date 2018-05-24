@@ -20,7 +20,8 @@ const spec = {
 
 const collect = (monitor, connect) => {
     return {
-        monitor
+        monitor,
+        dragSource: connect.dragSource()
     }
 }
 
@@ -35,8 +36,10 @@ class DragSection extends Component {
     }
 
     render() {
+        const {dragSource} = this.props;
+
         return (
-            <div styleName='drag-wrap' className='drag-wrap' />
+            dragSource(<div styleName='drag-wrap' className='drag-wrap' />)
         )
     }
 }
