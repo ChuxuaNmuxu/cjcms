@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 
 import initialState from './initialState';
+import lodash from 'lodash';
 import * as helper from './helper/helper';
 import * as miaow from '../Utils/miaow';
 import * as nodeHelper from './helper/node';
@@ -65,21 +66,33 @@ function handleChangeProps (hamster, action) {
     )
 }
 
-function handleEntitiesChanges (hamster, action) {
-    const {payload} = action;
+/**
+ * 拖拽结束
+ * @param {*} hamster 
+ * @param {*} action 
+ */
+function handleDragEnd (hamster, action) {
+    const {payload: offset} = action;
 
-    const {blockIds, operations} = payload;
+    /**
+     * 待移动的blockId
+     * @description 激活节点数组中包含祖先节点，独立节点和叶子节点，只需要将未选中的叶子节点包含进来即可
+     */
+    const activatedBlockIds = currentHelper.getActivatedBlockIds(hamster);
+    const ancestorBlockIds = currentHelper.getAncestorInCurrent(hamster);
+    const allLeafBlockIds = ancestorBlockIds.map(lodash.curry(nodeHelper.getAllLeafIds)(hamster)).flatten();
 
-    if (!blockIds) return hamster;
+    const needMoveBlockIds = miaow.uniq(miaow.cat(activatedBlockIds, allLeafBlockIds))
 
-    return hamster.update('entities', entities => {
-        return blockIds.reduce((entities, id) => {
-            return operations.reduce((entities, operate, path) => {
-                const objectPath = [id].concat(path.split('.'))
-                return entities.updateIn(objectPath, prop => operate(prop))
-            }, entities)
-        }, entities);
-    })
+    // 移动block
+    hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: needMoveBlockIds,
+        operations: {
+            'data.props.top': miaow.add(offset.get('top')),
+            'data.props.left': miaow.add(offset.get('left'))
+        }
+    }));
+    return hamster;
 }
 
 // 点击元素
@@ -191,7 +204,8 @@ const block = {
     [blockType('ADD')]: handleAddBlock,
     [blockType('ACTIVATE')]: handleActivateBlock,
     [blockType('PROPS_CHANGE')]: handleChangeProps,
-    [blockType('ENTITIES_CHANGE')]: handleEntitiesChanges,
+    // [blockType('ENTITIES_CHANGE')]: handleEntitiesChanges,
+    [blockType('DRAG_END')]: handleDragEnd,
     [blockType('CLICK')]: handleClickBlock,
     [blockType('GROUP_UNITE')]: handleUnite,
 }

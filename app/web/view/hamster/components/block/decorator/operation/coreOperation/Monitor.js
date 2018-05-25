@@ -33,4 +33,8 @@ export default class Monitor {
     getState () {
         return this.store.getState();
     }
+
+    isActing () {
+        return this.getState().dragOperation.sourceId
+    }
 }

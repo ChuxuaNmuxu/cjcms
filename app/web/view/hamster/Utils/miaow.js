@@ -203,6 +203,19 @@ export function copyProperties(target, source) {
     }
 }
 
+/**
+ * 带默认处理的dispatchMission
+ * @param {*} func 
+ * @param {*} funcs 
+ */
+export function ultimate (defaultHandle) {
+    return (...args) => {
+        const funcs = args.concat(defaultHandle);
+        return dispatchMission.apply(null, funcs)
+    }
+
+}
+
 /******* immutable *********/
 
 /**

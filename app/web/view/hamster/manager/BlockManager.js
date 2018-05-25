@@ -25,60 +25,21 @@ class BlockManager extends HamsterManager {
         // addBlock时会生成唯一id
     }
 
-    /**
-     * 激活blocks
-     * @param {*} blockIds
-     */
-    activateBlock (blockIds) {
-        this.dispatch(blockActions.activate({blockIds}))
-    }
-
     clickBlock (payload) {
         this.dispatch(blockActions.click(payload))
+    }
+
+    dragEnd (payload) {
+        this.dispatch(blockActions.dragEnd(payload))
     }
 
     getActivatedBlockIds () {
         return getActivatedBlockIds(this.getState('hamster'))
     }
 
-    /**
-     * 移动blocks
-     * @param {Array} blockIds 
-     * @param {object} offset
-     */
-    moveBlocks (blockIds, offset={}) {
-        this.dispatch(blockActions.entitiesChange({
-            blockIds,
-            operations: fromJS({
-                'data.props.top': miaow.add(offset.get('top')),
-                'data.props.left': miaow.add(offset.get('left'))
-            })
-        }))
-    }
-
     // 组合元素
     groupUnite () {
         this.dispatch(blockActions.groupUnite())
-    }
-
-    /**
-     * 移动blocks
-     * @param {Array} blockIds 
-     * @param {object} offset
-     */
-    moveBlocks (blockIds, offset={}) {
-        this.dispatch(blockActions.entitiesChange({
-            blockIds,
-            operations: fromJS({
-                'data.props.top': miaow.add(offset.get('top')),
-                'data.props.left': miaow.add(offset.get('left'))
-            })
-        }))
-    }
-
-    // 组合元素
-    unite () {
-        this.dispatch(blockActions.unite())
     }
 }
 

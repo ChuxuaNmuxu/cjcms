@@ -21,7 +21,17 @@ export default function (state=initialState, action) {
 				dropResult: null,
 				didDrop: false
             }
-        case END_DRAG:
+		case END_DRAG:
+		return {
+			...state,
+			itemType: null,
+			item: null,
+			sourceId: null,
+			dropResult: null,
+			didDrop: false,
+			isSourcePublic: null,
+			targetIds: [],
+		}
         default:
             return state;
     }

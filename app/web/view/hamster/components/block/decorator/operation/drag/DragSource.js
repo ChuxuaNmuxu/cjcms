@@ -11,7 +11,7 @@ const DragSource = (type, spec, collect, options) => {
         type,
         spec,
         collect,
-        options: {directConnect: true, ...options},
+        // options: {directConnect: true, ...options},
         createMonitor,
         createSource,
         handleConnect,
