@@ -33,9 +33,9 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.dragEnd(payload))
     }
 
-    // getActivatedBlockIds () {
-    //     return getActivatedBlockIds(this.getState('hamster'))
-    // }
+    getActivatedBlockIds () {
+        return getActivatedBlockIds(this.getState('hamster'))
+    }
 
     // 组合元素
     groupUnite () {

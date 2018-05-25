@@ -10,6 +10,14 @@ const spec = {
         console.log('beginDrag123: ', props)
     },
 
+    canDrag (props, monitor, component) {
+        const {block} = props;
+        const blockId = block.get('id');
+        const activatedId = props.hamster.getActivatedBlockIds();
+        
+        return activatedId.includes(blockId);
+    },
+
     endDrag (props, monitor, component) {
         const {x: left, y: top} = monitor.getOffset();
 

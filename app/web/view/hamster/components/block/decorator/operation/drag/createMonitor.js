@@ -13,6 +13,10 @@ class DragMonitor extends Monitor {
     canDragging () {
         return true;
     }
+
+    isDragging () {
+        return this.isActing()
+    }
 }
 
 export default (manager) => new DragMonitor(manager);

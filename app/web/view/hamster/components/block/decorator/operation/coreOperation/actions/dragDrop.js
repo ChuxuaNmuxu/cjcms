@@ -30,10 +30,12 @@ export function beginDrag (
 
     const source = registry.getSource(sourceId)
     // 自定义beginDrag回调
-	const item = source.beginAct()
+    const item = source.beginAct()
 
+    // const itemType = registry.getSourceType(sourceId)
     return {
         type: BEGIN_DRAG,
+        // itemType,
         item,
         sourceId,
         sourceOptions,
