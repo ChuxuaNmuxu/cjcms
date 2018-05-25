@@ -32,7 +32,7 @@ class DragSection extends Component {
     static displayName = 'DragSection'
 
     static propTypes = {
-        prop: PropTypes
+        dragSource: PropTypes.func
     }
 
     render() {

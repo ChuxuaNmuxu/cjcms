@@ -33,7 +33,7 @@
     "moment": "^2.17.1",
     "node-sass": "^4.8.3",
     "react": "^16.3.1",
-    "react-css-modules": "^4.7.3",
+    "react-css-modules": "git+https://github.com/cjfed/react-css-modules.git",
     "react-dom": "^16.3.1",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
