@@ -44,7 +44,7 @@ const containerIsObject = (config, props) => {
     if (!Immutable.Map.isMap(container)) return undefined;
     
     const ContentComponent = config.get('component');
-    return <Container  {...props} >
+    return <Container config={config} {...props} >
         <ContentComponent {...props} />
     </Container>
 }
@@ -82,7 +82,8 @@ const containerConfigured = (config, props) => {
 
 // @config component: null 配置组件不存在的情况
 const componentIsNull = (config, props) => {
-    if (!config.get('component')) return someOthers('component is null', props);
+    console.log('componentIsNull: ', config.toJS())
+    if (!config.get('component')) return <Container config = {config} {...props}/>;
 }
 
 // @config object 配置对象
