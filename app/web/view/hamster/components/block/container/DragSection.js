@@ -13,8 +13,7 @@ const spec = {
     endDrag (props, monitor, component) {
         const {x: left, y: top} = monitor.getOffset();
 
-        const subscriber = props.hamster.getSubscriber();
-        props.hamster.blockManager.moveBlocks(subscriber.getActivatedBlockIds(), fromJS({left, top}));
+        props.hamster.blockManager.dragEnd(fromJS({left, top}));
     }
 }
 
