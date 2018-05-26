@@ -281,3 +281,21 @@ export function uniq (a) {
 export function effect (a) {
     return a.filter(v => existy(v))
 }
+
+/**
+ * get
+ * @param {*} value 
+ * @param {*} path 
+ */
+export function get (path) {
+    path = lodash.isArray(path) ? path : path.split('.');
+    return value => value.getIn(path)
+}
+
+/**
+ * 求和
+ * @param {*} list
+ */
+export function sum (list) {
+    return list.reduce((sum, v) => sum + v, 0)
+}

@@ -45,22 +45,3 @@ export function createDefaultBlockObjects (hamster, id) {
     const defaultBlockData = extractBlockData(groupConfig).set('id', id);
     return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
-
-/**
- * entities数据增删改
- * @param {*} hamster 
- * @param {*} payload
- */
-export function handleEntitiesChanges (hamster, payload) {
-    const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');
-
-    const objectIds = miaow.toList(ids);
-    return hamster.update('entities', entities => {
-        return objectIds.reduce((entities, id) => {
-            return operations.reduce((entities, operate, path) => {
-                const objectPath = [id].concat(path.split('.'))
-                return entities.updateIn(objectPath, prop => operate(prop))
-            }, entities)
-        }, entities);
-    }) 
-}

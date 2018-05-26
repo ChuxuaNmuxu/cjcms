@@ -39,6 +39,9 @@ export default {
                     value: '#333',
                 }
             }
+        },
+        zIndex: {
+            value: 1
         }
     }
 }

@@ -5,7 +5,9 @@ import lodash from 'lodash';
 import * as helper from './helper/helper';
 import * as miaow from '../Utils/miaow';
 import * as nodeHelper from './helper/node';
-import * as currentHelper from './helper/current'
+import * as currentHelper from './helper/current';
+import * as entityHelper from './helper/entity';
+import * as blockHelper from './helper/block';
 
 function handleAddBlock (hamster, action) {
     console.log(5, action)
@@ -31,15 +33,6 @@ function handleAddBlock (hamster, action) {
             blocks => blocks.clear().concat(blockIds)
         )
     })
-    return hamster;
-}
-
-function handleActivateBlock (hamster, action) {
-    // 添加blocks
-    const {payload} = action;
-    // 修改current
-    const handleBlockIds = payload.blockIds;
-    hamster = hamster.updateIn(['current', 'blocks'], handleBlockIds)
     return hamster;
 }
 
@@ -85,7 +78,7 @@ function handleDragEnd (hamster, action) {
     const needMoveBlockIds = miaow.uniq(miaow.cat(activatedBlockIds, allLeafBlockIds))
 
     // 移动block
-    hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: needMoveBlockIds,
         operations: {
             'data.props.top': miaow.add(offset.get('top')),
@@ -157,32 +150,39 @@ function handleUnite (hamster, actions) {
     */
     // 孤立节点与祖先节点
     const ancestorIdsInCurrent = currentHelper.getAncestorInCurrent(hamster);
-    // TODO: 有必要的话可以抽取出来
-    const orphanIdsInCurrent = activeblockIds.filter(id => nodeHelper.isOrphan(hamster, id));
+    const orphanIdsInCurrent = currentHelper.getOrphansInCurrent(hamster);
 
     const childrenIds = miaow.cat(ancestorIdsInCurrent, orphanIdsInCurrent);
 
     // 生成defaultGroupObject
-    const objectId = helper.createId('block-');
-    hamster = helper.createDefaultBlockObjects(hamster, objectId);
+    const entityId = helper.createId('block-');
+    hamster = helper.createDefaultBlockObjects(hamster, entityId);
+
+    // 初始大小及位置
+    const idCluster = currentHelper.getIdClusterInCurrent(hamster);
+    const packageFourDimension = blockHelper.getPackageFourDimension(hamster, idCluster);
+    hamster = blockHelper.updateBlockFourDimension(hamster, entityId, Immutable.fromJS(packageFourDimension));
+
+    // 扩大一点
+    hamster = blockHelper.stretchBlock(hamster, entityId, 5);
 
     // 修改children属性
-    hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
-        ids: objectId,
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: entityId,
         operations: {'data.children': miaow.replaceAs(childrenIds)}
     }))
 
     // 加入indexs
-    hamster = hamster.updateIn(['index', 'blocks'], miaow.add(objectId));
+    hamster = hamster.updateIn(['index', 'blocks'], miaow.add(entityId));
 
     // 修改blocks的parent属性
-    hamster = helper.handleEntitiesChanges(hamster, Immutable.fromJS({
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: childrenIds,
-        operations: {'data.parent': miaow.replaceAs(objectId)}
+        operations: {'data.parent': miaow.replaceAs(entityId)}
     }))
 
     // 重激活组合元素
-    hamster = helper.handleReactivateBlocks(hamster, objectId);
+    hamster = helper.handleReactivateBlocks(hamster, entityId);
 
     return hamster;
 }
@@ -202,9 +202,7 @@ const blockType = type => 'BLOCK/' + type;
 
 const block = {
     [blockType('ADD')]: handleAddBlock,
-    [blockType('ACTIVATE')]: handleActivateBlock,
     [blockType('PROPS_CHANGE')]: handleChangeProps,
-    // [blockType('ENTITIES_CHANGE')]: handleEntitiesChanges,
     [blockType('DRAG_END')]: handleDragEnd,
     [blockType('CLICK')]: handleClickBlock,
     [blockType('GROUP_UNITE')]: handleUnite,
