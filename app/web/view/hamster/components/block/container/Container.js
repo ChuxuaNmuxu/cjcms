@@ -45,9 +45,6 @@ export default class BlockContainer extends React.Component {
 
         const config = containerConfig.filter((v, k) => !Reflect.has(['draggable', 'resizable', 'rotatable'], k));
 
-        console.log('containerConfig; ', containerConfig.toJS())
-        console.log('config; ', config.toJS())
-
         const childrens = components.map((Component, k) => React.cloneElement(
             <Component key={keys[k]} />,
             {...this.props, config}

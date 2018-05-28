@@ -60,12 +60,12 @@ export function updateBlockFourDimension (hamster, ids, payload) {
 }
 
 /**
- * 扩张一个block
+ * 扩大一个block
  * @param {*} hamster 
  * @param {*} id 
- * @param {*} gap 扩张的距离
+ * @param {*} gap 扩大的距离
  */ 
-export function stretchBlock (hamster, id, gap) {
+export function stretchBlock (hamster, id, gap=0) {
     const FourDimension = getPackageFourDimension(hamster, miaow.toList(id));
     const packageDimensionWithGap = {
         left: FourDimension.left - gap,

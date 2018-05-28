@@ -2,6 +2,10 @@ import * as nodeHelper from './node';
 import lodash from 'lodash';
 import * as miaow from '../../Utils/miaow';
 
+/**
+ * current数组中可能包含祖先节点，独立节点和叶子节点
+*/
+
 export const getActivatedBlockIds = (hamster) => {
     return hamster.getIn(['current', 'blocks'])
 }

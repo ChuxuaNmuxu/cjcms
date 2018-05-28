@@ -33,6 +33,10 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.dragEnd(payload))
     }
 
+    rotateEnd (payload) {
+        this.dispatch(blockActions.rotateEnd(payload))
+    }
+
     getActivatedBlockIds () {
         return getActivatedBlockIds(this.getState('hamster'))
     }

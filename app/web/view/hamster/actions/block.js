@@ -11,7 +11,8 @@ const actionCreaters = createActions({
         'PROPS_CHANGE': pmCreater,
         'DRAG_END': pmCreater,
         'CLICK': pmCreater,
-        'GROUP_UNITE': pmCreater
+        'GROUP_UNITE': pmCreater,
+        'ROTATE_END': pmCreater 
     }
 })
 

@@ -23,4 +23,12 @@ export default class Monitor {
     getOffset () {
         return getDifferenceFromInitialOffset(this.getState().dragOffset)
     }
+
+    getClientOffset () {
+        return this.getState().dragOffset.clientOffset
+    }
+
+    getInitialClientOffset () {
+        return this.getState().dragOffset.initialClientOffset
+    }
 }

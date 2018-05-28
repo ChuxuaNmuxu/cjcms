@@ -88,6 +88,34 @@ function handleDragEnd (hamster, action) {
     return hamster;
 }
 
+/**
+ * 旋转
+ * @param {*} hamster 
+ * @param {*} action 
+ */
+function handleRotateEnd (hamster, action) {
+    const {payload} = action;
+    const rotateAngle = payload.get('rotateAngle')
+    // const blockId = payload.get('blockId');
+    // const rotateRadius = payload.get('rotateRadius');
+
+    // const blockCenterClientOffset = blockHelper.getBlockCenter(hamster, blockId)
+
+    // const rotateRadian = Math.atan(left / rotateRadius - top);
+    // const rotateAngle = rotateRadian / Math.PI * 180;
+
+    // TODO: GROUP
+    const applyBlockIds = currentHelper.getActivatedBlockIds(hamster);
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: applyBlockIds,
+        operations: {
+            'data.props.rotation': miaow.replaceAs(rotateAngle)
+        }
+    }))
+
+    return hamster;
+}
+
 // 点击元素
 function handleClickBlock (hamster, action) {
     // 激活元素
@@ -163,7 +191,7 @@ function handleUnite (hamster, actions) {
     const packageFourDimension = blockHelper.getPackageFourDimension(hamster, idCluster);
     hamster = blockHelper.updateBlockFourDimension(hamster, entityId, Immutable.fromJS(packageFourDimension));
 
-    // 扩大一点
+    // 扩大一点,留点间隙
     hamster = blockHelper.stretchBlock(hamster, entityId, 5);
 
     // 修改children属性
@@ -206,6 +234,7 @@ const block = {
     [blockType('DRAG_END')]: handleDragEnd,
     [blockType('CLICK')]: handleClickBlock,
     [blockType('GROUP_UNITE')]: handleUnite,
+    [blockType('ROTATE_END')]: handleRotateEnd,
 }
 
 export default createReducer(initialState.hamster, block);
