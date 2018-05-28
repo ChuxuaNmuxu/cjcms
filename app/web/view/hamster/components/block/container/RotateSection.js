@@ -8,7 +8,12 @@ import {fromJS} from 'immutable'
 let centerClientOffset = {}
 
 const spec = {
-    beginRotate: (props, monitor, component) => {
+    canRotate: (props, monitor, component) => {
+        const {block} = props;
+        const blockId = block.get('id');
+        const activatedId = props.hamster.getActivatedBlockIds();
+        
+        return activatedId.includes(blockId);
     },
 
     endRotate: (props, monitor, component) => {

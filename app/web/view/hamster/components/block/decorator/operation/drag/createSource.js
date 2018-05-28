@@ -12,7 +12,7 @@ class DragSource extends SourceHandles {
     }
 
     beginAct (props, monitor, component) {
-        this.spec.beginDrag(this.props, this.monitor, this.component)
+        this.spec.beginDrag && this.spec.beginDrag(this.props, this.monitor, this.component)
     }
 
     canAct () {
@@ -20,7 +20,7 @@ class DragSource extends SourceHandles {
     }
 
     endAct () {
-        this.spec.endDrag(this.props, this.monitor, this.component)
+        this.spec.endDrag && this.spec.endDrag(this.props, this.monitor, this.component)
     }
 }
 

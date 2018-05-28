@@ -6,15 +6,15 @@ class RotateSource extends SourceHandles {
     }
 
     beginAct (props, monitor, component) {
-        this.spec.beginRotate(this.props, this.monitor, this.component)
+        this.spec.beginRotate && this.spec.beginRotate(this.props, this.monitor, this.component)
     }
 
     canAct () {
-        return true;
+        return this.spec.canRotate ? this.spec.canRotate(this.props, this.monitor, this.component) : true;
     }
 
     endAct () {
-        this.spec.endRotate(this.props, this.monitor, this.component)
+        this.spec.endRotate && this.spec.endRotate(this.props, this.monitor, this.component)
     }
 }
 
