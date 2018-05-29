@@ -13,6 +13,7 @@ import * as entityHelper from './entity';
  * @returns {plainObject} {top, bottom, left, right, width, height}
  */
 export function packageBlocks (hamster, ids) {
+    ids = miaow.toList(ids);
     const [tops, lefts, widths, heights] = ['top', 'left', 'width', 'height'].map(
         value => ids.map(lodash.flow(lodash.curry(getEntity)(hamster), miaow.get('data.props.'.concat(value))))
     )
@@ -102,18 +103,6 @@ const pointToCoordinate = {
 export function pin (fourDimension, offset, point) {
     // 钉子的坐标
     const pinCoordinate = lodash.isString(point) ? pointToCoordinate[point] : point;
-
-    // const fourDimensionWithOffset = {
-    //     ...fourDimension,
-    //     width: fourDimension.width + offset.width,
-    //     height: fourDimension.height + offset.height
-    // }
-
-    // const fourDimensionPinned = {
-    //     ...fourDimensionWithOffset,
-    //     left: fourDimensionWithOffset.left - offset.width * point.x,
-    //     top: fourDimensionWithOffset.top - offset.height * point.y
-    // }
 
     return {
         ...fourDimension,

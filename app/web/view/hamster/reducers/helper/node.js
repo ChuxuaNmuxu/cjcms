@@ -90,7 +90,7 @@ export function getAllLeafIds (hamster, id) {
 }
 
 /**
- * 是否是一个嵌套结构
+ * 是否在一个节点树中
  * @param {*} hamster 
  * @param {*} id 
  */
@@ -100,6 +100,7 @@ export function isInTree (hamster, id) {
 
 /**
  * 孤立节点
+ * @description 不在节点树中
  * @param {*} hamster 
  * @param {*} id 
  */
@@ -108,10 +109,19 @@ export function isOrphan (hamster, id) {
 }
 
 /**
- * 是否是叶子节点
+ * 是否是节点树中的的叶子节点
+ * @description 在节点树中且没有子节点
  * @param {*} hamster 
- * @param {*} id 
+ * @param {*} id
  */
 export function isLeaf (hamster, id) {
     return isInTree(hamster, id) && getChildrenIds(hamster, id).size === 0
+}
+
+/**
+ * 是祖先节点
+ * @description 在节点树中,有子节点,没有父节点
+ */
+export function isAncestor (hamster, id) {
+    return getChildrenIds(hamster, id).size > 0 && !getParentId(hamster, id)
 }

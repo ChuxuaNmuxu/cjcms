@@ -10,12 +10,19 @@ export const getActivatedBlockIds = (hamster) => {
     return hamster.getIn(['current', 'blocks'])
 }
 
+// 获取一组id中的祖先元素
+export function getAncestors (hamster, ids) {
+    ids = miaow.toList(ids);
+    const ancestorIds = ids.map(lodash.curry(nodeHelper.getAncestorIdSecurely)(hamster));
+
+    return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
+}
+
 // 获取激活元素中的祖先元素
 export const getAncestorInCurrent = (hamster) => {
     const activatedIds = getActivatedBlockIds(hamster);
-    const ancestorIds = activatedIds.map(lodash.curry(nodeHelper.getAncestorIdSecurely)(hamster));
 
-    return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
+    return getAncestors(hamster, activatedIds);
 }
 
 // 在激活元素中去除祖先元素
@@ -43,4 +50,27 @@ export function getIdClusterInCurrent (hamster) {
     const allLeafBlockIds = ancestorBlockIds.map(lodash.curry(nodeHelper.getAllLeafIds)(hamster)).flatten();
 
     return miaow.uniq(miaow.cat(orphanIdsInCurrent, allLeafBlockIds))
+}
+
+/**
+ * 攘外
+ * 
+ * @description 组合对内透明，对外表现为一个完整的元素
+ *  对外：被激活元素中已有非点击元素的祖先元素
+ * @param {*} ids 
+ */
+export function resistOutside (hamster, ids) {
+    const ancestors = getAncestors(hamster, ids);
+
+    return ancestors.size > 1
+}
+
+/**
+ * 已激活
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function isActivated (hamster, id) {
+    const activatedIds = getActivatedBlockIds(hamster);
+    return activatedIds.includes(id)
 }

@@ -15,7 +15,7 @@ export function createId (prefix='', suffix='') {
 
 // 激活元素
 export function handleActivateBlocks (hamster, blockIds) {
-    hamster = hamster.updateIn(['current', 'blocks'], miaow.add(blockIds))
+    hamster = hamster.updateIn(['current', 'blocks'], lodash.flow(miaow.add(blockIds), miaow.uniq))
     return hamster;
 }
 
@@ -27,7 +27,7 @@ export function handleCancelActivateBlocks (hamster, blockIds) {
 
 // 重选激活的元素
 export function handleReactivateBlocks (hamster, blockIds) {
-    hamster = hamster.updateIn(['current', 'blocks'], lodash.flow(miaow.reset, miaow.flowDebug, miaow.add(blockIds)))
+    hamster = hamster.updateIn(['current', 'blocks'], lodash.flow(miaow.reset, miaow.add(blockIds), miaow.uniq))
     return hamster;
 }
 

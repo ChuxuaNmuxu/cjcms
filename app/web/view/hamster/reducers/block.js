@@ -194,48 +194,79 @@ function handleClickBlock (hamster, action) {
     /**
      * 处理嵌套
      * @description 嵌套元素是个虚拟的元素，在被激活之后，对节点的操作将没有影响，
+     * @version 1.0
      * 在未激活状态时，优先激活祖先元素；节点元素激活，祖先元素必然处于激活状态
      * 1. 非叶子节点元素，不做处理
      * 2. 祖先节点未激活，激活祖先元素
      * 3. 节点元素激活，祖先元素必然处于激活状态
-     * 4. ctrl点击，只有自己和祖先节点处于激活状态时，不取消激活
     */
-    const activeIds = currentHelper.getActivatedBlockIds(hamster);
 
     /**
      * 具体实现
+     * @deprecated
+     * @version 1.0
      * 1. 判断出待激活的节点
      * 2. activeIds中去除ancestorid,在不考虑ancestor的情况下处理，在结束时再补充
      * 3. 按普通激活逻辑处理
     */
+
+    /**
+     * @version 1.1
+     * 1. 多选点击已激活元素，不取消激活
+     * 2. 组合对内透明，对外表现为一个完整的元素
+     * 	    inside：祖先元素 === 1
+	 *      outside：祖先元素 > 1
+     */
+
+    /**
+     * 具体实现
+     * @version 1.1
+     * 1. 组合元素的攘外安内：判断激活元素
+     *  对外：没有叶子元素
+     *  对内：只有单个祖先及其叶子元素，同vision1.0
+     * 2. ctrlKey：控制操作符
+     *  ctrl + 已激活: handleCancelActivateBlocks
+     *  ctrl + 未激活：handleActivateBlocks
+     *  没有ctrl：handleReactivateBlocks
+    */
+    
+   const activeIds = currentHelper.getActivatedBlockIds(hamster);
+
+   // 祖先节点元素，不做处理 @version 1.0 - 1
+   if (nodeHelper.isAncestor(hamster, blockId)) return hamster;
+
+    // 激活元素 @version 1.1 - 1 @version 1.0 - 2
+    const isResistOutside = currentHelper.resistOutside(hamster, activeIds.concat(blockId));
     let toAcitivateId = blockId;
-    let realActiveIds = Immutable.List();
 
-    if (nodeHelper.isInTree(hamster, blockId)) {
-        if (!nodeHelper.isLeaf(hamster, blockId)) return hamster;
-
-        const ancestorId = nodeHelper.getAncestorId(hamster, blockId);
-        if (!activeIds.includes(ancestorId)) toAcitivateId = ancestorId;
-
-        realActiveIds = activeIds.filter(id => id !== ancestorId);
+    const ancestorsInCurrent = currentHelper.getAncestorInCurrent(hamster);
+    if (isResistOutside) {
+        // 去除叶子元素,只保留祖先元素
+        hamster = helper.handleReactivateBlocks(hamster, ancestorsInCurrent);
+        // 同时如果点击的是叶子元素，则待激活元素为祖先元素
+        if (nodeHelper.isInTree(hamster, toAcitivateId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
     }
 
-    // 激活节点
-    // TODO: 优化为不直接return，而是给hamster赋值
+    // 操作符 @version 1.1 - 2
+    // 没有ctrl
+    let operation = lodash.curryRight(helper.handleReactivateBlocks)(toAcitivateId)
     if (event.ctrlKey) {
-        if (realActiveIds.includes(toAcitivateId)) {
-            if (realActiveIds.size === 1) return hamster;
-            return helper.handleCancelActivateBlocks(hamster, toAcitivateId)
-        }
-        return helper.handleActivateBlocks(hamster, toAcitivateId);
-    };
-    hamster = helper.handleReactivateBlocks(hamster, toAcitivateId);
+        // ctrl + 未激活
+        operation = lodash.curryRight(helper.handleActivateBlocks)(toAcitivateId)
 
-    // 保证ancestorId被激活
+        // ctrl + 已激活
+        if (currentHelper.isActivated(hamster, toAcitivateId)) {
+            operation = lodash.curryRight(helper.handleCancelActivateBlocks)(toAcitivateId)
+        }
+    }
+
+    hamster = operation(hamster);
+    
+    // 保证ancestorId被激活 @version1.0 - 3
     const ancestor = nodeHelper.getAncestorId(hamster, toAcitivateId);
     if (ancestor) return helper.handleActivateBlocks(hamster, ancestor);
 
-    return hamster; 
+    return hamster;
 }
 
 /**
