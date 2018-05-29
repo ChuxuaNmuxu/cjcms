@@ -36,15 +36,15 @@ export function getParentId (hamster, id) {
  * @param {*} hamster 
  * @param {*} id 
  */
-// 无祖先返回当前节点
-export const getAncestorIdSecurely = (hamster, id) => {
+// 无祖先返回当前节点,自己是自己的祖先
+export const getAncestorIdCompatibly = (hamster, id) => {
     const parentId = getParentId(hamster, id);
     if (!parentId) return id;
-    return getAncestorIdSecurely(hamster, parentId)
+    return getAncestorIdCompatibly(hamster, parentId)
 }
 // 无祖先节点返回undefined
 export function getAncestorId (hamster, id) {
-    const ancestorId = getAncestorIdSecurely(hamster, id);
+    const ancestorId = getAncestorIdCompatibly(hamster, id);
     if (ancestorId === id) return;
     return ancestorId;
 }
@@ -85,12 +85,13 @@ export function getLeafIds (hamster, id) {
  * @param {*} id 
  */
 export function getAllLeafIds (hamster, id) {
-    const ancestorId = getAncestorIdSecurely(hamster, id);
+    const ancestorId = getAncestorIdCompatibly(hamster, id);
     return getLeafIds(hamster, ancestorId)
 }
 
 /**
  * 是否在一个节点树中
+ * @description 父子节点至少得有一个
  * @param {*} hamster 
  * @param {*} id 
  */

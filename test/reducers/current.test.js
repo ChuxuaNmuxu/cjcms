@@ -5,10 +5,8 @@ const hamster = Immutable.fromJS({
     "current": {
         "blocks": [
             "1",
-            "4",
-            "7",
             "8",
-            "9",
+            "10"
         ]
         // "blocks": [
         //     "7",
@@ -87,6 +85,14 @@ const hamster = Immutable.fromJS({
           "parent": '8',
         }
       },
+      "10": {
+        "id": "10",
+        "type": "block",
+        "data": {
+          "children": [],
+          "parent": null,
+        }
+      },
     }
   })
 
@@ -101,7 +107,7 @@ test('test removeAncestorInCurrent', () => {
 })
 
 test('test getAncestorInCurrent', () => {
-  expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List(['1', '7', '8']))
+  expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List(['1', '8', '10']))
   // expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List([]))
 })
 

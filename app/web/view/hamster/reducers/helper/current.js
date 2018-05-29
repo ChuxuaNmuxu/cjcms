@@ -10,28 +10,53 @@ export const getActivatedBlockIds = (hamster) => {
     return hamster.getIn(['current', 'blocks'])
 }
 
-// 获取一组id中的祖先元素
-export function getAncestors (hamster, ids) {
-    ids = miaow.toList(ids);
-    const ancestorIds = ids.map(lodash.curry(nodeHelper.getAncestorIdSecurely)(hamster));
+/**
+ * 获取一组id中的祖先元素
+ * @description 兼容模式，包括孤立节点,他是自己的祖先，即孤立节点+祖先节点
+ */
+export function getAncestorsCompatibly (hamster, ids) {
+    const ancestorIds = miaow.toList(ids).map(lodash.curry(nodeHelper.getAncestorIdCompatibly)(hamster));
 
     return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
 }
 
-// 获取激活元素中的祖先元素
+/**
+ * 获取一组id中的祖先元素
+ * @description 不包括孤立节点
+ */
+export function getAncestors (hamster, ids) {
+    const ancestorIds = miaow.toList(ids).map(lodash.curry(nodeHelper.getAncestorId)(hamster));
+
+    return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
+}
+
+/**
+ * 获取激活元素中出叶子节点之外的节点
+ * @description 即孤立节点+祖先节点
+ */
+export const getExceptLeafsInCurrent = (hamster) => {
+    const activatedIds = getActivatedBlockIds(hamster);
+
+    return getAncestorsCompatibly(hamster, activatedIds);
+}
+
+/**
+ * 获取激活元素中的祖先元素
+ * @description 不包括孤立节点
+ */
 export const getAncestorInCurrent = (hamster) => {
     const activatedIds = getActivatedBlockIds(hamster);
 
     return getAncestors(hamster, activatedIds);
 }
 
-// 在激活元素中去除祖先元素
-export const removeAncestorInCurrent = (hamster) => {
-    const activatedIds = getActivatedBlockIds(hamster);
-    const ancestorIds = getAncestorInCurrent(hamster);
+// // 在激活元素中去除祖先元素
+// export const removeAncestorInCurrent = (hamster) => {
+//     const activatedIds = getActivatedBlockIds(hamster);
+//     const ancestorIds = getAncestorInCurrent(hamster);
 
-    return miaow.getComplement(activatedIds, ancestorIds);
-}
+//     return miaow.getComplement(activatedIds, ancestorIds);
+// }
 
 // 获取激活元素中的孤立元素
 export function getOrphansInCurrent (hamster) {
@@ -60,7 +85,7 @@ export function getIdClusterInCurrent (hamster) {
  * @param {*} ids 
  */
 export function resistOutside (hamster, ids) {
-    const ancestors = getAncestors(hamster, ids);
+    const ancestors = getAncestorsCompatibly(hamster, ids);
 
     return ancestors.size > 1
 }

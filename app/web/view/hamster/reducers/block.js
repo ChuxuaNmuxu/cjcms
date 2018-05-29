@@ -239,10 +239,10 @@ function handleClickBlock (hamster, action) {
     const isResistOutside = currentHelper.resistOutside(hamster, activeIds.concat(blockId));
     let toAcitivateId = blockId;
 
-    const ancestorsInCurrent = currentHelper.getAncestorInCurrent(hamster);
+    const noLeafsInCurrent = currentHelper.getExceptLeafsInCurrent(hamster);
     if (isResistOutside) {
-        // 去除叶子元素,只保留祖先元素
-        hamster = helper.handleReactivateBlocks(hamster, ancestorsInCurrent);
+        // 去除叶子元素,只保留祖先元素和孤立元素
+        hamster = helper.handleReactivateBlocks(hamster, noLeafsInCurrent);
         // 同时如果点击的是叶子元素，则待激活元素为祖先元素
         if (nodeHelper.isInTree(hamster, toAcitivateId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
     }
@@ -279,10 +279,7 @@ function handleUnite (hamster, actions) {
      * 1. 嵌套取祖先元素
     */
     // 孤立节点与祖先节点
-    const ancestorIdsInCurrent = currentHelper.getAncestorInCurrent(hamster);
-    const orphanIdsInCurrent = currentHelper.getOrphansInCurrent(hamster);
-
-    const childrenIds = miaow.cat(ancestorIdsInCurrent, orphanIdsInCurrent);
+    const childrenIds = currentHelper.getExceptLeafsInCurrent(hamster);
 
     // 生成defaultGroupObject
     const entityId = helper.createId('block-');
