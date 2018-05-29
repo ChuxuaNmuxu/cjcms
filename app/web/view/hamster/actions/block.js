@@ -9,10 +9,11 @@ const actionCreaters = createActions({
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
         'PROPS_CHANGE': pmCreater,
-        'DRAG_END': pmCreater,
         'CLICK': pmCreater,
         'GROUP_UNITE': pmCreater,
-        'ROTATE_END': pmCreater 
+        'DRAG_END': pmCreater,
+        'ROTATE_END': pmCreater ,
+        'RESIZE_END': pmCreater,
     }
 })
 

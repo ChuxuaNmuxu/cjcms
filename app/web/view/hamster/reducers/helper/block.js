@@ -17,10 +17,7 @@ export function packageBlocks (hamster, ids) {
         value => ids.map(lodash.flow(lodash.curry(getEntity)(hamster), miaow.get('data.props.'.concat(value))))
     )
 
-    const [bottoms, rights] = [
-        tops.zip(heights).map(miaow.sum),
-        lefts.zip(widths).map(miaow.sum)
-    ];
+    const [bottoms, rights] = [miaow.listAdd(tops, heights), miaow.listAdd(lefts, widths)];
 
     const [packageTop, packageLeft, packageBottom, packageRight] = [tops.min(), lefts.min(), bottoms.max(), rights.max()]
 
@@ -83,4 +80,46 @@ export function stretchBlock (hamster, id, gap=0) {
     }))
 
     return hamster;
+}
+
+/**
+ * 钉住一个点  
+ * @param {Object} fourDimension 四维
+ * @param {Object} offset 偏移
+ * @param {*} point 钉子的坐标  String | Object
+ * @returns {plainObject}
+ */
+const pointToCoordinate = {
+    'nw': {x: 0, y: 0},
+    'sw': {x: 0, y: 1},
+    'ne': {x: 1, y: 0},
+    'se': {x: 1, y: 1},
+    'n': {x: 0.5, y: 0},
+    's': {x: 0.5, y: 1},
+    'e': {x: 1, y: 0.5},
+    'w': {x: 0, y: 0.5}
+}
+export function pin (fourDimension, offset, point) {
+    // 钉子的坐标
+    const pinCoordinate = lodash.isString(point) ? pointToCoordinate[point] : point;
+
+    // const fourDimensionWithOffset = {
+    //     ...fourDimension,
+    //     width: fourDimension.width + offset.width,
+    //     height: fourDimension.height + offset.height
+    // }
+
+    // const fourDimensionPinned = {
+    //     ...fourDimensionWithOffset,
+    //     left: fourDimensionWithOffset.left - offset.width * point.x,
+    //     top: fourDimensionWithOffset.top - offset.height * point.y
+    // }
+
+    return {
+        ...fourDimension,
+        width: fourDimension.width + offset.x,
+        height: fourDimension.height + offset.y,
+        left: fourDimension.left - offset.x * pinCoordinate.x,
+        top: fourDimension.top - offset.y * pinCoordinate.y
+    };
 }

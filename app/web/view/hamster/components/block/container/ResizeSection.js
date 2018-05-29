@@ -3,13 +3,29 @@ import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules'
 import styles from './ResizeSection.scss'
 import resizeSource from '../decorator/operation/resize';
+import {fromJS} from 'immutable'
 
 const spec = {
     beginResize: (props, monitor, component) => {
         console.log('resizeStart: ', monitor.innerMonitor.store.getState())
     },
+
+    canResize: (props, monitor, component) => {
+        const {block} = props;
+        const blockId = block.get('id');
+        const activatedId = props.hamster.getActivatedBlockIds();
+        
+        return activatedId.includes(blockId);
+    },
+
     endResize: (props, monitor, component) => {
-        console.log('resizeEnd: ', monitor.innerMonitor.store.getState())
+        const offset = monitor.getOffset();
+        const direction = monitor.getDirection()
+
+        props.hamster.blockManager.resizeEnd(fromJS({
+            offset,
+            direction
+        }));
     }
 }
 

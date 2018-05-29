@@ -33,6 +33,10 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.dragEnd(payload))
     }
 
+    resizeEnd (payload) {
+        this.dispatch(blockActions.resizeEnd(payload))
+    }
+
     rotateEnd (payload) {
         this.dispatch(blockActions.rotateEnd(payload))
     }

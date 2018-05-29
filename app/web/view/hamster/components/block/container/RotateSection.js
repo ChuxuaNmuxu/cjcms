@@ -43,6 +43,7 @@ const spec = {
             y: blockCenterClientOffset.y - clientOffset.y
         }
 
+        // TODO: 计算的是最终旋转到的角度，也是上一版使用的方案，这样有个问题就是两个旋转不同角度的block在一起旋转后会变成同一个角度
         const rotateRadian = Math.atan(offset.x / offset.y);
         let rotateAngle = rotateRadian * 180 / Math.PI;
 

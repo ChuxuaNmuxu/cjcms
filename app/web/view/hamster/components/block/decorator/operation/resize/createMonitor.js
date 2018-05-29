@@ -11,6 +11,10 @@ class ResizeMonitor extends Monitor {
     canResize () {
         return true;
     }
+
+    getDirection () {
+        return this.getState().dragOperation.sourceOptions.dir
+    }
 }
 
 

@@ -66,7 +66,10 @@ export function minus (minuend) {
     }, value)
 }
 
-//
+/**
+ * 替换
+ * @param {*} value 
+ */
 export function replaceAs (value) {
     return () => value
 }
@@ -298,4 +301,15 @@ export function get (path) {
  */
 export function sum (list) {
     return list.reduce((sum, v) => sum + v, 0)
+}
+
+
+
+/**
+ * 数组对应位置求和
+ * @param {*} a 
+ * @param {*} b 
+ */
+export function listAdd (a, b) {
+    return a.zip(b).map(sum)
 }
