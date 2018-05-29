@@ -11,11 +11,10 @@ export const getActivatedBlockIds = (hamster) => {
 }
 
 /**
- * 获取一组id中的祖先元素
- * @description 兼容模式，包括孤立节点,他是自己的祖先，即孤立节点+祖先节点
+ * 孤立节点+祖先节点
  */
-export function getAncestorsCompatibly (hamster, ids) {
-    const ancestorIds = miaow.toList(ids).map(lodash.curry(nodeHelper.getAncestorIdCompatibly)(hamster));
+export function getExceptLeafs (hamster, ids) {
+    const ancestorIds = miaow.toList(ids).map(lodash.curry(nodeHelper.getMaybeAncestorId)(hamster));
 
     return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
 }
@@ -24,11 +23,11 @@ export function getAncestorsCompatibly (hamster, ids) {
  * 获取一组id中的祖先元素
  * @description 不包括孤立节点
  */
-export function getAncestors (hamster, ids) {
-    const ancestorIds = miaow.toList(ids).map(lodash.curry(nodeHelper.getAncestorId)(hamster));
+// export function getAncestors (hamster, ids) {
+//     const ancestorIds = miaow.toList(ids).map(lodash.curry(nodeHelper.getAncestorId)(hamster));
 
-    return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
-}
+//     return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
+// }
 
 /**
  * 获取激活元素中出叶子节点之外的节点
@@ -37,17 +36,18 @@ export function getAncestors (hamster, ids) {
 export const getExceptLeafsInCurrent = (hamster) => {
     const activatedIds = getActivatedBlockIds(hamster);
 
-    return getAncestorsCompatibly(hamster, activatedIds);
+    return getExceptLeafs(hamster, activatedIds);
 }
 
 /**
  * 获取激活元素中的祖先元素
- * @description 不包括孤立节点
  */
 export const getAncestorInCurrent = (hamster) => {
     const activatedIds = getActivatedBlockIds(hamster);
 
-    return getAncestors(hamster, activatedIds);
+    const ancestorIds = activatedIds.map(lodash.curry(nodeHelper.getAncestorId)(hamster));
+
+    return lodash.flow(miaow.uniq, miaow.effect)(ancestorIds);
 }
 
 // // 在激活元素中去除祖先元素
@@ -72,7 +72,10 @@ export function getOrphansInCurrent (hamster) {
 export function getIdClusterInCurrent (hamster) {
     const orphanIdsInCurrent = getOrphansInCurrent(hamster);
     const ancestorBlockIds = getAncestorInCurrent(hamster);
+    console.log('ancestorBlockIds: ', ancestorBlockIds)
     const allLeafBlockIds = ancestorBlockIds.map(lodash.curry(nodeHelper.getAllLeafIds)(hamster)).flatten();
+
+    console.log('allLeafBlockIds: ', allLeafBlockIds.toJS())
 
     return miaow.uniq(miaow.cat(orphanIdsInCurrent, allLeafBlockIds))
 }
@@ -85,9 +88,9 @@ export function getIdClusterInCurrent (hamster) {
  * @param {*} ids 
  */
 export function resistOutside (hamster, ids) {
-    const ancestors = getAncestorsCompatibly(hamster, ids);
+    const blockIds = getExceptLeafs(hamster, ids);
 
-    return ancestors.size > 1
+    return blockIds.size > 1
 }
 
 /**

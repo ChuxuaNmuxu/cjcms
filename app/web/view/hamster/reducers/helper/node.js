@@ -2,6 +2,7 @@ import Immutbale from 'immutable';
 
 import * as miaow from '../../Utils/miaow';
 import * as entityHelper from './entity';
+import lodash from 'lodash'
 
 /**
  * 节点数组存在
@@ -32,21 +33,48 @@ export function getParentId (hamster, id) {
 }
 
 /**
+ * 是否在一个节点树中
+ * @description 父子节点至少得有一个
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function isInTree (hamster, id) {
+    return getChildrenIds(hamster, id).size > 0 || getParentId(hamster, id);
+}
+
+/**
+ * 是祖先节点
+ * @description 在节点树中,有子节点,没有父节点
+ */
+export function isAncestor (hamster, id) {
+    return getChildrenIds(hamster, id).size > 0 && !getParentId(hamster, id)
+}
+
+/**
+ * 是否是叶子节点
+ * @description 在节点树中且没有子节点
+ * @param {*} hamster 
+ * @param {*} id
+ */
+export function isLeaf (hamster, id) {
+    return isInTree(hamster, id) && getChildrenIds(hamster, id).size === 0
+}
+
+/**
  * 获取元素的祖先节点id
  * @param {*} hamster 
  * @param {*} id 
  */
-// 无祖先返回当前节点,自己是自己的祖先
-export const getAncestorIdCompatibly = (hamster, id) => {
+// 无祖先返回当前节点
+export const getMaybeAncestorId = (hamster, id) => {
     const parentId = getParentId(hamster, id);
     if (!parentId) return id;
-    return getAncestorIdCompatibly(hamster, parentId)
+    return getMaybeAncestorId(hamster, parentId)
 }
 // 无祖先节点返回undefined
 export function getAncestorId (hamster, id) {
-    const ancestorId = getAncestorIdCompatibly(hamster, id);
-    if (ancestorId === id) return;
-    return ancestorId;
+    const maybeAncestorId = getMaybeAncestorId(hamster, id);
+    if (isAncestor(hamster, maybeAncestorId)) return maybeAncestorId;
 }
 
 /**
@@ -56,7 +84,7 @@ export function getAncestorId (hamster, id) {
  * @param {*} seen 累加器，主要作用是为记录回调的结果，一般使用不需要传值；传值则为初始的叶子节点数组
  */
 // 没有children时会返回包含自己的数组
-export function getLeafIdsSecurely (hamster, id, seen) {
+export function getMaybeLeafIds (hamster, id, seen) {
     seen = seen || Immutbale.List();
     const ids = miaow.toList(id);
 
@@ -68,15 +96,15 @@ export function getLeafIdsSecurely (hamster, id, seen) {
     const children = getChildrenIds(hamster, head);
 
     // 满足条件，seen累加id(head)，消耗ids的size
-    if (!nodesExist(children)) return getLeafIdsSecurely(hamster, rest, miaow.cat(seen, head));
+    if (!nodesExist(children)) return getMaybeLeafIds(hamster, rest, miaow.cat(seen, head));
     // 否则，children和余下的id都满足可能产生叶子节点
-    return getLeafIdsSecurely(hamster, miaow.cat(rest, children), seen);
+    return getMaybeLeafIds(hamster, miaow.cat(rest, children), seen);
 }
 // 没有children返回空数组
 export function getLeafIds (hamster, id) {
     const ids = miaow.toList(id);
-    const leafs = getLeafIdsSecurely(hamster, ids);
-    return leafs.filter(leafId => leafId !== id);
+    const leafs = getMaybeLeafIds(hamster, ids);
+    return leafs.filter(lodash.curry(isLeaf)(hamster));
 }
 
 /**
@@ -85,18 +113,10 @@ export function getLeafIds (hamster, id) {
  * @param {*} id 
  */
 export function getAllLeafIds (hamster, id) {
-    const ancestorId = getAncestorIdCompatibly(hamster, id);
-    return getLeafIds(hamster, ancestorId)
-}
+    const ancestorId = getAncestorId(hamster, id);
 
-/**
- * 是否在一个节点树中
- * @description 父子节点至少得有一个
- * @param {*} hamster 
- * @param {*} id 
- */
-export function isInTree (hamster, id) {
-    return getChildrenIds(hamster, id).size > 0 || getParentId(hamster, id);
+    if (!ancestorId) return Immutbale.List()
+    return getLeafIds(hamster, ancestorId)
 }
 
 /**
@@ -107,22 +127,4 @@ export function isInTree (hamster, id) {
  */
 export function isOrphan (hamster, id) {
     return !isInTree(hamster, id)
-}
-
-/**
- * 是否是节点树中的的叶子节点
- * @description 在节点树中且没有子节点
- * @param {*} hamster 
- * @param {*} id
- */
-export function isLeaf (hamster, id) {
-    return isInTree(hamster, id) && getChildrenIds(hamster, id).size === 0
-}
-
-/**
- * 是祖先节点
- * @description 在节点树中,有子节点,没有父节点
- */
-export function isAncestor (hamster, id) {
-    return getChildrenIds(hamster, id).size > 0 && !getParentId(hamster, id)
 }

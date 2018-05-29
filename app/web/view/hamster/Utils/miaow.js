@@ -121,7 +121,7 @@ export function prevCheck (...funcs) {
  * 判断value是否存在(不为undefined或null)
  * @param {any} value 
  */
-function existy (value) {
+export function existy (value) {
     return value != null;
 }
 
