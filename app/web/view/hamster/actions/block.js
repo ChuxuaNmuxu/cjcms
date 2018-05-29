@@ -14,6 +14,7 @@ const actionCreaters = createActions({
         'DRAG_END': pmCreater,
         'ROTATE_END': pmCreater ,
         'RESIZE_END': pmCreater,
+        'BLOCK_DELETE': pmCreater
     }
 })
 

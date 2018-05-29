@@ -20,7 +20,6 @@ export default class Registry {
 
     addSource (source) {
         const id = this.createId();
-        console.log('id: ', id)
         this.sources[id] = source;
         // this.monitors[id] = monitor;
         return id;

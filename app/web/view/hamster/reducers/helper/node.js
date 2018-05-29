@@ -16,20 +16,41 @@ function nodesExist (ids) {
  * 获取子节点
  * @param {*} hamster 
  * @param {*} id 
+ * @returns list
  */
 export function getChildrenIds (hamster, id) {
     const entity = entityHelper.getEntity(hamster, id); 
-    return entity && entity.getIn(['data', 'children']);
+    if (!entity) return Immutbale.List();
+    return entity.getIn(['data', 'children']);
 }
 
 /**
  * 获取元素的父节点id
  * @param {*} hamster 
- * @param {*} id 
+ * @param {*} id
+ * @returns undefined | String 
  */
 export function getParentId (hamster, id) {
     const entity = entityHelper.getEntity(hamster, id);
     return entity && entity.getIn(['data', 'parent']);
+}
+
+/**
+ * 有子节点
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function hasChildrenIds (hamster, id) {
+    return getChildrenIds(hamster, id).size > 0
+}
+
+/**
+ * 有父节点
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export function hasParentId (hamster, id) {
+    return Boolean(getParentId(hamster, id))
 }
 
 /**
@@ -38,27 +59,49 @@ export function getParentId (hamster, id) {
  * @param {*} hamster 
  * @param {*} id 
  */
-export function isInTree (hamster, id) {
-    return getChildrenIds(hamster, id).size > 0 || getParentId(hamster, id);
-}
+export const isInTree = miaow.or(
+    hasChildrenIds,
+    hasParentId
+)
 
 /**
  * 是祖先节点
- * @description 在节点树中,有子节点,没有父节点
+ * @description 有子节点,没有父节点
  */
-export function isAncestor (hamster, id) {
-    return getChildrenIds(hamster, id).size > 0 && !getParentId(hamster, id)
-}
+export const isAncestor = miaow.and(
+    hasChildrenIds,
+    miaow.not(hasParentId)
+)
 
 /**
- * 是否是叶子节点
- * @description 在节点树中且没有子节点
+ * 是叶子节点
+ * @description 没有子节点,有父节点
  * @param {*} hamster 
  * @param {*} id
  */
-export function isLeaf (hamster, id) {
-    return isInTree(hamster, id) && getChildrenIds(hamster, id).size === 0
-}
+export const isLeaf = miaow.and(
+    hasParentId,
+    miaow.not(hasChildrenIds)
+)
+
+/**
+ * 是中间节点
+ * @description 既有子节点又有父节点
+ * @param {*} hamster 
+ * @param {*} id
+ */
+export const isMidsideNode = miaow.and(
+    hasChildrenIds,
+    hasParentId
+)
+
+/**
+ * 孤立节点
+ * @description 不在节点树中
+ * @param {*} hamster 
+ * @param {*} id 
+ */
+export const isOrphan = miaow.not(isInTree)
 
 /**
  * 获取元素的祖先节点id
@@ -104,7 +147,7 @@ export function getMaybeLeafIds (hamster, id, seen) {
 export function getLeafIds (hamster, id) {
     const ids = miaow.toList(id);
     const leafs = getMaybeLeafIds(hamster, ids);
-    return leafs.filter(lodash.curry(isLeaf)(hamster));
+    return leafs.filter(id => isLeaf(hamster, id));
 }
 
 /**
@@ -117,14 +160,4 @@ export function getAllLeafIds (hamster, id) {
 
     if (!ancestorId) return Immutbale.List()
     return getLeafIds(hamster, ancestorId)
-}
-
-/**
- * 孤立节点
- * @description 不在节点树中
- * @param {*} hamster 
- * @param {*} id 
- */
-export function isOrphan (hamster, id) {
-    return !isInTree(hamster, id)
 }

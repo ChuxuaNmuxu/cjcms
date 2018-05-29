@@ -244,7 +244,7 @@ function handleClickBlock (hamster, action) {
         // 去除叶子元素,只保留祖先元素和孤立元素
         hamster = helper.handleReactivateBlocks(hamster, noLeafsInCurrent);
         // 同时如果点击的是叶子元素，则待激活元素为祖先元素
-        if (nodeHelper.isInTree(hamster, toAcitivateId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
+        if (nodeHelper.isInTree(hamster, blockId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
     }
 
     // 操作符 @version 1.1 - 2
@@ -300,17 +300,28 @@ function handleUnite (hamster, actions) {
     }))
 
     // 加入indexs
+    // TODO: 新增block逻辑
     hamster = hamster.updateIn(['index', 'blocks'], miaow.add(entityId));
-
+    
     // 修改blocks的parent属性
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: childrenIds,
         operations: {'data.parent': miaow.replaceAs(entityId)}
     }))
 
+    // 删除中间节点
+    // TODO: 删除元素逻辑
+    hamster = hamster = hamster.updateIn(['index', 'blocks'], miaow.filter(id => !nodeHelper.isMidsideNode(hamster, id)))
+
     // 重激活组合元素
     hamster = helper.handleReactivateBlocks(hamster, entityId);
 
+    return hamster;
+}
+
+function handleDeleteBlock (hamster, action) {
+    const activateIds = currentHelper.getActivatedBlockIds(hamster);
+    hamster = hamster.updateIn(['index', 'blocks'], miaow.minus(activateIds));
     return hamster;
 }
 
@@ -335,6 +346,7 @@ const block = {
     [blockType('GROUP_UNITE')]: handleUnite,
     [blockType('ROTATE_END')]: handleRotateEnd,
     [blockType('RESIZE_END')]: handleResizeEnd,
+    [blockType('BLOCK_DELETE')]: handleDeleteBlock,
 }
 
 export default createReducer(initialState.hamster, block);

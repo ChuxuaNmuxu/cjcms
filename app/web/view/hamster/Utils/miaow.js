@@ -110,7 +110,7 @@ export const reset = dispatchMission(
  * @param {any} args
  */
 export function prevCheck (...funcs) {
-    const andFuncs = and(funcs);
+    const andFuncs = and.apply(null, funcs);
     return (execFunc) => (...args) => {
         if (!andFuncs.apply(null, args)) return undefined;
         return execFunc.apply(null, args)
@@ -125,15 +125,32 @@ export function existy (value) {
     return value != null;
 }
 
+export function identity (value) {
+    return () => value;
+}
+
 /**
  * 与
  * @param {Array} funcs 
  */
-export function and (funcs) {
+export function and (...funcs) {
+    return function (...args) {
+        return lodash.reduce(funcs, (accu, func) => {
+            if (!lodash.isFunction(func)) func = identity(Boolean(func));
+            return accu && func.apply(func, args);
+        }, true);
+    }
+}
+
+/**
+ * 或
+ * @param {*} funcs 
+ */
+export function or (...funcs) {
     return (...args) => lodash.reduce(funcs, (accu, func) => {
-        if (!lodash.isFunction(func)) func = () => !!func;
-        return accu && func.apply(func, args);
-    }, true);
+        if (!lodash.isFunction(func)) func = identity(Boolean(func));
+        return accu || func.apply(func, args);
+    }, false);
 }
 
 /**
@@ -217,6 +234,10 @@ export function ultimate (defaultHandle) {
         return dispatchMission.apply(null, funcs)
     }
 
+}
+
+export function not (func) {
+    return (...args) => !func.apply(null, args)
 }
 
 /******* immutable *********/
@@ -313,3 +334,5 @@ export function sum (list) {
 export function listAdd (a, b) {
     return a.zip(b).map(sum)
 }
+
+export const filter = func => list => list.filter(func)

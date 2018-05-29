@@ -29,6 +29,11 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.click(payload))
     }
 
+    blockDelete (payload) {
+        this.dispatch(blockActions.blockDelete(payload))
+    }
+
+
     dragEnd (payload) {
         this.dispatch(blockActions.dragEnd(payload))
     }

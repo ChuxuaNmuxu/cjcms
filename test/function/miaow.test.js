@@ -94,17 +94,18 @@ test('test minus', () => {
     expect(minusArray([5, 1])).toEqual([1])
 })
 
-test('test and', () => {
+test.only('test and', () => {
     const myMock = jest.fn();
 
     myMock
-    .mockReturnValueOnce(1)
+    .mockReturnValueOnce(false)
     .mockReturnValueOnce('123')
-    .mockReturnValueOnce(true)
+    .mockReturnValueOnce(false)
 
     const func = () => true
+    const func1 = () => 0
 
-    expect(miaow.and(func, false, func)()).toBe(true)
+    expect(miaow.and(func1, func, func)()).toBe(false)
 })
 
 test('test cat', () => {

@@ -32,11 +32,14 @@ const createConnect = (config) => (manager) => {
         //     disConnectSource = null;
         // }
 
-        disConnectSource = Backend.connectSource(
-            sourceId,
-            node,
-            options
-        )
+        if (currentNode && sourceId) {
+            disConnectSource = Backend.connectSource(
+                sourceId,
+                node,
+                options
+            )
+        }
+
     }
 
     const receiveId = id => {
