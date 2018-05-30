@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules'
 import styles from './ResizeSection.scss'
-import resizeSource from '../decorator/operation/resize';
+import resizeSource from '../../decorator/operation/resize';
 import {fromJS} from 'immutable'
+import parseConfig from './configManager'
 
 const spec = {
     beginResize: (props, monitor, component) => {
@@ -45,28 +46,39 @@ const collect = (monitor, connect) => ({
 @resizeSource('container', spec, collect)
 @CSSModules(styles)
 class ResizeSection extends Component {
+    static propTypes = {
+        resizeNorth: PropTypes.func,
+        resizeSouth: PropTypes.func,
+        resizeEast: PropTypes.func,
+        resizeWest: PropTypes.func,
+        resizeNW: PropTypes.func,
+        resizeNE: PropTypes.func,
+         resizeSW: PropTypes.func,
+        resizeSE: PropTypes.func,
+        config: PropTypes.object
+    }
 
     static displayName = 'ResizeSection'
 
     render() {
         const {resizeNorth, resizeSouth, resizeEast, resizeWest, resizeNW, resizeNE,  resizeSW, resizeSE} = this.props;
+        const {config = fromJS({resizable: true})} = this.props;
+
+        const options = parseConfig(config.get( 'resizable'))
+
         return (
             <React.Fragment>
-                {resizeNorth(<div styleName='north'/>)}
-                {resizeSouth(<div styleName='south'/>)}
-                {resizeEast(<div styleName='east'/>)}
-                {resizeWest(<div styleName='west'/>)}
-                {resizeNW(<div styleName='NW'/>)}
-                {resizeNE(<div styleName='NE'/>)}
-                {resizeSW(<div styleName='SW'/>)}
-                {resizeSE(<div styleName='SE'/>)}
+                {options.n && resizeNorth(<div styleName='north'/>)}
+                {options.s && resizeSouth(<div styleName='south'/>)}
+                {options.e && resizeEast(<div styleName='east'/>)}
+                {options.w && resizeWest(<div styleName='west'/>)}
+                {options.nw && resizeNW(<div styleName='NW'/>)}
+                {options.ne && resizeNE(<div styleName='NE'/>)}
+                {options.sw && resizeSW(<div styleName='SW'/>)}
+                {options.se && resizeSE(<div styleName='SE'/>)}
             </React.Fragment>
         );
     }
 }
-
-ResizeSection.propTypes = {
-
-};
 
 export default ResizeSection;

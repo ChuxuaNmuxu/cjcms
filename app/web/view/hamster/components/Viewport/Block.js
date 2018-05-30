@@ -16,10 +16,12 @@ import Container from '../block/container';
 import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable, { fromJS } from 'immutable';
 import {withHamster} from '../../hamster';
+import defaultBlockConfig from '../../config/block'
+const defaultContainerConfig = fromJS(defaultBlockConfig.content.container)
 
 // 其他情况
 const someOthers = (error, props) => {
-    return <Container {...props}>
+    return <Container config={defaultContainerConfig} {...props}>
         <div style={{color: 'red'}}>
             {`config not support yet, please check: ${error}`}
         </div>
@@ -62,7 +64,7 @@ const containerIsTrue = (config, props) => {
     if (config.get('container') !== true) return undefined;
 
     const ContentComponent = config.get('component');
-    return <Container {...props} >
+    return <Container config={defaultContainerConfig} {...props} >
         <ContentComponent {...props} />
     </Container>
 }
@@ -83,6 +85,7 @@ const containerConfigured = (config, props) => {
 // @config component: null 配置组件不存在的情况
 const componentIsNull = (config, props) => {
     console.log('componentIsNull: ', config.toJS())
+
     if (!config.get('component')) return <Container config = {config} {...props}/>;
 }
 
@@ -102,7 +105,7 @@ const contentIsComponent = (ContentComponent, props) => {
     // function or class
     if (!isValidateReactComponent(ContentComponent)) return undefined;
 
-    return <Container {...props}>
+    return <Container config={defaultContainerConfig} {...props}>
         <ContentComponent {...props} />
     </Container>
 }

@@ -8,6 +8,8 @@ import lodash from 'lodash'
 import uuid from 'uuid'
 import {Map} from 'immutable'
 import * as miaow from '../../../Utils/miaow'
+import defaultBlockConfig from '../../../config/block'
+const defaultContainerConfig = Map(defaultBlockConfig.content.container)
 
 const keys = lodash.range(3).map(() => uuid.v4())
 
@@ -41,9 +43,10 @@ export default class BlockContainer extends React.Component {
             this.ResizeSection
         ]
 
-        const {config: containerConfig = Map()} = this.props;
+        const {config: contentConfig = Map()} = this.props;
+        const containerConfig = contentConfig.get('container');
 
-        const config = containerConfig.filter((v, k) => !Reflect.has(['draggable', 'resizable', 'rotatable'], k));
+        const config = defaultContainerConfig.merge(containerConfig)
 
         const childrens = components.map((Component, k) => React.cloneElement(
             <Component key={keys[k]} />,
