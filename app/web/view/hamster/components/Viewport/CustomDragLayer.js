@@ -3,20 +3,22 @@ import PropTypes from 'prop-types'
 import DragLayer from '../block/decorator/operation/drag/DragLayer'
 
 @DragLayer((monitor, props) => ({
-    monitor
+    initialOffset: monitor.getInitialClientOffset(),
+    offset: monitor.getOffset(),
+    isDragging: monitor.isDragging()
 }))
 class CustomDragLayer extends Component {
     static propTypes = {
-        monitor: PropTypes.object
+        isDragging: PropTypes.bool,
+        offset: PropTypes.object
     }
 
     render() {
-        const {monitor} = this.props;
-        console.log('dragLayer: ', monitor)
+        if (!this.props.isDragging) return null
 
         return (
             <div>
-                layer
+                {this.props.offset.x}
             </div>
         )
     }

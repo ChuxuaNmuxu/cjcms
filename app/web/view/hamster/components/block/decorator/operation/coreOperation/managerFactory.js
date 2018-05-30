@@ -20,7 +20,7 @@ const createManager = (options) => class {
     }
 
     getRegistry () {
-        return this.monitor.registry;
+        return manager.registry;
     }
 
     // 通过getActions()[action]调用dispatch(action)

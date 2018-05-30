@@ -52,7 +52,7 @@ export default class Monitor {
     }
 
     isActing () {
-        return this.getState().dragOperation.sourceId
+        return !!this.getState().dragOperation.sourceId
     }
 
     getSourceId () {

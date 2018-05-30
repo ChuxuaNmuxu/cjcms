@@ -13,9 +13,9 @@ export default function displayLayerFactory (Manager) {
             constructor(props, context) {
                 super(props, context);
                 
-                this.state = this.getCurrentState();
                 this.manager = Manager;
                 this.monitor = Manager.getMonitor()
+                this.state = this.getCurrentState();
             }
 
             componentDidMount () {
