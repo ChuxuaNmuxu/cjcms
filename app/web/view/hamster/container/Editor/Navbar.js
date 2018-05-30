@@ -13,11 +13,13 @@ class NavbarView extends Component {
 }
 
 NavbarView.propTypes = {
+    slideGroups: ImmutablePropTypes.list,
     slides: ImmutablePropTypes.list,
     entities: ImmutablePropTypes.map
 };
 
 const mapStateToProps = ({hamster}) => ({
+    slideGroups: hamster.getIn(['index', 'slide.groups']),
     slides: hamster.getIn(['index', 'slides']),
     entities: hamster.get('entities')
 });

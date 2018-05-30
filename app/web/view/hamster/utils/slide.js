@@ -8,6 +8,16 @@ const createSlide = () => {
     return createEntity('slide', fromJS({}))
 }
 
+/**
+ * 创建卡片组
+ */
+const createSlideGroup = () => {
+    return createEntity('slide.group', fromJS({
+        slides: []
+    }))
+}
+
 export {
-    createSlide
+    createSlide,
+    createSlideGroup
 }

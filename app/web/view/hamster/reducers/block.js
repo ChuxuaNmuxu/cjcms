@@ -34,7 +34,6 @@ function handleAddBlock (hamster, action) {
 }
 
 function handleActivateBlock (hamster, action) {
-    // 添加blocks
     const {payload} = action;
     // 修改current
     const handleBlockIds = payload.blockIds;

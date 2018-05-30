@@ -3,14 +3,11 @@ import { createActions } from 'redux-actions';
 import {pmCreater} from './helper'
 
 const actionCreaters = createActions({
-    'BLOCK': {
+    'SLIDE': {
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
-        'PROPS_CHANGE': pmCreater,
-        'ENTITIES_CHANGE': pmCreater,
-        'CLICK': pmCreater,
-        'GROUP_UNITE': pmCreater
+        'ADD_GROUP': pmCreater
     }
 })
 
-export default actionCreaters.block;
+export default actionCreaters.slide;
