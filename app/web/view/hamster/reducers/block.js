@@ -96,20 +96,12 @@ function handleDragEnd (hamster, action) {
 function handleRotateEnd (hamster, action) {
     const {payload} = action;
     const rotateAngle = payload.get('rotateAngle')
-    // const blockId = payload.get('blockId');
-    // const rotateRadius = payload.get('rotateRadius');
-
-    // const blockCenterClientOffset = blockHelper.getBlockCenter(hamster, blockId)
-
-    // const rotateRadian = Math.atan(left / rotateRadius - top);
-    // const rotateAngle = rotateRadian / Math.PI * 180;
-
     // TODO: GROUP
     const applyBlockIds = currentHelper.getActivatedBlockIds(hamster);
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: applyBlockIds,
         operations: {
-            'data.props.rotation': miaow.replaceAs(rotateAngle)
+            'data.props.rotation': miaow.add(rotateAngle)
         }
     }))
 

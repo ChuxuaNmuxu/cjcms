@@ -233,12 +233,64 @@ export function ultimate (defaultHandle) {
         const funcs = args.concat(defaultHandle);
         return dispatchMission.apply(null, funcs)
     }
-
 }
 
 export function not (func) {
     return (...args) => !func.apply(null, args)
 }
+
+/**
+ * 求与纵轴夹角
+ * @param {Array} center 顶角坐标
+ * @param {Array} another 另一点坐标
+ * @returns {number} 取值范围: 0~360度
+ */
+export function angleToVerticalAxis (center, another) {
+    const offset = {
+        x: another.x - center.x,
+        y: center.y - another.y
+    }
+
+    const rotateRadian = Math.atan(offset.x / offset.y);
+    let rotateAngle = rotateRadian * 180 / Math.PI;
+
+    // 修正旋转角在0-360之间
+    if (offset.y < 0) {
+        rotateAngle += 180;
+    } else if (offset.y > 0 && offset.x < 0) {
+        rotateAngle += 360;
+    }
+
+    return rotateAngle;
+}
+
+/**
+ * 已知3个坐标，求夹角
+ * @param {Array} center 顶角坐标
+ * @param {Array} start 起始点坐标
+ * @param {Array} end 终点坐标
+ * @returns {number} 取值范围: -360~360度
+ */
+export function getAngleByThreeCoord (center, start, end) {
+    const startAngel = angleToVerticalAxis(center, start);
+    const endAngel = angleToVerticalAxis(center, end);
+    return endAngel - startAngel
+}
+
+export function always (value) {
+    return () => value
+}
+
+/**
+ * 恒为真
+ */
+export const alwaysTrue = always(true);
+
+
+/**
+ * 恒为假
+ */
+export const alwaysFalse = always(false);
 
 /******* immutable *********/
 

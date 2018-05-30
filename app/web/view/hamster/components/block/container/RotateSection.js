@@ -4,6 +4,7 @@ import rotateSource from '../decorator/operation/rotate';
 import CSSModules from 'react-css-modules'
 import styles from './RotateSection.scss'
 import {fromJS} from 'immutable'
+import {getAngleByThreeCoord} from '../../../Utils/miaow'
 
 let centerClientOffset = {}
 
@@ -38,21 +39,7 @@ const spec = {
             y: initialClientOffset.y + rotateRadius * Math.cos(rotation * Math.PI / 180)
         }
 
-        const offset = {
-            x: clientOffset.x - blockCenterClientOffset.x,
-            y: blockCenterClientOffset.y - clientOffset.y
-        }
-
-        // TODO: 计算的是最终旋转到的角度，也是上一版使用的方案，这样有个问题就是两个旋转不同角度的block在一起旋转后会变成同一个角度
-        const rotateRadian = Math.atan(offset.x / offset.y);
-        let rotateAngle = rotateRadian * 180 / Math.PI;
-
-        // 修正旋转角在0-360之间
-        if (offset.y < 0) {
-            rotateAngle += 180;
-        } else if (offset.y > 0 && offset.x < 0) {
-            rotateAngle += 360;
-        }
+        const rotateAngle = getAngleByThreeCoord(blockCenterClientOffset, initialClientOffset, clientOffset);
 
         props.hamster.blockManager.rotateEnd(fromJS({
             rotateAngle
