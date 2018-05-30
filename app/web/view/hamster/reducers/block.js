@@ -190,7 +190,7 @@ function handleClickBlock (hamster, action) {
      * 在未激活状态时，优先激活祖先元素；节点元素激活，祖先元素必然处于激活状态
      * 1. 非叶子节点元素，不做处理
      * 2. 祖先节点未激活，激活祖先元素
-     * 3. 节点元素激活，祖先元素必然处于激活状态
+     * 3. 节点元素操作时，祖先元素必然处于激活状态
     */
 
     /**
@@ -252,11 +252,13 @@ function handleClickBlock (hamster, action) {
         }
     }
 
-    hamster = operation(hamster);
+    hamster = operation(hamster, toAcitivateId);
     
-    // 保证ancestorId被激活 @version1.0 - 3
-    const ancestor = nodeHelper.getAncestorId(hamster, toAcitivateId);
-    if (ancestor) return helper.handleActivateBlocks(hamster, ancestor);
+    // 操作的是节点元素，祖先元素必然处于激活状态 @version1.0 - 3
+    if (nodeHelper.isLeaf(hamster, toAcitivateId)) {
+        const ancestor = nodeHelper.getAncestorId(hamster, toAcitivateId);
+        return helper.handleActivateBlocks(hamster, ancestor);
+    }
 
     return hamster;
 }
