@@ -5,7 +5,7 @@ import Monitor from './Monitor';
 import reducers from './reduces'
 import * as actions from './actions/dragDrop';
 import Backend from '../backend'
-import {extend} from '../../../../../Utils/miaow';
+// import {extend} from '../../../../../Utils/miaow';
 
 /**
  * Manager工厂函数
@@ -33,14 +33,14 @@ class Manager {
     }
 
     // manager扩展，目前只支持monitor
-    extend (options={}) {
-        this.extendMonitor(options.Monitor)
-    }
+    // extend (options={}) {
+    //     this.extendMonitor(options.Monitor)
+    // }
 
-    extendMonitor (monitor = {}) {
-        const MixMonitor = extend(Monitor, monitor);
-        this.monitor = new MixMonitor(this.store);
-    }
+    // extendMonitor (monitor = {}) {
+    //     const MixMonitor = extend(Monitor, monitor);
+    //     this.monitor = new MixMonitor(this.store);
+    // }
 
     getBackend () {
         return this.backend;

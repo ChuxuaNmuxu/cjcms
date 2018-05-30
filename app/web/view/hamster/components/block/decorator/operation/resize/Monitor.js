@@ -1,13 +1,7 @@
 /**
  * 每生成一个dragSource,都会实例化一个此monitor，并暴露给外部组件
  */
-import Monitor from '../base/Monitor';
-
-class ResizeMonitor extends Monitor {
-    constructor (manager) {
-       super(manager)
-    }
-
+class ResizeMonitor {
     canResize () {
         return true;
     }
@@ -18,4 +12,4 @@ class ResizeMonitor extends Monitor {
 }
 
 
-export default (manager) => new ResizeMonitor(manager);
+export default ResizeMonitor

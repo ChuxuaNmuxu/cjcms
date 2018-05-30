@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
 import {isEqual} from 'lodash'
 
-export default function displayLayerFactory (Monitor) {
+export default function displayLayerFactory (Manager) {
     const DisplayLayer = (collect, options={}) => DecoratedComponent => {
         const displayName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
 
@@ -14,15 +14,16 @@ export default function displayLayerFactory (Monitor) {
                 super(props, context);
                 
                 this.state = this.getCurrentState();
-                this.monitor = Monitor
+                this.manager = Manager;
+                this.monitor = Manager.getMonitor()
             }
 
             componentDidMount () {
-				this.unsubscribeFromOffsetChange = this.monitor.innerMonitor.subscribeToOffsetChange(
+				this.unsubscribeFromOffsetChange = this.monitor.subscribeToOffsetChange(
 					this.handleChange,
 				)
 
-                this.unsubscribeFromStateChange = this.monitor.innerMonitor.subscribeToStateChange(
+                this.unsubscribeFromStateChange = this.monitor.subscribeToStateChange(
                     this.handleChange
                 )
 

@@ -1,6 +1,6 @@
-import manager from './core';
+import manager from './DragManager';
 import createSource from './createSource';
-import createMonitor from './createMonitor';
+// import createMonitor from './createMonitor';
 import handleConnect from './handleConnect';
 import decorateSource from '../base/decorateSource';
 
@@ -12,7 +12,7 @@ const DragSource = (type, spec, collect, options) => {
         spec,
         collect,
         // options: {directConnect: true, ...options},
-        createMonitor,
+        // createMonitor,
         createSource,
         handleConnect,
         manager

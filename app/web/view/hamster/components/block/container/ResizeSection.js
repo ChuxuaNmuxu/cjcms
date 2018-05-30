@@ -7,7 +7,7 @@ import {fromJS} from 'immutable'
 
 const spec = {
     beginResize: (props, monitor, component) => {
-        console.log('resizeStart: ', monitor.innerMonitor.store.getState())
+        console.log('resizeStart: ', monitor.getState())
     },
 
     canResize: (props, monitor, component) => {

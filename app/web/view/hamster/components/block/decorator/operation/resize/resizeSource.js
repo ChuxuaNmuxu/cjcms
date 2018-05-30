@@ -1,7 +1,7 @@
-import manager from './core';
+import manager from './resizeManager';
 import decorateSource from '../base/decorateSource';
 import createSource from './createSource';
-import createMonitor from './createMonitor';
+// import createMonitor from './createMonitor';
 import handleConnect from './handleConnect';
 
 const resizeSource = (type, spec, collect) => {
@@ -11,7 +11,7 @@ const resizeSource = (type, spec, collect) => {
         type,
         spec,
         collect,
-        createMonitor,
+        // createMonitor,
         createSource,
         handleConnect,
         manager

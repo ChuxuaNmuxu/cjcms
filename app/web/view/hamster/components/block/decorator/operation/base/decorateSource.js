@@ -12,7 +12,7 @@ const decorateSource = ({
     spec,
     collect,
     options = {},
-    createMonitor,
+    // createMonitor,
     createSource,
     handleConnect,
     directConnect,
@@ -29,8 +29,8 @@ const decorateSource = ({
                 this.register = this.manager.getRegistry();
                 this.backend = this.manager.getBackend();
 
-                this.monitorHandle = createMonitor(this.manager);
-                this.sourceHandle = createSource(spec, this.monitorHandle);
+                // this.monitorHandle = createMonitor(this.manager);
+                this.sourceHandle = createSource(spec, this.monitor);
                 this.handleConnect = handleConnect(this.manager);
 
                 this.sourceId = null;
@@ -86,7 +86,7 @@ const decorateSource = ({
                 this.sourceId = this.register.addSource(this.sourceHandle);
 
                 // 需要sourceId的对象
-                this.monitorHandle.reveiveSourceId(this.sourceId);
+                this.monitor.reveiveSourceId(this.sourceId);
                 this.handleConnect.receiveId(this.sourceId)
             }
 
@@ -96,7 +96,7 @@ const decorateSource = ({
 
             getCurrentState () {
                 return collect && collect(
-                    this.monitorHandle,
+                    this.monitor,
                     this.handleConnect.connector
                 );
             }
