@@ -79,6 +79,8 @@ export default class Backend {
 
         // TODO: 拖动过程中，dom节点被移除，drag事件中断，需要手动处理dragEnd事件
 
+        if (!this.monitor.isActing()) e.preventDefault();
+
     }
 
     handleTopDragEnd = () => {

@@ -17,14 +17,14 @@ class Manager {
     constructor (Backend) {
         const store = createStore(reducers);
         this.store = store;
-        this.backend = new Backend(this);
-
+        
         // const MixMonitor = this.extendMonitor(Monitor, monitor);
         // this.monitor = new MixMonitor(store);
         this.monitor  = new Monitor(store);
         this.registry = this.monitor.registry;
         // this.registry = new Registry(store);
-
+        
+        this.backend = new Backend(this);
         this.setupBackend();
     }
 

@@ -7,7 +7,7 @@ const actionCreaters = createActions({
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
         'PROPS_CHANGE': pmCreater,
-        'ENTITIES_CHANGE': pmCreater,
+        'DRAG_END': pmCreater,
         'CLICK': pmCreater,
         'GROUP_UNITE': pmCreater
     }

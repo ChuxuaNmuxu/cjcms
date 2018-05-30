@@ -7,12 +7,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import CSSModules from 'react-css-modules';
 // import classNames from 'classnames';
-import {flowRight} from 'lodash';
+import {flowRight, isFunction} from 'lodash';
 
 import styles from './Block.scss';
 import configManager from '../../manager/ConfigManager';
-import blockPraser from '../block/decorator/blockParse';
-import {DragSource} from '../block/decorator/operation/drag';
+// import styleParser from '../block/decorator/style';
 import Container from '../block/container';
 import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
 import Immutable, { fromJS } from 'immutable';
@@ -27,18 +26,40 @@ const someOthers = (error, props) => {
     </Container>
 }
 
+// @config container: function 自定义容器
+const containerIsFunction = (config, props) => {
+    const container = config.get('container');
+    if (!isFunction(container)) return undefined;
+    const ContainerComponent = container(config, props)
+
+    const ContentComponent = config.get('component');
+    return <ContainerComponent {...props} >
+        <ContentComponent {...props} />
+    </ContainerComponent>
+}
+
+// @config container: object 容器单项配置
+const containerIsObject = (config, props) => {
+    const container = config.get('container');
+    if (!Immutable.Map.isMap(container)) return undefined;
+    
+    const ContentComponent = config.get('component');
+    return <Container config={config} {...props} >
+        <ContentComponent {...props} />
+    </Container>
+}
+
 // @config container: false 不需要容器
-const noContainer = (config, props) => {
+const containerIsFalse = (config, props) => {
     if (config.get('container') !== false) return undefined;
     
     const ContentComponent = config.get('component');
     return <ContentComponent {...props} />
 }
 
-// @config container: object 配置容器
-const containerConfigured = (config, props) => {
-    const container = config.get('container');
-    if (!Immutable.Map.isMap(container)) return undefined;
+// @config container: true 默认容器
+const containerIsTrue = (config, props) => {
+    if (config.get('container') !== true) return undefined;
 
     const ContentComponent = config.get('component');
     return <Container {...props} >
@@ -46,10 +67,24 @@ const containerConfigured = (config, props) => {
     </Container>
 }
 
+// @config container: object 配置容器
+const containerConfigured = (config, props) => {
+    const container = config.get('container');
+    if (!Immutable.Map.isMap(container)) return undefined;
+
+    return dispatchMission(
+        containerIsTrue,
+        containerIsFalse,
+        containerIsObject,
+        containerIsFunction
+    )(config, props);
+}
+
 // @config component: null 配置组件不存在的情况
 const componentIsNull = (config, props) => {
-    if (!config.get('component')) return someOthers('component is null', props);
-} 
+    console.log('componentIsNull: ', config.toJS())
+    if (!config.get('component')) return <Container config = {config} {...props}/>;
+}
 
 // @config object 配置对象
 const contentIsObject = (config, props) => {
@@ -58,8 +93,7 @@ const contentIsObject = (config, props) => {
     // 先校验component是否为null(这是默认配置，说明没有第三方自定义)，在处理容器的配置
     return dispatchMission(
         componentIsNull,
-        containerConfigured,
-        noContainer
+        containerConfigured
     )(config, props);
 }
 
@@ -73,37 +107,18 @@ const contentIsComponent = (ContentComponent, props) => {
     </Container>
 }
 
-const spec = {
-    beginDrag (props, monitor, component) {
-        console.log('beginDrag123: ', props)
-    },
-
-    endDrag (props, monitor, component) {
-        const {x: left, y: top} = monitor.getOffset();
-
-        const subscriber = props.hamster.getSubscriber();
-        props.hamster.blockManager.moveBlocks(subscriber.getActivatedBlockIds(), fromJS({left, top}));
-    }
-}
-
-const collect = (monitor, connect) => {
-    return {
-        monitor
-    }
-}
-
 @withHamster()
-@blockPraser()
-@DragSource('block', spec, collect)
+// @styleParser()
+// @DragSource('block', spec, collect)
 class Component extends React.Component {
     static propTypes = {
         block: PropTypes.any,
         active: PropTypes.bool
     }
 
-    handleClick = (e, block) => {
+    handleClick = (e) => {
+        const {hamster, block} = this.props;
         const blockId = block.get('id');
-        const {hamster} = this.props;
         hamster.blockManager.clickBlock({event: e, blockId});
     }
 

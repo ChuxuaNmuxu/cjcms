@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import rotateSource from '../decorator/operation/rotate';
+import CSSModules from 'react-css-modules'
+import styles from './RotateSection.scss'
 
 const spec = {
     beginRotate: (props, monitor, component) => {
@@ -18,33 +20,27 @@ const collect = (monitor, connector) => ({
 
 
 @rotateSource('container', spec, collect)
-class RotatePin extends Component {
+@CSSModules(styles)
+class RotateSection extends Component {
+    static displayName = 'RotateSection'
+
     static propTypes = {
         canRotate: PropTypes.bool,
         rotateSource: PropTypes.func
     }
 
     render() {
-        const style = {
-            width: '20px',
-            height: '20px',
-            background: 'violet',
-            borderRadio: '50%',
-            position: 'absolute',
-            top: '30px',
-            right: '20px'
-        }
-
         const {rotateSource} = this.props;
 
         return (
-            rotateSource(
-                <div style={style}>
-                    旋转吧，地球君
+            <div styleName='rotate-wrap' className='rotate-wrap'>
+                    <div className="axle" />
+                {
+                    rotateSource(<div className="handle" />)
+                }
                 </div>
-            )
         )
     }
 }
 
-export default  RotatePin;
+export default  RotateSection;

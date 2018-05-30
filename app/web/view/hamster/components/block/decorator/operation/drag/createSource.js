@@ -16,7 +16,7 @@ class DragSource extends SourceHandles {
     }
 
     canAct () {
-        return true;
+        return this.spec.canDrag ? this.spec.canDrag(this.props, this.monitor, this.component) : true;
     }
 
     endAct () {

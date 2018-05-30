@@ -27,10 +27,10 @@ const createConnect = (config) => (manager) => {
         currentOptions = options
 
         // 连接到backend之前先清除原来的，每个sourceId在backend中只会存在一个，目前还不知道有啥用
-        if (disConnectSource) {
-            disConnectSource();
-            disConnectSource = null;
-        }
+        // if (disConnectSource) {
+        //     disConnectSource();
+        //     disConnectSource = null;
+        // }
 
         disConnectSource = Backend.connectSource(
             sourceId,

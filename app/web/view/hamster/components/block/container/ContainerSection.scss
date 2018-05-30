@@ -1,0 +1,13 @@
+.wrap {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    margin: 5px;
+    vertical-align: middle;
+    position: absolute;
+
+    &.active {
+        border-color: red;
+    }
+}
