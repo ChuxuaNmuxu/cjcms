@@ -5,6 +5,7 @@ import EntityManager from './EntityManager'
 import SourceManager from './SourceManager'
 import StoreManager from './StoreManager'
 import BlockManager from './BlockManager'
+import SlideManager from './SlideManager'
 import Subscriber from './Subscriber';
 import hamster from '.';
 
@@ -37,6 +38,7 @@ class Hamster extends StoreManager {
         this.entityManager = new EntityManager(this);
         this.sourceManager = new SourceManager(this);
         this.blockManager = new BlockManager(this);
+        this.slideManager = new SlideManager(this);
         this.subscriber = new Subscriber(store);
     }
 

@@ -6,6 +6,14 @@ export const getActivatedBlockIds = (hamster) => {
     return hamster.getIn(['current', 'blocks'])
 }
 
+export const getActivatedSlideIds = (hamster) => {
+    return hamster.getIn(['current', 'slides'])
+}
+
+export const getActivatedSlideGroupId = (hamster) => {
+    return hamster.getIn(['current', 'slide.group'])
+}
+
 // 获取激活元素中的祖先元素
 export const getAncestorInCurrent = (hamster) => {
     const activatedIds = getActivatedBlockIds(hamster);

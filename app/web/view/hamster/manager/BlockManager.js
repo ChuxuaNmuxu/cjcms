@@ -22,7 +22,6 @@ class BlockManager extends HamsterManager {
         blocks = fromJS(blocks);
         blocks = blocks.map(extractBlockData);
         this.dispatch(blockActions.add({blocks}));
-        // addBlock时会生成唯一id
     }
 
     clickBlock (payload) {

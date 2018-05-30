@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import Navbar from '../../components/Navbar';
 
 class NavbarView extends Component {
-    render() {
+    render () {
         return (
-            <Navbar />
+            <Navbar {...this.props} />
         );
     }
 }
 
 NavbarView.propTypes = {
-
+    slideGroups: ImmutablePropTypes.list,
+    slides: ImmutablePropTypes.list,
+    entities: ImmutablePropTypes.map
 };
 
-export default connect()(NavbarView);
+const mapStateToProps = ({hamster}) => ({
+    slideGroups: hamster.getIn(['index', 'slide.groups']),
+    slides: hamster.getIn(['index', 'slides']),
+    entities: hamster.get('entities')
+});
+
+export default connect(mapStateToProps)(NavbarView);
