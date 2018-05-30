@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import DragLayer from '../block/decorator/operation/DragLayer'
+import DragLayer from '../block/decorator/operation/drag/DragLayer'
 
 @DragLayer((monitor, props) => ({
-    monitor,
-    props
+    monitor
 }))
 class CustomDragLayer extends Component {
     static propTypes = {
@@ -12,6 +11,9 @@ class CustomDragLayer extends Component {
     }
 
     render() {
+        const {monitor} = this.props;
+        console.log('dragLayer: ', monitor)
+
         return (
             <div>
                 layer

@@ -1,0 +1,66 @@
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import hoistStatics from 'hoist-non-react-statics'
+import {isEqual} from 'lodash'
+
+export default function displayLayerFactory (Monitor) {
+    const DisplayLayer = (collect, options={}) => DecoratedComponent => {
+        const displayName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
+
+        class Layer extends Component {
+            static displayName = 'DisplayLayer' + displayName;
+
+            constructor(props, context) {
+                super(props, context);
+                
+                this.state = this.getCurrentState();
+                this.monitor = Monitor
+            }
+
+            componentDidMount () {
+				this.unsubscribeFromOffsetChange = this.monitor.innerMonitor.subscribeToOffsetChange(
+					this.handleChange,
+				)
+
+                this.unsubscribeFromStateChange = this.monitor.innerMonitor.subscribeToStateChange(
+                    this.handleChange
+                )
+
+                this.handleChange();
+            }
+
+            componentWillUnmount () {
+                this.unsubscribeFromOffsetChange();
+                this.unsubscribeFromStateChange();
+            }
+
+            handleChange = () => {
+                const state = this.getCurrentState();
+                if (isEqual(state, this.state)) return;
+                this.setState({
+                    ...state
+                })
+            }
+            getCurrentState = () => {
+                return collect && collect(
+                    this.monitor,
+                    this.props
+                );
+            }
+
+            render() {
+                return (
+                    <DecoratedComponent 
+                      {...this.state}
+                      {...this.props}
+                      ref={node => {this.node = node}}
+                    />
+                )
+            }
+        }
+
+        return hoistStatics(Layer, DecoratedComponent)
+    }
+
+    return DisplayLayer;
+} 

@@ -14,7 +14,7 @@ export class Viewport extends React.Component {
                 <div className='reveal'>
                     <div className='slides'>
                         <section className='section'>
-                            {/* <CustomDragLayer /> */}
+                            <CustomDragLayer />
                             {
                                 blockIds.map(id =>
                                     <Block

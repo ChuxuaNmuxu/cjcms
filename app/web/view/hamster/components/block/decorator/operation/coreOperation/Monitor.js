@@ -15,15 +15,31 @@ export default class Monitor {
             const currentStateId =  this.store.getState().stateId;
 
             if (prevStateId !== currentStateId) {
+                prevStateId = currentStateId;
                 listener()
             }
 
-            prevStateId = currentStateId;
         }
 
         // 返回解除监听函数
         return this.store.subscribe(handleChange);
     }
+
+        // 订阅store中offset相关数据的变动
+        subscribeToOffsetChange (listener, options = {}) {
+            // TODO: 参数校验
+            let previousState = this.store.getState().dragOffset
+            const handleChange = () => {
+                const nextState = this.store.getState().dragOffset
+                if (nextState !== previousState) {
+                    previousState = nextState;
+                    listener()
+                }
+    
+            }
+    
+            return this.store.subscribe(handleChange)
+        }
 
     // 订阅位置的变动
     subscribeToOffsetChange (listener, options = {}) {
