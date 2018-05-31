@@ -1,9 +1,10 @@
 import lodash from 'lodash';
 import Immutable from 'immutable';
 
-import { getEntity } from './entity';
 import * as miaow from '../../Utils/miaow';
 import * as entityHelper from './entity';
+import { getActivatedBlockIds, resistOutside } from './current';
+import { getAllLeafIds, isAncestor } from './node';
 
 /**
  * 包裹blocks的框的位置及大小
@@ -15,7 +16,7 @@ import * as entityHelper from './entity';
 export function packageBlocks (hamster, ids) {
     ids = miaow.toList(ids);
     const [tops, lefts, widths, heights] = ['top', 'left', 'width', 'height'].map(
-        value => ids.map(lodash.flow(lodash.curry(getEntity)(hamster), miaow.get('data.props.'.concat(value))))
+        value => ids.map(lodash.flow(lodash.curry(entityHelper.getEntity)(hamster), miaow.get('data.props.'.concat(value))))
     )
 
     const [bottoms, rights] = [miaow.listAdd(tops, heights), miaow.listAdd(lefts, widths)];
@@ -112,3 +113,43 @@ export function pin (fourDimension, offset, point) {
         top: fourDimension.top - offset.y * pinCoordinate.y
     };
 }
+
+/**
+ * 将被操作的正确block
+ * @param {*} hamster 
+ * @description 对外：所有激活元素；对内：去掉祖先元素
+ * @returns {Array} 全是叶子节点或者没有叶子节点
+ */
+export function getRightBlock (hamster) {
+    const activatedBlockIds = getActivatedBlockIds(hamster);
+    if (resistOutside(hamster, activatedBlockIds)) return activatedBlockIds;
+    return activatedBlockIds.filter(id => !isAncestor(hamster, id));
+}
+
+/**
+ * 将被drag的正确block
+ * @param {*} hamster 
+ * @description 祖先节点->整棵树
+ */
+export const rightBlockToDrag = hamster => lodash.flow(
+    getRightBlock,
+    miaow.map(id => isAncestor(hamster, id) ? miaow.cat(id, getAllLeafIds(hamster, id)) : id),
+    miaow.handle('flatten')
+)(hamster)
+
+/**
+ * 将被resize的正确block
+ * @param {*} hamster 
+ * @description 去掉祖先节点
+ */
+export const rightBlockToResize = hamster => lodash.flow(
+    getRightBlock,
+    miaow.filter(id => !isAncestor(hamster, id)),
+)(hamster)
+
+/**
+ * 将被rotate的正确block
+ * @param {*} hamster 
+ * @description 祖先节点->整棵树
+ */
+export const rightBlockToRotate = rightBlockToDrag;

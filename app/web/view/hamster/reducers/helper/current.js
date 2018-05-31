@@ -82,7 +82,6 @@ export function getIdClusterInCurrent (hamster) {
 
 /**
  * 攘外
- * 
  * @description 组合对内透明，对外表现为一个完整的元素
  *  对外：被激活元素中已有非点击元素的祖先元素
  * @param {*} ids 
@@ -90,7 +89,7 @@ export function getIdClusterInCurrent (hamster) {
 export function resistOutside (hamster, ids) {
     const blockIds = getExceptLeafs(hamster, ids);
 
-    return blockIds.size > 1
+    return ids.size ===1 || blockIds.size > 1
 }
 
 /**

@@ -71,11 +71,7 @@ function handleDragEnd (hamster, action) {
      * 待移动的blockId
      * @description 激活节点数组中包含祖先节点，独立节点和叶子节点，只需要将未选中的叶子节点包含进来即可
      */
-    const activatedBlockIds = currentHelper.getActivatedBlockIds(hamster);
-    const ancestorBlockIds = currentHelper.getAncestorInCurrent(hamster);
-    const allLeafBlockIds = ancestorBlockIds.map(lodash.curry(nodeHelper.getAllLeafIds)(hamster)).flatten();
-
-    const needMoveBlockIds = miaow.uniq(miaow.cat(activatedBlockIds, allLeafBlockIds))
+    const needMoveBlockIds = blockHelper.rightBlockToDrag(hamster)
 
     // 移动block
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({

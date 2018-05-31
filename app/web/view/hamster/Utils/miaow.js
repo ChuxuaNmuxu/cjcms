@@ -376,8 +376,6 @@ export function sum (list) {
     return list.reduce((sum, v) => sum + v, 0)
 }
 
-
-
 /**
  * 数组对应位置求和
  * @param {*} a 
@@ -387,4 +385,8 @@ export function listAdd (a, b) {
     return a.zip(b).map(sum)
 }
 
-export const filter = func => list => list.filter(func)
+export const map = func => param => param.map(func) ;
+
+export const filter = func => list => list.filter(func);
+
+export const handle = operation => list => list[operation]();
