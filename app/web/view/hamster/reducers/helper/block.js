@@ -64,8 +64,8 @@ export function updateBlockFourDimension (hamster, ids, payload) {
  * @param {*} id 
  * @param {*} gap 扩大的距离
  */ 
-export function stretchBlock (hamster, id, gap=0) {
-    const FourDimension = getPackageFourDimension(hamster, miaow.toList(id));
+export function stretchBlock (hamster, ids, gap=0) {
+    const FourDimension = getPackageFourDimension(hamster, miaow.toList(ids));
     const packageDimensionWithGap = {
         left: FourDimension.left - gap,
         top: FourDimension.top - gap,
@@ -74,7 +74,7 @@ export function stretchBlock (hamster, id, gap=0) {
     }
 
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
-        ids: id,
+        ids,
         operations: lodash.reduce(packageDimensionWithGap, (accu, v, k) => {
             accu['data.props.'.concat(k)] = miaow.replaceAs(v)
             return accu;
@@ -123,7 +123,7 @@ export function pin (fourDimension, offset, point) {
 export function getRightBlock (hamster) {
     const activatedBlockIds = getActivatedBlockIds(hamster);
     if (resistOutside(hamster, activatedBlockIds)) return activatedBlockIds;
-    return activatedBlockIds.filter(id => !isAncestor(hamster, id));
+    return activatedBlockIds.filter(miaow.not(isAncestor)(hamster));
 }
 
 /**
@@ -133,7 +133,12 @@ export function getRightBlock (hamster) {
  */
 export const rightBlockToDrag = hamster => lodash.flow(
     getRightBlock,
-    miaow.map(id => isAncestor(hamster, id) ? miaow.cat(id, getAllLeafIds(hamster, id)) : id),
+    miaow.map(
+        miaow.dispatchMission(
+            miaow.prevCheck(isAncestor(hamster))(id => miaow.cat(id, getAllLeafIds(hamster, id))),
+            miaow.identity
+        )
+    ),
     miaow.handle('flatten')
 )(hamster)
 
@@ -144,7 +149,7 @@ export const rightBlockToDrag = hamster => lodash.flow(
  */
 export const rightBlockToResize = hamster => lodash.flow(
     getRightBlock,
-    miaow.filter(id => !isAncestor(hamster, id)),
+    miaow.filter(miaow.not(isAncestor)(hamster)),
 )(hamster)
 
 /**

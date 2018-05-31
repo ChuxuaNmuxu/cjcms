@@ -72,7 +72,7 @@ function handleDragEnd (hamster, action) {
      * @description 激活节点数组中包含祖先节点，独立节点和叶子节点，只需要将未选中的叶子节点包含进来即可
      */
     const needMoveBlockIds = blockHelper.rightBlockToDrag(hamster)
-
+    
     // 移动block
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: needMoveBlockIds,
@@ -81,6 +81,22 @@ function handleDragEnd (hamster, action) {
             'data.props.left': miaow.add(offset.get('left'))
         }
     }));
+    
+    const activatedIds = currentHelper.getActivatedBlockIds(hamster);
+    // 更新组合元素的思维
+    if (miaow.not(currentHelper.resistOutside)(hamster, activatedIds)) {
+        // 初始大小及位置
+        const ancestorId = currentHelper.getAncestorInCurrent(hamster);
+
+        const idCluster = currentHelper.getIdClusterInCurrent(hamster, activatedIds);
+        const packageFourDimension = blockHelper.getPackageFourDimension(hamster, idCluster);
+        hamster = blockHelper.updateBlockFourDimension(hamster, ancestorId, Immutable.fromJS(packageFourDimension));
+    
+        // 扩大一点,留点间隙
+        hamster = blockHelper.stretchBlock(hamster, ancestorId, 5);
+
+    }
+
     return hamster;
 }
 
@@ -221,7 +237,7 @@ function handleClickBlock (hamster, action) {
    const activeIds = currentHelper.getActivatedBlockIds(hamster);
 
    // 祖先节点元素，不做处理 @version 1.0 - 1
-   if (nodeHelper.isAncestor(hamster, blockId)) return hamster;
+   if (nodeHelper.isAncestor(hamster)(blockId)) return hamster;
 
     // 激活元素 @version 1.1 - 1 @version 1.0 - 2
     const isResistOutside = currentHelper.resistOutside(hamster, activeIds.concat(blockId));
@@ -232,7 +248,7 @@ function handleClickBlock (hamster, action) {
         // 去除叶子元素,只保留祖先元素和孤立元素
         hamster = helper.handleReactivateBlocks(hamster, noLeafsInCurrent);
         // 同时如果点击的是叶子元素，则待激活元素为祖先元素
-        if (nodeHelper.isInTree(hamster, blockId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
+        if (nodeHelper.isInTree(hamster)(blockId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
     }
 
     // 操作符 @version 1.1 - 2
@@ -251,7 +267,7 @@ function handleClickBlock (hamster, action) {
     hamster = operation(hamster, toAcitivateId);
     
     // 操作的是节点元素，祖先元素必然处于激活状态 @version1.0 - 3
-    if (nodeHelper.isLeaf(hamster, toAcitivateId)) {
+    if (nodeHelper.isLeaf(hamster)(toAcitivateId)) {
         const ancestor = nodeHelper.getAncestorId(hamster, toAcitivateId);
         return helper.handleActivateBlocks(hamster, ancestor);
     }
@@ -276,7 +292,7 @@ function handleUnite (hamster, actions) {
     hamster = helper.createDefaultBlockObjects(hamster, entityId);
 
     // 初始大小及位置
-    const idCluster = currentHelper.getIdClusterInCurrent(hamster);
+    const idCluster = currentHelper.getIdClusterInCurrent(hamster, activeblockIds);
     const packageFourDimension = blockHelper.getPackageFourDimension(hamster, idCluster);
     hamster = blockHelper.updateBlockFourDimension(hamster, entityId, Immutable.fromJS(packageFourDimension));
 
@@ -301,7 +317,7 @@ function handleUnite (hamster, actions) {
 
     // 删除中间节点
     // TODO: 删除元素逻辑
-    hamster = hamster = hamster.updateIn(['index', 'blocks'], miaow.filter(id => !nodeHelper.isMidsideNode(hamster, id)))
+    hamster = hamster = hamster.updateIn(['index', 'blocks'], miaow.filter(miaow.not(nodeHelper.isMidsideNode)(hamster)))
 
     // 重激活组合元素
     hamster = helper.handleReactivateBlocks(hamster, entityId);

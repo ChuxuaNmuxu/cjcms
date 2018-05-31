@@ -59,19 +59,19 @@ export function hasParentId (hamster, id) {
  * @param {*} hamster 
  * @param {*} id 
  */
-export const isInTree = miaow.or(
+export const isInTree = hamster => id => miaow.or(
     hasChildrenIds,
     hasParentId
-)
+)(hamster, id)
 
 /**
  * 是祖先节点
  * @description 有子节点,没有父节点
  */
-export const isAncestor = miaow.and(
+export const isAncestor = hamster => id => miaow.and(
     hasChildrenIds,
     miaow.not(hasParentId)
-)
+)(hamster, id)
 
 /**
  * 是叶子节点
@@ -79,10 +79,10 @@ export const isAncestor = miaow.and(
  * @param {*} hamster 
  * @param {*} id
  */
-export const isLeaf = miaow.and(
+export const isLeaf = hamster => id => miaow.and(
     hasParentId,
     miaow.not(hasChildrenIds)
-)
+)(hamster, id)
 
 /**
  * 是中间节点
@@ -90,10 +90,10 @@ export const isLeaf = miaow.and(
  * @param {*} hamster 
  * @param {*} id
  */
-export const isMidsideNode = miaow.and(
+export const isMidsideNode = hamster => id => miaow.and(
     hasChildrenIds,
     hasParentId
-)
+)(hamster, id)
 
 /**
  * 孤立节点
@@ -147,7 +147,7 @@ export function getMaybeLeafIds (hamster, id, seen) {
 export function getLeafIds (hamster, id) {
     const ids = miaow.toList(id);
     const leafs = getMaybeLeafIds(hamster, ids);
-    return leafs.filter(id => isLeaf(hamster, id));
+    return leafs.filter(isLeaf(hamster));
 }
 
 /**
@@ -161,3 +161,6 @@ export function getAllLeafIds (hamster, id) {
     if (!ancestorId) return Immutbale.List()
     return getLeafIds(hamster, ancestorId)
 }
+
+// 过滤出祖先节点
+export const filterAncestorIds = hamster => ids => miaow.filter(isAncestor(hamster))(miaow.toList(ids));

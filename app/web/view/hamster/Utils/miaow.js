@@ -125,9 +125,11 @@ export function existy (value) {
     return value != null;
 }
 
-export function identity (value) {
-    return () => value;
-}
+// export function identity (value) {
+//     return () => value;
+// }
+
+export const identity = value => value
 
 /**
  * 与
@@ -136,7 +138,7 @@ export function identity (value) {
 export function and (...funcs) {
     return function (...args) {
         return lodash.reduce(funcs, (accu, func) => {
-            if (!lodash.isFunction(func)) func = identity(Boolean(func));
+            if (!lodash.isFunction(func)) func = always(Boolean(func));
             return accu && func.apply(func, args);
         }, true);
     }
@@ -148,7 +150,7 @@ export function and (...funcs) {
  */
 export function or (...funcs) {
     return (...args) => lodash.reduce(funcs, (accu, func) => {
-        if (!lodash.isFunction(func)) func = identity(Boolean(func));
+        if (!lodash.isFunction(func)) func = always(Boolean(func));
         return accu || func.apply(func, args);
     }, false);
 }
@@ -236,7 +238,12 @@ export function ultimate (defaultHandle) {
 }
 
 export function not (func) {
-    return (...args) => !func.apply(null, args)
+    return (...args) => {
+        const result = func.apply(null, args)
+
+        if (lodash.isFunction(result)) return not(result)
+        return !result;
+    }
 }
 
 /**

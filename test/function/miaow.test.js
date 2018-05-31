@@ -94,7 +94,7 @@ test('test minus', () => {
     expect(minusArray([5, 1])).toEqual([1])
 })
 
-test.only('test and', () => {
+test('test and', () => {
     const myMock = jest.fn();
 
     myMock
@@ -125,4 +125,14 @@ test('test getDefference', () => {
     // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
     expect(miaow.getDefference(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2]))).toEqual(Immutable.List([3]))
     expect(miaow.getDefference(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toEqual(Immutable.List([3]))
+})
+
+test.only('test not', () => {
+    // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
+
+    const a = () => () => true
+
+    const b = args => true
+
+    expect(miaow.not(b)(33)).toEqual(false)
 })
