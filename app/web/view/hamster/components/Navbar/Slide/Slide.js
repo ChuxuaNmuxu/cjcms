@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import CSSModules from 'react-css-modules'
 
-import styles from './Slide.scss'
+import styles from './styles.scss'
 
 @CSSModules(styles)
 class Slide extends Component {
