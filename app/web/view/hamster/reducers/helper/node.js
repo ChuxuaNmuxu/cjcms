@@ -115,9 +115,9 @@ export const getMaybeAncestorId = (hamster, id) => {
     return getMaybeAncestorId(hamster, parentId)
 }
 // 无祖先节点返回undefined
-export function getAncestorId (hamster, id) {
+export const getAncestorId = hamster => id => {
     const maybeAncestorId = getMaybeAncestorId(hamster, id);
-    if (isAncestor(hamster, maybeAncestorId)) return maybeAncestorId;
+    if (isAncestor(hamster)(maybeAncestorId)) return maybeAncestorId;
 }
 
 /**
@@ -155,12 +155,20 @@ export function getLeafIds (hamster, id) {
  * @param {*} hamster 
  * @param {*} id 
  */
-export function getAllLeafIds (hamster, id) {
-    const ancestorId = getAncestorId(hamster, id);
-
-    if (!ancestorId) return Immutbale.List()
-    return getLeafIds(hamster, ancestorId)
+export function getAllLeafIds (hamster) {
+    return id => {
+        const ancestorId = getAncestorId(hamster)(id);
+    
+        if (!ancestorId) return Immutbale.List()
+        return getLeafIds(hamster, ancestorId)
+    }
 }
 
 // 过滤出祖先节点
 export const filterAncestorIds = hamster => ids => miaow.filter(isAncestor(hamster))(miaow.toList(ids));
+
+// 过滤出叶子节点
+export const filterLeafIds = hamster => ids => miaow.filter(isLeaf(hamster))(miaow.toList(ids));
+
+// ids里是否存在叶子元素
+export const includesLeafs = hamster => ids => ids.some(isLeaf(hamster))

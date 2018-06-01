@@ -3,8 +3,9 @@ import Immutable from 'immutable';
 
 import * as miaow from '../../Utils/miaow';
 import * as entityHelper from './entity';
-import { getActivatedBlockIds, resistOutside } from './current';
-import { getAllLeafIds, isAncestor } from './node';
+import * as currentHelper from './current';
+import * as nodeHelper from './node';
+import * as helper from './helper';
 
 /**
  * 包裹blocks的框的位置及大小
@@ -85,6 +86,21 @@ export function stretchBlock (hamster, ids, gap=0) {
 }
 
 /**
+ * 以leafids更新groupId的block四维
+ * @param {*} hamster 
+ * @param {*} leafIds 
+ * @param {*} groupId 
+ */
+export function updateGroupFourDimension (hamster, leafIds, groupId) {
+    const packageFourDimension = getPackageFourDimension(hamster, leafIds);
+    hamster = updateBlockFourDimension(hamster, groupId, Immutable.fromJS(packageFourDimension));
+
+    // 扩大一点,留点间隙
+    hamster = stretchBlock(hamster, groupId, 5);
+    return hamster;
+}
+
+/**
  * 钉住一个点  
  * @param {Object} fourDimension 四维
  * @param {Object} offset 偏移
@@ -114,47 +130,17 @@ export function pin (fourDimension, offset, point) {
     };
 }
 
-/**
- * 将被操作的正确block
- * @param {*} hamster 
- * @description 对外：所有激活元素；对内：去掉祖先元素
- * @returns {Array} 全是叶子节点或者没有叶子节点
- */
-export function getRightBlock (hamster) {
-    const activatedBlockIds = getActivatedBlockIds(hamster);
-    if (resistOutside(hamster, activatedBlockIds)) return activatedBlockIds;
-    return activatedBlockIds.filter(miaow.not(isAncestor)(hamster));
-}
-
-/**
- * 将被drag的正确block
- * @param {*} hamster 
- * @description 祖先节点->整棵树
- */
-export const rightBlockToDrag = hamster => lodash.flow(
-    getRightBlock,
-    miaow.map(
-        miaow.dispatchMission(
-            miaow.prevCheck(isAncestor(hamster))(id => miaow.cat(id, getAllLeafIds(hamster, id))),
-            miaow.identity
-        )
-    ),
-    miaow.handle('flatten')
-)(hamster)
-
-/**
- * 将被resize的正确block
- * @param {*} hamster 
- * @description 去掉祖先节点
- */
-export const rightBlockToResize = hamster => lodash.flow(
-    getRightBlock,
-    miaow.filter(miaow.not(isAncestor)(hamster)),
-)(hamster)
-
-/**
- * 将被rotate的正确block
- * @param {*} hamster 
- * @description 祖先节点->整棵树
- */
-export const rightBlockToRotate = rightBlockToDrag;
+// /**
+//  * 升级为群组,即叶子节点
+//  * @param {*} hamster 
+//  * @param {*} id 祖先节点
+//  */
+// export const toCluster = hamster => ids => lodash.flow(
+//     currentHelper.getExceptLeafs(hamster),
+//     miaow.map(
+//         miaow.dispatchMission(
+//             miaow.prevCheck(nodeHelper.isAncestor(hamster))(nodeHelper.getAllLeafIds(hamster)),
+//             miaow.identity
+//         )
+//     )
+// )(miaow.toList(ids))

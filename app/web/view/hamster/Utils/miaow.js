@@ -397,3 +397,5 @@ export const map = func => param => param.map(func) ;
 export const filter = func => list => list.filter(func);
 
 export const handle = operation => list => list[operation]();
+
+export const push = value => list => list.push(value);

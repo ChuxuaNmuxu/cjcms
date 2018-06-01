@@ -79,9 +79,9 @@ test('test getParentIds', () => {
 })
 
 test.only('test getAncestorId', () => {
-    expect(nodeHelper.getAncestorId(hamster, '6')).toEqual('1')
-    expect(nodeHelper.getAncestorId(hamster, '1')).toBe('1')
-    expect(nodeHelper.getAncestorId(hamster, '8')).toBe(undefined)
+    expect(nodeHelper.getAncestorId(hamster)('6')).toEqual('1')
+    expect(nodeHelper.getAncestorId(hamster)('1')).toBe('1')
+    expect(nodeHelper.getAncestorId(hamster)('8')).toBe(undefined)
 })
 
 test('test getLeafIds', () => {

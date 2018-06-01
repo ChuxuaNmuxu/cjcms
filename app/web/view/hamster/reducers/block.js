@@ -65,40 +65,29 @@ function handleChangeProps (hamster, action) {
  * @param {*} action 
  */
 function handleDragEnd (hamster, action) {
-    const {payload: offset} = action;
+    const {payload} = action;
+    const [offset, blockId] = miaow.destruction(payload, 'offset', 'blockId');
 
-    /**
-     * 待移动的blockId
-     * @description 激活节点数组中包含祖先节点，独立节点和叶子节点，只需要将未选中的叶子节点包含进来即可
-     */
-    const needMoveBlockIds = blockHelper.rightBlockToDrag(hamster)
-    
-    // 移动block
-    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
-        ids: needMoveBlockIds,
-        operations: {
-            'data.props.top': miaow.add(offset.get('top')),
-            'data.props.left': miaow.add(offset.get('left'))
-        }
-    }));
-    
-    const activatedIds = currentHelper.getActivatedBlockIds(hamster);
-    // 更新组合元素的思维
-    if (miaow.not(currentHelper.resistOutside)(hamster, activatedIds)) {
-        // 初始大小及位置
-        const ancestorId = currentHelper.getAncestorInCurrent(hamster);
+    const {
+        operateBlockId,
+        activatedBlockIds
+    } = currentHelper.judgeSituationWhenDrag(hamster, blockId);
 
-        const idCluster = currentHelper.getIdClusterInCurrent(hamster, activatedIds);
-        const packageFourDimension = blockHelper.getPackageFourDimension(hamster, idCluster);
-        hamster = blockHelper.updateBlockFourDimension(hamster, ancestorId, Immutable.fromJS(packageFourDimension));
-    
-        // 扩大一点,留点间隙
-        hamster = blockHelper.stretchBlock(hamster, ancestorId, 5);
+    // 移动blocks
+    const needMoveBlockIds = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
+    hamster = helper.handleDragBlock(hamster, Immutable.fromJS({
+        offset,
+        blockIds: needMoveBlockIds
+    }))
 
-    }
+    // 更新组合元素
+    hamster = helper.updateAllGroupFourDimension(hamster, needMoveBlockIds);
+
+    // 移动的元素如果未激活，那么在移动结束后激活
+    hamster = helper.activateBlock(hamster, operateBlockId, false);
 
     return hamster;
-}
+}   
 
 /**
  * 旋转
@@ -224,6 +213,7 @@ function handleClickBlock (hamster, action) {
 
     /**
      * 具体实现
+     * @deprecated
      * @version 1.1
      * 1. 组合元素的攘外安内：判断激活元素
      *  对外：没有叶子元素
@@ -234,43 +224,12 @@ function handleClickBlock (hamster, action) {
      *  没有ctrl：handleReactivateBlocks
     */
     
-   const activeIds = currentHelper.getActivatedBlockIds(hamster);
-
-   // 祖先节点元素，不做处理 @version 1.0 - 1
-   if (nodeHelper.isAncestor(hamster)(blockId)) return hamster;
-
-    // 激活元素 @version 1.1 - 1 @version 1.0 - 2
-    const isResistOutside = currentHelper.resistOutside(hamster, activeIds.concat(blockId));
-    let toAcitivateId = blockId;
-
-    const noLeafsInCurrent = currentHelper.getExceptLeafsInCurrent(hamster);
-    if (isResistOutside) {
-        // 去除叶子元素,只保留祖先元素和孤立元素
-        hamster = helper.handleReactivateBlocks(hamster, noLeafsInCurrent);
-        // 同时如果点击的是叶子元素，则待激活元素为祖先元素
-        if (nodeHelper.isInTree(hamster)(blockId)) toAcitivateId = nodeHelper.getAncestorId(hamster, blockId)
-    }
-
-    // 操作符 @version 1.1 - 2
-    // 没有ctrl
-    let operation = lodash.curryRight(helper.handleReactivateBlocks)(toAcitivateId)
-    if (event.ctrlKey) {
-        // ctrl + 未激活
-        operation = lodash.curryRight(helper.handleActivateBlocks)(toAcitivateId)
-
-        // ctrl + 已激活
-        if (currentHelper.isActivated(hamster, toAcitivateId)) {
-            operation = lodash.curryRight(helper.handleCancelActivateBlocks)(toAcitivateId)
-        }
-    }
-
-    hamster = operation(hamster, toAcitivateId);
-    
-    // 操作的是节点元素，祖先元素必然处于激活状态 @version1.0 - 3
-    if (nodeHelper.isLeaf(hamster)(toAcitivateId)) {
-        const ancestor = nodeHelper.getAncestorId(hamster, toAcitivateId);
-        return helper.handleActivateBlocks(hamster, ancestor);
-    }
+    /**
+     * 具体实现
+     * @version 1.2
+     * 形式判断 -> 激活元素判断 -> 操作符判断
+    */
+    hamster = helper.activateBlock(hamster, blockId, event.ctrlKey);
 
     return hamster;
 }
@@ -285,7 +244,7 @@ function handleUnite (hamster, actions) {
      * 1. 嵌套取祖先元素
     */
     // 孤立节点与祖先节点
-    const childrenIds = currentHelper.getExceptLeafsInCurrent(hamster);
+    const childrenIds = currentHelper.forceMaybeAncestorsInCurrent(hamster);
 
     // 生成defaultGroupObject
     const entityId = helper.createId('block-');
@@ -293,11 +252,7 @@ function handleUnite (hamster, actions) {
 
     // 初始大小及位置
     const idCluster = currentHelper.getIdClusterInCurrent(hamster, activeblockIds);
-    const packageFourDimension = blockHelper.getPackageFourDimension(hamster, idCluster);
-    hamster = blockHelper.updateBlockFourDimension(hamster, entityId, Immutable.fromJS(packageFourDimension));
-
-    // 扩大一点,留点间隙
-    hamster = blockHelper.stretchBlock(hamster, entityId, 5);
+    hamster = blockHelper.updateGroupFourDimension(hamster, idCluster, entityId);
 
     // 修改children属性
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
@@ -320,7 +275,7 @@ function handleUnite (hamster, actions) {
     hamster = hamster = hamster.updateIn(['index', 'blocks'], miaow.filter(miaow.not(nodeHelper.isMidsideNode)(hamster)))
 
     // 重激活组合元素
-    hamster = helper.handleReactivateBlocks(hamster, entityId);
+    hamster = helper.handleReactivateBlocks(hamster)(entityId);
 
     return hamster;
 }

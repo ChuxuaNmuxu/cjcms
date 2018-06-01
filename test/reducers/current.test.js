@@ -117,6 +117,6 @@ test('test getAncestors', () => {
 })
 
 test('test getAncestors', () => {
-  expect(currentHelper.getExceptLeafsInCurrent(hamster)).toEqual(Immutable.List(['1','10']))
+  expect(currentHelper.forceMaybeAncestorsInCurrent(hamster)).toEqual(Immutable.List(['1','10']))
   // expect(currentHelper.getAncestorInCurrent(hamster)).toEqual(Immutable.List([]))
 })
