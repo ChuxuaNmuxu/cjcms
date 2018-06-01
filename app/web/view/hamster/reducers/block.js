@@ -97,10 +97,15 @@ function handleDragEnd (hamster, action) {
 function handleRotateEnd (hamster, action) {
     const {payload} = action;
     const rotateAngle = payload.get('rotateAngle')
+    const blockId = payload.get('blockId');
     // TODO: GROUP
-    const applyBlockIds = currentHelper.getActivatedBlockIds(hamster);
+    const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, blockId);
+
+    let rotateBlockIds = activatedBlockIds;
+    if (!isResistInside) rotateBlockIds = activatedBlockIds.map(nodeHelper.getAllLeafIds(hamster)).concat(activatedBlockIds).flatten();
+
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
-        ids: applyBlockIds,
+        ids: rotateBlockIds,
         operations: {
             'data.props.rotation': miaow.add(rotateAngle)
         }
@@ -114,69 +119,17 @@ function handleRotateEnd (hamster, action) {
  * @param {*} hamster 
  * @param {*} action 
  */
-const directionConfig = {
-    'nw': {
-        oppsite: 'se',
-        emendation: [-1, -1]
-    },
-    'sw': {
-        oppsite: 'ne',
-        emendation: [-1, 1]
-    },
-    'ne': {
-        oppsite: 'sw',
-        emendation: [1, -1]
-    },
-    'se': {
-        oppsite: 'nw',
-        emendation: [1, 1]
-    },
-    'e': {
-        oppsite: 'w',
-        emendation: [1, 0]
-    },
-    'n': {
-        oppsite: 's',
-        emendation: [0, -1]
-    },
-    's': {
-        oppsite: 'n',
-        emendation: [0, 1]
-    },
-    'w': {
-        oppsite: 'e',
-        emendation: [-1, 0]
-    }
-}
-
 function handleResizeEnd (hamster, action) {
     const {payload} = action;
     const offset = payload.get('offset');
     const direction = payload.get('direction');
 
-    const pinPoint = directionConfig[direction]['oppsite'];
-
-    const sizeOffsetArray = lodash.zip(
-        miaow.destruction(offset, 'x', 'y'),
-        directionConfig[direction]['emendation']
-    ).map(x => lodash.multiply.apply(null, x))
-    
-    const sizeOffset = {
-        x: sizeOffsetArray[0],
-        y:sizeOffsetArray[1]
-    }
-
     const activatedIds = currentHelper.getActivatedBlockIds(hamster);
+    const resizeBlockIds = activatedIds.filter(miaow.not(nodeHelper.isAncestor)(hamster));
 
-    hamster = activatedIds.reduce((hamster, id) => {
-        const fourDimension = lodash.flow(
-            blockHelper.getPackageFourDimension,
-            lodash.curryRight(blockHelper.pin)(pinPoint)(sizeOffset),
-        )(hamster, miaow.toList(id))
+    hamster = helper.handleResizeBlocks(hamster, resizeBlockIds, direction, offset);
 
-        return blockHelper.updateBlockFourDimension(hamster, id, Immutable.fromJS(fourDimension));
-    }, hamster)
-
+    hamster = helper.updateAllGroupFourDimension(hamster, activatedIds);
     return hamster
 }
 

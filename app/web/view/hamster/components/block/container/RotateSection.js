@@ -42,7 +42,8 @@ const spec = {
         const rotateAngle = getAngleByThreeCoord(blockCenterClientOffset, initialClientOffset, clientOffset);
 
         props.hamster.blockManager.rotateEnd(fromJS({
-            rotateAngle
+            rotateAngle,
+            blockId
         }));
     }
 }

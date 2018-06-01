@@ -118,3 +118,69 @@ export function activateBlock (hamster, id, isMultiply) {
 
     return hamster;
 }
+
+const directionConfig = {
+    'nw': {
+        oppsite: 'se',
+        emendation: [-1, -1]
+    },
+    'sw': {
+        oppsite: 'ne',
+        emendation: [-1, 1]
+    },
+    'ne': {
+        oppsite: 'sw',
+        emendation: [1, -1]
+    },
+    'se': {
+        oppsite: 'nw',
+        emendation: [1, 1]
+    },
+    'e': {
+        oppsite: 'w',
+        emendation: [1, 0]
+    },
+    'n': {
+        oppsite: 's',
+        emendation: [0, -1]
+    },
+    's': {
+        oppsite: 'n',
+        emendation: [0, 1]
+    },
+    'w': {
+        oppsite: 'e',
+        emendation: [-1, 0]
+    }
+}
+/**
+ * 拉伸
+ * @param {*} hamster 
+ * @param {*} blockIds 
+ * @param {Map} offset {x, y}
+ * @returns hamster
+ */
+export function handleResizeBlocks (hamster, blockIds, direction, offset) {
+    const pinPoint = directionConfig[direction]['oppsite'];
+
+    const sizeOffsetArray = lodash.zip(
+        miaow.destruction(offset, 'x', 'y'),
+        directionConfig[direction]['emendation']
+    ).map(x => lodash.multiply.apply(null, x))
+    
+    const sizeOffset = {
+        x: sizeOffsetArray[0],
+        y: sizeOffsetArray[1]
+    }
+
+    hamster = blockIds.reduce((hamster, id) => {
+        const fourDimension = lodash.flow(
+            blockHelper.getPackageFourDimension,
+            blockHelper.pin(pinPoint)(sizeOffset),
+        )(hamster, miaow.toList(id))
+
+        return blockHelper.updateBlockFourDimension(hamster, id, Immutable.fromJS(fourDimension));
+    }, hamster)
+
+    return hamster;
+}

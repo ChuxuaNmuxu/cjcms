@@ -117,7 +117,7 @@ const pointToCoordinate = {
     'e': {x: 1, y: 0.5},
     'w': {x: 0, y: 0.5}
 }
-export function pin (fourDimension, offset, point) {
+export const pin = point => offset => fourDimension => {
     // 钉子的坐标
     const pinCoordinate = lodash.isString(point) ? pointToCoordinate[point] : point;
 
