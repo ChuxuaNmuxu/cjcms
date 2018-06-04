@@ -155,7 +155,7 @@ const directionConfig = {
 }
 /**
  * 拉伸
- * @version 1.1
+ * @version 1.2
  * @param {*} hamster 
  * @param {*} blockId
  * @param {Map} offset {x, y}
@@ -164,45 +164,56 @@ const directionConfig = {
 export function handleResizeBlocks (hamster, blockId, direction, offset) {
     /**
      * 具体实现
-     * 普通坐标系：以左上角为原点；中心坐标系，以block中心为原点
-     * 1. 普通坐标系中拉伸，中心重合后旋转；
-     * 2. 在中心坐标系中计算需要两个block的pinpoint的偏移向量
-     * 3. 在普通坐标系偏移block使pinpoint重合
+     * @version 1.2
+     * 说明：普通坐标系（OCS）：以左上角为原点，默认坐标系；
+     * 中心坐标系（CCS）： 以block中心为原点，旋转后的坐标系
+     * pinpoint：操作前和操作后不变的点
+     *  1. 普通坐标系中的偏移换算到中心坐标系偏移量sv，这一步换算可以实现指哪打哪
+     *  2. 在普通坐标系中以block中心以sv为宽高偏移量拉伸block；
+     *  3. (旋转)；
+     *  4. 在中心坐标系中计算距离到达最终状态当前pinpoint的偏移向量pv
+     *  5. pv换算到普通坐标系，在普通坐标系偏移block使pinpoint重合
+     * 总的来说：在中心坐标系中计算，在普通坐标系中操作；先计算width，height，再以中心旋转，最后修正top, left
      */
     const entity = entityHelper.getEntity(hamster, blockId);
     const angle = entity.getIn(['data', 'props', 'rotation']);
 
     const pinPoint = directionConfig[direction]['oppsite'];
 
-    const sizeOffsetArray = lodash.zip(
-        miaow.destruction(offset, 'x', 'y'),
+    // 中心坐标系中偏移量
+    const offsetInCCS = blockHelper.coordTransformation(miaow.destruction(offset, 'x', 'y'), angle);
+
+    const sizeOffsetVector = lodash.zip(
+        offsetInCCS,
         directionConfig[direction]['emendation']
     ).map(x => lodash.multiply.apply(null, x))
     
     const sizeOffset = {
-        width: sizeOffsetArray[0],
-        height: sizeOffsetArray[1]
+        width: sizeOffsetVector[0],
+        height: sizeOffsetVector[1]
     }
 
     const oldFourDimension = blockHelper.getPackageFourDimension(hamster, miaow.toList(blockId));
 
+    // pin住中心点坐标, 增加width, height
     const fourDimensionPinnedCenter = blockHelper.pin([0.5, 0.5])(sizeOffset)(oldFourDimension);
-
     hamster = blockHelper.updateBlockFourDimension(hamster, blockId, Immutable.fromJS(fourDimensionPinnedCenter));
 
     const newFourDimension = blockHelper.getPackageFourDimension(hamster, miaow.toList(blockId));
 
-    const vector = blockHelper.samePointDifferenceVector(oldFourDimension)(newFourDimension)(pinPoint);
+    // 距离到达最终状态当前pinpoint的偏移向量
+    const positionOffset = blockHelper.samePointDifferenceVector(oldFourDimension)(newFourDimension)(pinPoint);
 
-    const vectorTransform = blockHelper.coordTransformation(vector, -angle);
+    // 换算到普通坐标系
+    const positionOffsetTransform = blockHelper.coordTransformation(positionOffset, -angle);
 
-    const fourDimensionSuperPoint = {
+    const fourDimensionPinnedPoint = {
         ...fourDimensionPinnedCenter,
-        left: fourDimensionPinnedCenter.left - vectorTransform[0],
-        top: fourDimensionPinnedCenter.top - vectorTransform[1]
+        left: fourDimensionPinnedCenter.left - positionOffsetTransform[0],
+        top: fourDimensionPinnedCenter.top - positionOffsetTransform[1]
     }
 
-    hamster = blockHelper.updateBlockFourDimension(hamster, blockId, Immutable.fromJS(fourDimensionSuperPoint));
+    hamster = blockHelper.updateBlockFourDimension(hamster, blockId, Immutable.fromJS(fourDimensionPinnedPoint));
 
     return hamster;
 }

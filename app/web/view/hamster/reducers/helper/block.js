@@ -190,7 +190,7 @@ export const samePointDifferenceVector = oldFourDimension=> newFourDimension=> p
 // )(miaow.toList(ids))
 
 /**
- * 转坐标转换
+ * 坐标转换
  * @param {Object} coord 坐标
  * @param {Number} angle 坐标系旋转角，角度
  */
