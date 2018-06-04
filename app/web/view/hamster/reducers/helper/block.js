@@ -101,21 +101,22 @@ export function updateGroupFourDimension (hamster, leafIds, groupId) {
 }
 
 /**
- * 钉住一个点  
+ * 钉住一个点
+ * @description 坐标原点位于左上角
  * @param {Object} fourDimension 四维
- * @param {Object} offset 偏移
+ * @param {Object} offset 偏移 {width, height}
  * @param {*} point 钉子的坐标  String | Object
  * @returns {plainObject}
  */
 const pointToCoordinate = {
-    'nw': {x: 0, y: 0},
-    'sw': {x: 0, y: 1},
-    'ne': {x: 1, y: 0},
-    'se': {x: 1, y: 1},
-    'n': {x: 0.5, y: 0},
-    's': {x: 0.5, y: 1},
-    'e': {x: 1, y: 0.5},
-    'w': {x: 0, y: 0.5}
+    'nw': [0, 0],
+    'sw': [0, 1],
+    'ne': [1, 0],
+    'se': [1, 1],
+    'n': [0.5, 0],
+    's': [0.5, 1],
+    'e': [1, 0.5],
+    'w': [0, 0.5]
 }
 export const pin = point => offset => fourDimension => {
     // 钉子的坐标
@@ -123,11 +124,54 @@ export const pin = point => offset => fourDimension => {
 
     return {
         ...fourDimension,
-        width: fourDimension.width + offset.x,
-        height: fourDimension.height + offset.y,
-        left: fourDimension.left - offset.x * pinCoordinate.x,
-        top: fourDimension.top - offset.y * pinCoordinate.y
+        width: fourDimension.width + offset.width,
+        height: fourDimension.height + offset.height,
+        left: fourDimension.left - offset.width * pinCoordinate[0],
+        top: fourDimension.top - offset.height * pinCoordinate[1]
     };
+}
+
+/**
+ * 坐标原点位于中心
+ * @param {*} oldFourDimension
+ * @param {*} newFourDimension
+ * @param {*} point 
+ * @returns {Array} [x, y]
+ */
+const pointToCoordinateC = {
+    'nw': [-1, -1],
+    'sw': [-1, 1],
+    'ne': [1, -1],
+    'se': [1, 1],
+    'n': [0, -1],
+    's': [0, 1],
+    'e': [1, 0],
+    'w': [-1, 0]
+}
+// length * 0.5是单位元
+const getCoord = length => radio => length * 0.5 * radio;
+export const samePointDifferenceVector = oldFourDimension=> newFourDimension=> point => {
+    // 相同点的坐标
+    const pinCoordinate = lodash.isString(point) ? pointToCoordinateC[point] : point;
+
+    const newCoord = [
+        getCoord(newFourDimension.width)(pinCoordinate[0]),
+        getCoord(newFourDimension.height)(pinCoordinate[1])
+    ]
+
+    const oldCoord = [
+        getCoord(oldFourDimension.width)(pinCoordinate[0]),
+        getCoord(oldFourDimension.height)(pinCoordinate[1])
+    ]
+
+    const vector = lodash.flow(
+        lodash.zip,
+        miaow.map(
+            arr => [arr[0] - arr[1]]
+        )
+    )(newCoord, oldCoord)
+
+    return vector
 }
 
 // /**
@@ -144,3 +188,19 @@ export const pin = point => offset => fourDimension => {
 //         )
 //     )
 // )(miaow.toList(ids))
+
+/**
+ * 转坐标转换
+ * @param {Object} coord 坐标
+ * @param {Number} angle 坐标系旋转角，角度
+ */
+export function coordTransformation (coord, angle) {
+    const radian = angle * Math.PI / 180;
+
+    const [x, y] = coord;
+
+    const x1 = x * Math.cos(radian) + y * Math.sin(radian);
+    const y1 = -x * Math.sin(radian) + y * Math.cos(radian);
+
+    return [Number(x1.toFixed(2)), Number(y1.toFixed(2))]
+}

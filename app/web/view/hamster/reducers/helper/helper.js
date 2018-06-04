@@ -155,12 +155,23 @@ const directionConfig = {
 }
 /**
  * 拉伸
+ * @version 1.1
  * @param {*} hamster 
- * @param {*} blockIds 
+ * @param {*} blockId
  * @param {Map} offset {x, y}
  * @returns hamster
  */
-export function handleResizeBlocks (hamster, blockIds, direction, offset) {
+export function handleResizeBlocks (hamster, blockId, direction, offset) {
+    /**
+     * 具体实现
+     * 普通坐标系：以左上角为原点；中心坐标系，以block中心为原点
+     * 1. 普通坐标系中拉伸，中心重合后旋转；
+     * 2. 在中心坐标系中计算需要两个block的pinpoint的偏移向量
+     * 3. 在普通坐标系偏移block使pinpoint重合
+     */
+    const entity = entityHelper.getEntity(hamster, blockId);
+    const angle = entity.getIn(['data', 'props', 'rotation']);
+
     const pinPoint = directionConfig[direction]['oppsite'];
 
     const sizeOffsetArray = lodash.zip(
@@ -169,18 +180,29 @@ export function handleResizeBlocks (hamster, blockIds, direction, offset) {
     ).map(x => lodash.multiply.apply(null, x))
     
     const sizeOffset = {
-        x: sizeOffsetArray[0],
-        y: sizeOffsetArray[1]
+        width: sizeOffsetArray[0],
+        height: sizeOffsetArray[1]
     }
 
-    hamster = blockIds.reduce((hamster, id) => {
-        const fourDimension = lodash.flow(
-            blockHelper.getPackageFourDimension,
-            blockHelper.pin(pinPoint)(sizeOffset),
-        )(hamster, miaow.toList(id))
+    const oldFourDimension = blockHelper.getPackageFourDimension(hamster, miaow.toList(blockId));
 
-        return blockHelper.updateBlockFourDimension(hamster, id, Immutable.fromJS(fourDimension));
-    }, hamster)
+    const fourDimensionPinnedCenter = blockHelper.pin([0.5, 0.5])(sizeOffset)(oldFourDimension);
+
+    hamster = blockHelper.updateBlockFourDimension(hamster, blockId, Immutable.fromJS(fourDimensionPinnedCenter));
+
+    const newFourDimension = blockHelper.getPackageFourDimension(hamster, miaow.toList(blockId));
+
+    const vector = blockHelper.samePointDifferenceVector(oldFourDimension)(newFourDimension)(pinPoint);
+
+    const vectorTransform = blockHelper.coordTransformation(vector, -angle);
+
+    const fourDimensionSuperPoint = {
+        ...fourDimensionPinnedCenter,
+        left: fourDimensionPinnedCenter.left - vectorTransform[0],
+        top: fourDimensionPinnedCenter.top - vectorTransform[1]
+    }
+
+    hamster = blockHelper.updateBlockFourDimension(hamster, blockId, Immutable.fromJS(fourDimensionSuperPoint));
 
     return hamster;
 }

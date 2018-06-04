@@ -56,3 +56,7 @@ test('test get', () => {
         height: 200
     })
 })
+
+test('test ', () => {
+    expect(blockHelper.samePointDifference({width: 100, height: 100})({width: 100, height: 100})('n')).toBe([0, 0])
+})

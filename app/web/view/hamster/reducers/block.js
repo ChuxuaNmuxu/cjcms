@@ -127,7 +127,8 @@ function handleResizeEnd (hamster, action) {
     const activatedIds = currentHelper.getActivatedBlockIds(hamster);
     const resizeBlockIds = activatedIds.filter(miaow.not(nodeHelper.isAncestor)(hamster));
 
-    hamster = helper.handleResizeBlocks(hamster, resizeBlockIds, direction, offset);
+    // hamster = helper.handleResizeBlocks(hamster, resizeBlockIds, direction, offset);
+    hamster = resizeBlockIds.reduce((hamster, id) => helper.handleResizeBlocks(hamster, id, direction, offset), hamster)
 
     hamster = helper.updateAllGroupFourDimension(hamster, activatedIds);
     return hamster
