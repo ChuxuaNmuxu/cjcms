@@ -231,7 +231,7 @@ function handleUnite (hamster, actions) {
     hamster = helper.handleReactivateBlocks(hamster)(entityId);
 
     // 叶子 transform-origin
-    hamster = blockHelper.updateOriginTransformOrigin(hamster)(entityId);
+    // hamster = blockHelper.updateOriginTransformOrigin(hamster)(entityId);
 
     return hamster;
 }

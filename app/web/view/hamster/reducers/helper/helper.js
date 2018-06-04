@@ -71,15 +71,18 @@ export function handleDragBlock (hamster, payload) {
  */
 export function updateAllGroupFourDimension (hamster, ids) {
     const groupIds = lodash.flow(
+        miaow.toList,
         currentHelper.forceMaybeAncestors(hamster),
         nodeHelper.filterAncestorIds(hamster)
     )(ids);
 
     hamster = groupIds.reduce((hamster, id) => {
         // 叶子节点加transform-origin
-        hamster = blockHelper.updateOriginTransformOrigin(hamster)(id);
+        hamster = blockHelper.updateGroupFourDimension(hamster, nodeHelper.getAllLeafIds(hamster)(id), id)
 
-        return blockHelper.updateGroupFourDimension(hamster, nodeHelper.getAllLeafIds(hamster)(id), id)
+        // hamster = blockHelper.updateOriginTransformOrigin(hamster)(id);
+
+        return hamster;
     }, hamster)
 
     return hamster;
@@ -180,7 +183,7 @@ export function handleResizeBlocks (hamster, blockId, direction, offset) {
      *  5. pv换算到普通坐标系，在普通坐标系偏移block使pinpoint重合
      * 总的来说：在中心坐标系中计算，在普通坐标系中操作；先计算width，height，再以中心旋转，最后修正top, left
      */
-    const entity = entityHelper.getEntity(hamster, blockId);
+    const entity = entityHelper.getEntity(hamster)(blockId);
     const angle = entity.getIn(['data', 'props', 'rotation']);
 
     const pinPoint = directionConfig[direction]['oppsite'];

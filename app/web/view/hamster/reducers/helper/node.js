@@ -19,7 +19,7 @@ function nodesExist (ids) {
  * @returns list
  */
 export function getChildrenIds (hamster, id) {
-    const entity = entityHelper.getEntity(hamster, id); 
+    const entity = entityHelper.getEntity(hamster)(id); 
     if (!entity) return Immutbale.List();
     return entity.getIn(['data', 'children']);
 }
@@ -31,7 +31,7 @@ export function getChildrenIds (hamster, id) {
  * @returns undefined | String 
  */
 export function getParentId (hamster, id) {
-    const entity = entityHelper.getEntity(hamster, id);
+    const entity = entityHelper.getEntity(hamster)(id);
     return entity && entity.getIn(['data', 'parent']);
 }
 

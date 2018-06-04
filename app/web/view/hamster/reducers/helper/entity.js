@@ -6,9 +6,7 @@ import * as miaow from '../../Utils/miaow';
  * @param {*} hamster 
  * @param {*} id 
  */
-export function getEntity (hamster, id) {
-    return hamster.getIn(['entities', id]);
-}
+export const getEntity = hamster => id => hamster.getIn(['entities', id]);
 
 /**
  * entities数据增删改

@@ -38,7 +38,7 @@ class ContainerSection extends Component {
         const containerStyle = Object.assign({}, style, currentStyle);
 
         return (
-            <div className={classes} styleName={classes} style={containerStyle} onClick={this.handleClick} >
+            <div id={block.get('id')} className={classes} styleName={classes} style={containerStyle} onClick={this.handleClick} >
                 {
                     children
                 }

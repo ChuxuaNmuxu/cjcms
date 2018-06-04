@@ -17,7 +17,7 @@ import * as helper from './helper';
 export function packageBlocks (hamster, ids) {
     ids = miaow.toList(ids);
     const [tops, lefts, widths, heights] = ['top', 'left', 'width', 'height'].map(
-        value => ids.map(lodash.flow(lodash.curry(entityHelper.getEntity)(hamster), miaow.get('data.props.'.concat(value))))
+        value => ids.map(lodash.flow(entityHelper.getEntity(hamster), miaow.get('data.props.'.concat(value))))
     )
 
     const [bottoms, rights] = [miaow.listAdd(tops, heights), miaow.listAdd(lefts, widths)];
@@ -217,7 +217,7 @@ export const updateOriginTransformOrigin = hamster => ancestorId => {
     const leafIds = nodeHelper.getAllLeafIds(hamster)(ancestorId);
 
     hamster = leafIds.reduce((hamster, leafId) => {
-        const entity = entityHelper.getEntity(hamster, leafId);
+        const entity = entityHelper.getEntity(hamster)(leafId);
         const position = [entity.getIn(['data', 'props', 'left']), entity.getIn(['data', 'props', 'top'])]
         const transformOirgin = lodash.flow(
             miaow.arrMinus(groupCenter),
