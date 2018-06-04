@@ -98,7 +98,7 @@ function handleRotateEnd (hamster, action) {
     const {payload} = action;
     const rotateAngle = payload.get('rotateAngle')
     const blockId = payload.get('blockId');
-    // TODO: GROUP
+
     const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, blockId);
 
     let rotateBlockIds = activatedBlockIds;
@@ -127,7 +127,6 @@ function handleResizeEnd (hamster, action) {
     const activatedIds = currentHelper.getActivatedBlockIds(hamster);
     const resizeBlockIds = activatedIds.filter(miaow.not(nodeHelper.isAncestor)(hamster));
 
-    // hamster = helper.handleResizeBlocks(hamster, resizeBlockIds, direction, offset);
     hamster = resizeBlockIds.reduce((hamster, id) => helper.handleResizeBlocks(hamster, id, direction, offset), hamster)
 
     hamster = helper.updateAllGroupFourDimension(hamster, activatedIds);
@@ -227,9 +226,12 @@ function handleUnite (hamster, actions) {
     // 删除中间节点
     // TODO: 删除元素逻辑
     hamster = hamster = hamster.updateIn(['index', 'blocks'], miaow.filter(miaow.not(nodeHelper.isMidsideNode)(hamster)))
-
+    
     // 重激活组合元素
     hamster = helper.handleReactivateBlocks(hamster)(entityId);
+
+    // 叶子 transform-origin
+    hamster = blockHelper.updateOriginTransformOrigin(hamster)(entityId);
 
     return hamster;
 }

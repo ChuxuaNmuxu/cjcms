@@ -299,6 +299,20 @@ export const alwaysTrue = always(true);
  */
 export const alwaysFalse = always(false);
 
+/**
+ * 数组对应位置相减 a - b
+ * @param {*} a 
+ * @param {*} b
+ */
+export const arrMinus = a => b => {
+    return lodash.flow(
+        lodash.zip,
+        map(
+            arr => lodash.subtract.apply(null, arr)
+        )
+    )(a, b)
+}
+
 /******* immutable *********/
 
 /**

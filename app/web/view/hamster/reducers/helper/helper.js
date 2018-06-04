@@ -75,9 +75,14 @@ export function updateAllGroupFourDimension (hamster, ids) {
         nodeHelper.filterAncestorIds(hamster)
     )(ids);
 
-    return groupIds.reduce((hamster, id) => {
+    hamster = groupIds.reduce((hamster, id) => {
+        // 叶子节点加transform-origin
+        hamster = blockHelper.updateOriginTransformOrigin(hamster)(id);
+
         return blockHelper.updateGroupFourDimension(hamster, nodeHelper.getAllLeafIds(hamster)(id), id)
     }, hamster)
+
+    return hamster;
 }
 
 /**

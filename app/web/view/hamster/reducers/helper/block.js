@@ -40,8 +40,8 @@ export function packageBlocks (hamster, ids) {
  * @param {*} id 
  * @returns {plainObject} {top, left, width, height}
  */
-export function getPackageFourDimension (hamster, ids) {
-    return lodash.pick(packageBlocks(hamster, ids), ['left', 'top', 'width', 'height']);
+export function getPackageFourDimension (hamster, id) {
+    return lodash.pick(packageBlocks(hamster, miaow.toList(id)), ['left', 'top', 'width', 'height']);
 }
 
 /**
@@ -174,21 +174,6 @@ export const samePointDifferenceVector = oldFourDimension=> newFourDimension=> p
     return vector
 }
 
-// /**
-//  * 升级为群组,即叶子节点
-//  * @param {*} hamster 
-//  * @param {*} id 祖先节点
-//  */
-// export const toCluster = hamster => ids => lodash.flow(
-//     currentHelper.getExceptLeafs(hamster),
-//     miaow.map(
-//         miaow.dispatchMission(
-//             miaow.prevCheck(nodeHelper.isAncestor(hamster))(nodeHelper.getAllLeafIds(hamster)),
-//             miaow.identity
-//         )
-//     )
-// )(miaow.toList(ids))
-
 /**
  * 坐标转换
  * @param {Object} coord 坐标
@@ -203,4 +188,51 @@ export function coordTransformation (coord, angle) {
     const y1 = -x * Math.sin(radian) + y * Math.cos(radian);
 
     return [Number(x1.toFixed(2)), Number(y1.toFixed(2))]
+}
+
+/**
+ * 中心坐标
+ * @description 普通坐标系
+ * @param {*} hamster 
+ * @param {*} fourDimension 
+ */
+export const getCenterCoord = hamster => id => {
+    const fourDimension = getPackageFourDimension(hamster, id);
+
+    const {width, height, top, left} = fourDimension;
+    return [
+        left + width * 0.5,
+        top + height * 0.5
+    ]
+}
+
+/**
+ * 更新transform-origin
+ * @param {*} hamster 
+ * @param {*} ancestorId
+ */
+export const updateOriginTransformOrigin = hamster => ancestorId => {
+    // 叶子节点加transform-origin
+    const groupCenter = getCenterCoord(hamster)(ancestorId);
+    const leafIds = nodeHelper.getAllLeafIds(hamster)(ancestorId);
+
+    hamster = leafIds.reduce((hamster, leafId) => {
+        const entity = entityHelper.getEntity(hamster, leafId);
+        const position = [entity.getIn(['data', 'props', 'left']), entity.getIn(['data', 'props', 'top'])]
+        const transformOirgin = lodash.flow(
+            miaow.arrMinus(groupCenter),
+            miaow.flowDebug,
+            miaow.map(miaow.add('px'))
+        )(position);
+        hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+            ids: leafId,
+            operations: {
+                'data.props.transformOrigin': () => transformOirgin.join(' ')
+            }
+        }))
+
+        return hamster
+    }, hamster)
+
+    return hamster;
 }

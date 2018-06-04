@@ -127,7 +127,7 @@ test('test getDefference', () => {
     expect(miaow.getDefference(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toEqual(Immutable.List([3]))
 })
 
-test.only('test not', () => {
+test('test not', () => {
     // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
 
     const a = () => () => true
@@ -135,4 +135,10 @@ test.only('test not', () => {
     const b = args => true
 
     expect(miaow.not(b)(33)).toEqual(false)
+})
+
+test.only('test arrMinus', () => {
+    // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
+
+    expect(miaow.arrMinus([1, 2])([4, 5])).toEqual([-3, -3])
 })

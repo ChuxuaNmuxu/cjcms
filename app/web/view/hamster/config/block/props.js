@@ -61,6 +61,10 @@ const props = {
     zIndex: {
         title: '层级',
         value: 10
+    },
+    transformOrigin: {
+        title: '旋转中心',
+        value: 'center'
     }
 }
 
