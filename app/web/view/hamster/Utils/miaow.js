@@ -254,8 +254,8 @@ export function not (func) {
  */
 export function angleToVerticalAxis (center, another) {
     const offset = {
-        x: another.x - center.x,
-        y: center.y - another.y
+        x: another[0] - center[0],
+        y: center[1] - another[1]
     }
 
     const rotateRadian = Math.atan(offset.x / offset.y);
@@ -282,6 +282,27 @@ export function getAngleByThreeCoord (center, start, end) {
     const startAngel = angleToVerticalAxis(center, start);
     const endAngel = angleToVerticalAxis(center, end);
     return endAngel - startAngel
+}
+
+/**
+ * 勾股定理求直角三角形第三边
+ * @param {*} a 
+ * @param {*} b 
+ */
+export const getThirdSideLengthInRightTriangle = (a, b) => Math.sqrt(a * a, b * b);
+
+/**
+ * 极坐标转笛卡尔坐标
+ * @param{Array} coord 极坐标 [angle, r]
+ */
+export const coordPCSToDescartes = coord => {
+    const [angle, r] = coord;
+    const radian = angle * Math.PI / 180;
+
+    return [
+        r * Math.sin(radian),
+        -r * Math.cos(radian),
+    ]
 }
 
 export function always (value) {
@@ -311,6 +332,12 @@ export const arrMinus = a => b => {
             arr => lodash.subtract.apply(null, arr)
         )
     )(a, b)
+}
+
+//
+export const getCoord = maybeCoord => {
+    if (maybeCoord.x && maybeCoord.y) return [maybeCoord.x, maybeCoord.y];
+    return maybeCoord;
 }
 
 /******* immutable *********/

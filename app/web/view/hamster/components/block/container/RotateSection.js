@@ -4,7 +4,7 @@ import rotateSource from '../decorator/operation/rotate';
 import CSSModules from 'react-css-modules'
 import styles from './RotateSection.scss'
 import {fromJS} from 'immutable'
-import {getAngleByThreeCoord} from '../../../Utils/miaow'
+import * as miaow from '../../../Utils/miaow'
 
 let centerClientOffset = {}
 
@@ -39,7 +39,7 @@ const spec = {
             y: initialClientOffset.y + rotateRadius * Math.cos(rotation * Math.PI / 180)
         }
 
-        const rotateAngle = getAngleByThreeCoord(blockCenterClientOffset, initialClientOffset, clientOffset);
+        const rotateAngle = miaow.getAngleByThreeCoord.apply(null, [blockCenterClientOffset, initialClientOffset, clientOffset].map(miaow.getCoord));
 
         props.hamster.blockManager.rotateEnd(fromJS({
             rotateAngle,

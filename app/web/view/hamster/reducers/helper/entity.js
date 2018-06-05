@@ -1,5 +1,6 @@
 import {fromJS} from 'immutable';
 import * as miaow from '../../Utils/miaow';
+import * as lodash from 'lodash';
 
 /**
  * 获取特定id的entity
@@ -25,4 +26,11 @@ export function handleEntitiesChanges (hamster, payload) {
             }, entities)
         }, entities);
     }) 
+}
+
+export const getProp = hamster => id => propPath => {
+    return lodash.flow(
+        getEntity(hamster),
+        miaow.get('data.props.' + propPath)
+    )(id)
 }

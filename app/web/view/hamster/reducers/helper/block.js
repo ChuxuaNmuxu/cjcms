@@ -195,6 +195,7 @@ export function coordTransformation (coord, angle) {
  * @description 普通坐标系
  * @param {*} hamster 
  * @param {*} fourDimension 
+ * @returns {Array} [left, top]
  */
 export const getCenterCoord = hamster => id => {
     const fourDimension = getPackageFourDimension(hamster, id);
@@ -232,6 +233,60 @@ export const updateOriginTransformOrigin = hamster => ancestorId => {
         }))
 
         return hamster
+    }, hamster)
+
+    return hamster;
+}
+
+/**
+ * 组合旋转时，叶子元素跟随旋转
+ * @description 1. 祖先元素初始旋转角 -> 坐标系旋转 -> 笛卡尔坐标转换
+ *  2. 祖先元素旋转 -> 极坐标系坐标变化
+ *  3. 极坐标 -> 笛卡尔坐标
+ *  4. 笛卡尔坐标反转换 -> 得到在初始笛卡尔坐标系中的偏移向量
+ * @param {*} hamster 
+ * @param {*} ancestorId
+ */
+export const leafsRotateWithAncestor = hamster => ancestorId => angle => {
+    const leafIds = nodeHelper.getAllLeafIds(hamster)(ancestorId);
+
+    const centerCoord = getCenterCoord(hamster)(ancestorId);
+    const ancestorRotation = entityHelper.getProp(hamster)(ancestorId)('rotation');
+
+    hamster = leafIds.reduce((hamster, id) => {
+        // 笛卡尔坐标下的叶子中心点坐标
+        const leafCoordInDescartes = miaow.arrMinus(getCenterCoord(hamster)(id))(centerCoord);
+        // 笛卡尔坐标转换
+        const leafCoordInDescartesTransformed = coordTransformation(leafCoordInDescartes, ancestorRotation);
+    
+        /************************ 转换后的坐标中计算 start*/
+
+        // 组合旋转后， 叶子元素在极坐标系中的坐标
+        const initAngle = miaow.angleToVerticalAxis([0, 0], leafCoordInDescartesTransformed);
+        const leafCoordInPCSAfterRotate = [
+            initAngle + angle,
+            miaow.getThirdSideLengthInRightTriangle.apply(null, leafCoordInDescartesTransformed)
+        ];
+
+        // 极坐标转笛卡尔坐标
+        const leafCoordInDescartesAfterRotate = miaow.coordPCSToDescartes(leafCoordInPCSAfterRotate);
+        // 偏移向量
+        const positionOffsetTransformed = miaow.arrMinus(leafCoordInDescartesAfterRotate)(leafCoordInDescartesTransformed);
+
+        /************************ 转换后的坐标中计算 end*/
+
+        // 笛卡尔坐标反转换
+        const positionOffset = coordTransformation(positionOffsetTransformed, -ancestorRotation);
+
+        hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+            ids: id,
+            operations: {
+                'data.props.left': left => left + positionOffset[0],
+                'data.props.top': top => top + positionOffset[1],
+            }
+        }))
+
+        return hamster;
     }, hamster)
 
     return hamster;
