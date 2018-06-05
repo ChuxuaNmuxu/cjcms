@@ -283,6 +283,7 @@ export const leafsRotateWithAncestor = hamster => ancestorId => angle => {
             operations: {
                 'data.props.left': left => left + positionOffset[0],
                 'data.props.top': top => top + positionOffset[1],
+                'data.props.rotation': rotation => rotation + angle
             }
         }))
 
