@@ -264,7 +264,7 @@ export const leafsRotateWithAncestor = hamster => ancestorId => angle => {
         // 组合旋转后， 叶子元素在极坐标系中的坐标
         const initAngle = miaow.angleToVerticalAxis([0, 0], leafCoordInDescartesTransformed);
         const leafCoordInPCSAfterRotate = [
-            initAngle + angle,
+            (initAngle + angle) % 360,
             miaow.getThirdSideLengthInRightTriangle.apply(null, leafCoordInDescartesTransformed)
         ];
 
@@ -281,9 +281,9 @@ export const leafsRotateWithAncestor = hamster => ancestorId => angle => {
         hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
             ids: id,
             operations: {
-                'data.props.left': left => left + positionOffset[0],
-                'data.props.top': top => top + positionOffset[1],
-                'data.props.rotation': rotation => rotation + angle
+                'data.props.left': miaow.add(positionOffset[0]),
+                'data.props.top': miaow.add(positionOffset[1]),
+                'data.props.rotation': miaow.add(angle)
             }
         }))
 

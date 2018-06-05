@@ -289,7 +289,7 @@ export function getAngleByThreeCoord (center, start, end) {
  * @param {*} a 
  * @param {*} b 
  */
-export const getThirdSideLengthInRightTriangle = (a, b) => Math.sqrt(a * a, b * b);
+export const getThirdSideLengthInRightTriangle = (a, b) => Math.sqrt(a * a + b * b);
 
 /**
  * 极坐标转笛卡尔坐标

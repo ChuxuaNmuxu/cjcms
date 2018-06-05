@@ -82,6 +82,14 @@ export function updateAllGroupFourDimension (hamster, ids) {
 
         // hamster = blockHelper.updateOriginTransformOrigin(hamster)(id);
 
+        hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+            ids: id,
+            operations: {
+                'data.props.rotation': miaow.replaceAs(0)
+            }
+        }))
+
+
         return hamster;
     }, hamster)
 

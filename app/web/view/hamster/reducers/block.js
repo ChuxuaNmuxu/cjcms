@@ -70,6 +70,7 @@ function handleDragEnd (hamster, action) {
 
     const {
         operateBlockId,
+        isResistInside,
         activatedBlockIds
     } = currentHelper.judgeSituationWhenDrag(hamster, blockId);
 
@@ -105,7 +106,11 @@ function handleRotateEnd (hamster, action) {
     if (!isResistInside) {
         // rotateBlockIds = activatedBlockIds.map(nodeHelper.getAllLeafIds(hamster)).concat(activatedBlockIds).flatten();
         const ancestorIds = nodeHelper.filterAncestorIds(hamster)(activatedBlockIds);
-        hamster = blockHelper.leafsRotateWithAncestor(hamster)(ancestorIds.get(0))(rotateAngle)
+
+        hamster = ancestorIds.reduce((hamster, id) => {
+            if (!nodeHelper.isAncestor(id)) return hamster;
+            return blockHelper.leafsRotateWithAncestor(hamster)(id)(rotateAngle)
+        }, hamster)
     }
 
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
