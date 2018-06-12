@@ -15,6 +15,10 @@ const createConnect = (config) => (manager) => {
     let currentOptions;
     let disConnectSource;
 
+    let currentPreview;
+    let currentPreviewOptions;
+    let disConnectPreview;
+
     const registry = manager.getRegistry();
     
     const reConnectSource = (node, options) => {
@@ -42,6 +46,30 @@ const createConnect = (config) => (manager) => {
 
     }
 
+    const reConnectPreview = (node, options) => {
+        // 随props改变，connect函数会被经常触发
+        if (node === currentPreview && isEqual(options, currentPreviewOptions)) {
+            return ;
+        }
+
+        currentPreview = node;
+        currentPreviewOptions = options
+
+        // 连接到backend之前先清除原来的，每个sourceId在backend中只会存在一个，目前还不知道有啥用
+        // if (disConnectSource) {
+        //     disConnectSource();
+        //     disConnectSource = null;
+        // }
+
+        if (currentPreview && sourceId) {
+            disConnectPreview = Backend.connectPreview(
+                sourceId,
+                node,
+                options
+            )
+        }
+    }
+
     const receiveId = id => {
         sourceId = id;
     }
@@ -51,6 +79,7 @@ const createConnect = (config) => (manager) => {
             const currentOptions = {...configOption, ...options}
             reConnectSource(node, currentOptions)
         }
+        accu.connectPreview = reConnectPreview;
         return accu;
     }, {})
 

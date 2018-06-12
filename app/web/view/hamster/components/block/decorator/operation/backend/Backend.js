@@ -1,3 +1,5 @@
+import getEmptyImage from '../base/getEmptyImage'
+
 export default class Backend {
     constructor (manager) {
         this.actions = manager.getActions()
@@ -7,6 +9,7 @@ export default class Backend {
         this.sourceNodes = [];
         this.dragStartSource = [];
         this.sourcePreview = [];
+        this.sourcePreviewOptions = [];
     }
 
     get window () {
@@ -31,6 +34,17 @@ export default class Backend {
             // 兼容IE
 			// node.removeEventListener('selectstart', handleSelectStart)
 			node.setAttribute('draggable', false)
+        }
+    }
+
+    // drag过程中的幽灵图
+    connectPreview (sourceId, node, options) {
+        this.sourcePreview[sourceId] = node;
+        this.sourcePreviewOptions[sourceId] = options;
+
+        return () => {
+            Reflect.deleteProperty(this.sourcePreview, sourceId);
+            Reflect.deleteProperty(this.sourcePreviewOptions, sourceId);
         }
     }
 
@@ -75,7 +89,17 @@ export default class Backend {
         })
 
         // TODO: 拖拽展示图片
-        // const {dataTransfer} = e;
+        const {dataTransfer} = e;
+        if (this.monitor.isActing()) {
+            const sourceId = this.monitor.getSourceId();
+            const preview = this.sourcePreview[sourceId];
+
+            const dragPreview = preview || getEmptyImage();
+
+            // TODO: preview位置计算、浏览器兼容
+            dataTransfer.setDragImage(dragPreview, 0, 0)
+        }
+
 
         // TODO: 拖动过程中，dom节点被移除，drag事件中断，需要手动处理dragEnd事件
 

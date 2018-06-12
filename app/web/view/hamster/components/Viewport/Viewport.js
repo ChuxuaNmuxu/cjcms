@@ -4,7 +4,7 @@ import CSSModules from 'react-css-modules';
 
 import styles from './Viewport.scss';
 import Block from './Block';
-import CustomDragLayer from './CustomDragLayer';
+import CustomLayer from '../block/CustomLayer';
 
 export class Viewport extends React.Component {
     render () {
@@ -14,7 +14,7 @@ export class Viewport extends React.Component {
                 <div className='reveal'>
                     <div className='slides'>
                         <section className='section'>
-                            <CustomDragLayer />
+                            <CustomLayer />
                             {
                                 blockIds.map(id =>
                                     <Block

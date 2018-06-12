@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import DragLayer from '../block/decorator/operation/drag/DragLayer'
+import DragLayer from '../decorator/operation/drag/DragLayer'
 
 @DragLayer((monitor, props) => ({
     initialOffset: monitor.getInitialClientOffset(),
