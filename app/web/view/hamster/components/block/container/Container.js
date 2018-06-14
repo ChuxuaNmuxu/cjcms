@@ -16,8 +16,10 @@ const keys = lodash.range(3).map(() => uuid.v4())
 export default class BlockContainer extends React.Component {
     static propTypes = {
         config: PropTypes.object,
+        children: PropTypes.node,
         block: PropTypes.object,
-        children: PropTypes.node
+        active: PropTypes.bool,
+        clickBlock: PropTypes.func
     }
 
     constructor(props, context) {

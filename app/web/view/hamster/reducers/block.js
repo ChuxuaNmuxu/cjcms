@@ -87,6 +87,9 @@ function handleDragEnd (hamster, action) {
     // 移动的元素如果未激活，那么在移动结束后激活
     hamster = helper.activateBlock(hamster, operateBlockId, false);
 
+    // current
+    hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
+
     return hamster;
 }   
 
@@ -120,6 +123,9 @@ function handleRotateEnd (hamster, action) {
         }
     }))
 
+    // current
+    hamster = currentHelper.updateCurrent(hamster)('rotating')(false);
+
     return hamster;
 }
 
@@ -139,6 +145,10 @@ function handleResizeEnd (hamster, action) {
     hamster = resizeBlockIds.reduce((hamster, id) => helper.handleResizeBlocks(hamster, id, direction, offset), hamster)
 
     hamster = helper.updateAllGroupFourDimension(hamster, activatedIds);
+
+    // current
+    hamster = currentHelper.updateCurrent(hamster)('resizing')(false);
+
     return hamster
 }
 
@@ -245,6 +255,17 @@ function handleUnite (hamster, actions) {
     return hamster;
 }
 
+/**
+ * drag or resize or rotate begin
+ * @param {*} hamster 
+ * @param {*} action 
+ */
+function handleActStart (hamster, action) {
+    const {payload} = action;
+    hamster = currentHelper.updateCurrent(hamster)(payload.get('type'))(true);
+    return hamster;
+}
+
 function handleDeleteBlock (hamster, action) {
     const activateIds = currentHelper.getActivatedBlockIds(hamster);
     hamster = hamster.updateIn(['index', 'blocks'], miaow.minus(activateIds));
@@ -273,6 +294,7 @@ const block = {
     [blockType('ROTATE_END')]: handleRotateEnd,
     [blockType('RESIZE_END')]: handleResizeEnd,
     [blockType('BLOCK_DELETE')]: handleDeleteBlock,
+    [blockType('ACT_START')]: handleActStart,
 }
 
 export default createReducer(initialState.hamster, block);

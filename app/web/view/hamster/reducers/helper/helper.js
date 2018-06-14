@@ -64,6 +64,30 @@ export function handleDragBlock (hamster, payload) {
 }
 
 /**
+ * 拖拽
+ * @param {*} hamster 
+ * @param {*} payload {blockId, offset}
+ */
+export function handleDrag (hamster, payload) {
+    const [offset, blockId] = miaow.destruction(payload, 'offset', 'blockId');
+
+    const {
+        operateBlockId,
+        isResistInside,
+        activatedBlockIds
+    } = currentHelper.judgeSituationWhenDrag(hamster, blockId);
+
+    // 移动blocks
+    const needMoveBlockIds = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
+    hamster = handleDragBlock(hamster, Immutable.fromJS({
+        offset,
+        blockIds: needMoveBlockIds
+    }))
+
+    return hamster;
+}
+
+/**
  * 更新ids中的叶子所在树的group的四维
  * @param {*} hamster 
  * @param {*} ids 

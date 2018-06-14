@@ -14,17 +14,18 @@ class ContainerSection extends Component {
     static propTypes = {
         config: PropTypes.object,
         children: PropTypes.node,
-        handleClick: PropTypes.func
+        block: PropTypes.object,
+        active: PropTypes.bool,
+        clickBlock: PropTypes.func,
+        style: PropTypes.object
     }
 
     handleClick = e => {
-        const {handleClick} = this.props;
-        handleClick && handleClick(e)
+        const {clickBlock} = this.props;
+        clickBlock && clickBlock(e)
     }
 
     render() {
-        console.log(233, this.props)
-
         const {block, active, children, style={}} = this.props;
 
         let classes = ['wrap'];

@@ -1,28 +1,34 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import rotateSource from '../decorator/operation/rotate';
 import CSSModules from 'react-css-modules'
-import styles from './RotateSection.scss'
 import {fromJS} from 'immutable'
-import * as miaow from '../../../Utils/miaow'
+import {connect} from 'react-redux'
 
-let centerClientOffset = {}
+import rotateSource from '../decorator/operation/rotate';
+import styles from './RotateSection.scss'
+import * as miaow from '../../../Utils/miaow'
+import blockActions from '../../../actions/block';
 
 const spec = {
+    beginRotate: (props) => {
+        const {actStart} = props;
+        actStart && actStart(fromJS({
+            type: 'rotating'
+        }))
+    },
+
     canRotate: (props, monitor, component) => {
-        const {block} = props;
-        const blockId = block.get('id');
-        const activatedId = props.hamster.getActivatedBlockIds();
+        const {active} = props;
         
-        return activatedId.includes(blockId);
+        return active;
     },
 
     endRotate: (props, monitor, component) => {
-        const blockId = props.block.get('id');
-        const rotation = props.block.getIn(['data', 'props', 'rotation']);
-        const blockHeight = props.block.getIn(['data', 'props', 'height']);
-        const blockWidth = props.block.getIn(['data', 'props', 'width']);
-
+        const {block, rotateEnd} = props;
+        const blockId = block.get('id');
+        const rotation = block.getIn(['data', 'props', 'rotation']);
+        const blockHeight = block.getIn(['data', 'props', 'height']);
+        const blockWidth = block.getIn(['data', 'props', 'width']);
 
         const axelHeight = component.querySelector('.axle').getBoundingClientRect().height;
         const radius = component.querySelector('.handle').getBoundingClientRect().height / 2;
@@ -41,7 +47,7 @@ const spec = {
 
         const rotateAngle = miaow.getAngleByThreeCoord.apply(null, [blockCenterClientOffset, initialClientOffset, clientOffset].map(miaow.getCoord));
 
-        props.hamster.blockManager.rotateEnd(fromJS({
+        rotateEnd && rotateEnd(fromJS({
             rotateAngle,
             blockId
         }));
@@ -61,7 +67,14 @@ class RotateSection extends Component {
 
     static propTypes = {
         canRotate: PropTypes.bool,
-        rotateSource: PropTypes.func
+        rotateSource: PropTypes.func,
+        config: PropTypes.object,
+        block: PropTypes.object,
+        active: PropTypes.bool,
+        hamster: PropTypes.object,
+        clickBlock: PropTypes.func,
+        actStart: PropTypes.func,
+        rotateEnd: PropTypes.func
     }
 
     render() {
@@ -73,9 +86,17 @@ class RotateSection extends Component {
                 {
                     rotateSource(<div className="handle" />)
                 }
-                </div>
+            </div>
         )
     }
 }
 
-export default  RotateSection;
+const mapDispatchToProps = dispatch => {
+    return {
+        actStart: (payload) => dispatch(blockActions.actStart(payload)),
+        rotateEnd: (payload) => dispatch(blockActions.rotateEnd(payload))
+    }
+}
+
+export {RotateSection}
+export default connect(null, mapDispatchToProps)(RotateSection);

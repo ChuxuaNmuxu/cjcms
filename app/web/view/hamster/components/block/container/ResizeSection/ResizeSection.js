@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules'
-import styles from './ResizeSection.scss'
-import resizeSource from '../../decorator/operation/resize';
+import {connect} from 'react-redux'
 import {fromJS} from 'immutable'
+
+import styles from './ResizeSection.scss'
 import parseConfig from './configManager'
+import resizeSource from '../../decorator/operation/resize';
+import blockActions from '../../../../actions/block';
+
 
 const spec = {
     beginResize: (props, monitor, component) => {
-        console.log('resizeStart: ', monitor.getState())
+        const {actStart} = props;
+        actStart && actStart(fromJS({
+            type: 'resizing'
+        }))
     },
 
     canResize: (props, monitor, component) => {
-        const {block} = props;
-        const blockId = block.get('id');
-        const activatedId = props.hamster.getActivatedBlockIds();
-        
-        return activatedId.includes(blockId);
+        return props.active;
     },
 
     endResize: (props, monitor, component) => {
+        const {resizeEnd} = props;
         const offset = monitor.getOffset();
         const direction = monitor.getDirection()
 
-        props.hamster.blockManager.resizeEnd(fromJS({
+        resizeEnd && resizeEnd(fromJS({
             offset,
             direction
         }));
@@ -53,9 +57,15 @@ class ResizeSection extends Component {
         resizeWest: PropTypes.func,
         resizeNW: PropTypes.func,
         resizeNE: PropTypes.func,
-         resizeSW: PropTypes.func,
+        resizeSW: PropTypes.func,
         resizeSE: PropTypes.func,
-        config: PropTypes.object
+        config: PropTypes.object,
+        block: PropTypes.object,
+        active: PropTypes.bool,
+        hamster: PropTypes.object,
+        clickBlock: PropTypes.func,
+        actStart: PropTypes.func,
+        resizeEnd: PropTypes.func
     }
 
     static displayName = 'ResizeSection'
@@ -81,4 +91,12 @@ class ResizeSection extends Component {
     }
 }
 
-export default ResizeSection;
+const mapDispatchToProps = dispatch => {
+    return {
+        actStart: (payload) => dispatch(blockActions.actStart(payload)),
+        resizeEnd: (payload) => dispatch(blockActions.resizeEnd(payload))
+    }
+}
+
+export {ResizeSection}
+export default connect(null, mapDispatchToProps)(ResizeSection);

@@ -1,5 +1,3 @@
-import Immutable from 'immutable';
-
 import * as nodeHelper from './node';
 import lodash from 'lodash';
 import * as miaow from '../../Utils/miaow';
@@ -83,7 +81,7 @@ export function getIdClusterInCurrent (hamster, ids) {
     const orphanIds = miaow.filter(nodeHelper.isOrphan(hamster))(ids);
     const ancestorBlockIds = miaow.filter(nodeHelper.isAncestor(hamster))(ids);
 
-    const allLeafBlockIds = ancestorBlockIds.map(lodash.curry(nodeHelper.getAllLeafIds)(hamster)).flatten();
+    const allLeafBlockIds = ancestorBlockIds.map(nodeHelper.getAllLeafIds(hamster)).flatten();
 
     return miaow.uniq(miaow.cat(orphanIds, allLeafBlockIds))
 }
@@ -254,3 +252,23 @@ export function isActivated (hamster) {
         return activatedIds.includes(id)
     }
 }
+
+/**
+ * 设置current属性的值
+ * @param {*} hamster 
+ * @param {*} path 路径 
+ * @param {*} operation
+ */
+export const updateCurrent = hamster => path => operation => {
+    operation = lodash.isFunction(operation) ? operation : miaow.replaceAs(operation);
+
+    const currentPath = path.split('.')
+    return hamster.updateIn(['current'].concat(currentPath), operation);
+}
+
+export const isDragging = hamster => hamster.getIn(['current', 'dragging']);
+export const isResizing = hamster => hamster.getIn(['current', 'resizing']);
+export const isRotating = hamster => hamster.getIn(['current', 'rotating']);
+
+// 正在操作的blockId
+export const getOperatingBlockId = hamster => hamster.getIn(['current', 'operatingBlockId']);
