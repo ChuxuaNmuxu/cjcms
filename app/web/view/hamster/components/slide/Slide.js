@@ -11,9 +11,7 @@ class Slide extends React.Component {
     
     render() {
         return (
-            <SlideComponent {...this.props}>
-                <Block />
-            </SlideComponent>
+            <SlideComponent {...this.props} Block={Block} />
         );
     }
 }

@@ -11,8 +11,12 @@ class DragSource extends SourceHandles {
        super(spec, monitor)
     }
 
-    beginAct (props, monitor, component) {
-        this.spec.beginDrag && this.spec.beginDrag(this.props, this.monitor, this.component)
+    beginAct () {
+        this.spec.beginDrag && this.spec.beginDrag(this.props, this.component);
+    }
+
+    acting () {
+        this.spec.drag && this.spec.drag(this.props, this.monitor, this.component);
     }
 
     canAct () {

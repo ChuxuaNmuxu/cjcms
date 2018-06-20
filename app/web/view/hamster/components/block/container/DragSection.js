@@ -9,10 +9,20 @@ import {connect} from 'react-redux'
 import blockActions from '../../../actions/block';
 
 const spec = {
-    beginDrag (props, monitor, component) {
-        const {actStart} = props;
-        actStart && actStart(fromJS({
-            type: 'dragging'
+    beginDrag (props, component) {
+        const {beginDrag, block} = props;
+        beginDrag && beginDrag(fromJS({
+            type: 'dragging',
+            blockId: block.get('id')
+        }))
+    },
+
+    drag (props, monitor) {
+        const {drag, block} = props;
+        const {x: left, y: top} = monitor.getOffset();
+        drag && drag(fromJS({
+            offset: {left, top},
+            blockId: block.get('id')
         }))
     },
 
@@ -44,19 +54,22 @@ const collect = (monitor, connect) => {
 
 @DragSource('block', spec, collect)
 @CSSModules(styles)
-class DragSection extends Component {
+class DragSection extends React.Component {
     static displayName = 'DragSection'
 
     static propTypes = {
         config: PropTypes.object,
         block: PropTypes.object,
         active: PropTypes.bool,
-        hamster: PropTypes.object,
-        clickBlock: PropTypes.func,
         dragSource: PropTypes.func,
-        actStart: PropTypes.func,
+        beginDrag: PropTypes.func,
         dragEnd: PropTypes.func
     }
+
+    shouldComponentUpdate = (nextProps, nextState) => {
+        return false;
+    }
+    
 
     render() {
         const {dragSource} = this.props;
@@ -69,7 +82,7 @@ class DragSection extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        actStart: (payload) => dispatch(blockActions.actStart(payload)),
+        beginDrag: (payload) => dispatch(blockActions.actStart(payload)),
         dragEnd: (payload) => dispatch(blockActions.dragEnd(payload))
     }
 }

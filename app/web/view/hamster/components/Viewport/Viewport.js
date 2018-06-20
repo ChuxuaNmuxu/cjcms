@@ -7,7 +7,7 @@ import Slide from '../slide'
 // import Block from './Block';
 // import CustomLayer from '../block/CustomLayer';
 
-// import Region from '../../components/region'
+import Region from '../../components/region'
 
 class Viewport extends React.Component {
     render () {
@@ -15,18 +15,22 @@ class Viewport extends React.Component {
         // const blocks = entities.filter(entity => blockIds.includes(entity.get('id')));
         return (
             <div className='viewport' styleName='viewport'>
-                <div className='reveal'>
-                    <div className='slides'>
-                        {/* <CustomLayer /> */}
-                        <section className='section'>
-                            <Slide
-                              blockIds={blockIds}
-                              entities={entities}
-                              activatedIds={currentBlocks}
-                            />
-                        </section>
+                <Region
+                  exact={true}
+                >
+                    <div className='reveal'>
+                        <div className='slides'>
+                            {/* <CustomLayer /> */}
+                            <section className='section'>
+                                <Slide
+                                  blockIds={blockIds}
+                                  entities={entities}
+                                  activatedIds={currentBlocks}
+                                />
+                            </section>
+                        </div>
                     </div>
-                </div>
+                </Region>
             </div>
         )
     }

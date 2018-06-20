@@ -76,7 +76,7 @@ function handleDragEnd (hamster, action) {
 
     // 移动blocks
     const needMoveBlockIds = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
-    hamster = helper.handleDragBlock(hamster, Immutable.fromJS({
+    hamster = helper.handleDragBlocks(hamster, Immutable.fromJS({
         offset,
         blockIds: needMoveBlockIds
     }))
@@ -106,6 +106,7 @@ function handleRotateEnd (hamster, action) {
     const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, blockId);
 
     let rotateBlockIds = activatedBlockIds;
+    // 攘外，叶子元素跟随祖先旋转
     if (!isResistInside) {
         // rotateBlockIds = activatedBlockIds.map(nodeHelper.getAllLeafIds(hamster)).concat(activatedBlockIds).flatten();
         const ancestorIds = nodeHelper.filterAncestorIds(hamster)(activatedBlockIds);
@@ -116,6 +117,7 @@ function handleRotateEnd (hamster, action) {
         }, hamster)
     }
 
+    // 安内
     hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: rotateBlockIds,
         operations: {

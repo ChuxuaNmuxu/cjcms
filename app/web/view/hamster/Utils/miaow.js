@@ -261,12 +261,16 @@ export function angleToVerticalAxis (center, another) {
     const rotateRadian = Math.atan(offset.x / offset.y);
     let rotateAngle = rotateRadian * 180 / Math.PI;
 
+    console.log(246, rotateAngle)
+
     // 修正旋转角在0-360之间
     if (offset.y < 0) {
         rotateAngle += 180;
     } else if (offset.y > 0 && offset.x < 0) {
         rotateAngle += 360;
     }
+
+    console.log(273, rotateAngle)
 
     return rotateAngle;
 }
@@ -334,10 +338,66 @@ export const arrMinus = a => b => {
     )(a, b)
 }
 
-//
+// {x, y}转换为坐标形式
 export const getCoord = maybeCoord => {
     if (maybeCoord.x && maybeCoord.y) return [maybeCoord.x, maybeCoord.y];
+    if (maybeCoord.top && maybeCoord.left) return [maybeCoord.left, maybeCoord.top]
     return maybeCoord;
+}
+
+/**
+ * 根据两个坐标求四维
+ * @param {Array} c1 
+ * @param {Array} c2 
+ */
+export const getBox = (a, b) => {
+    const zip = lodash.zip(a, b);
+
+    const [left, top] = zip.map(v => Math.min.apply(null, v))
+    const [right, bottom] = zip.map(v => Math.max.apply(null, v))
+    return {
+        left,
+        top,
+        width: right - left,
+        height: bottom - top
+    }
+}
+
+/**
+ * 浅比较
+ * @param {*} a 
+ * @param {*} b 
+ */
+export const shallowEqual = (a, b) => {
+    if (a === b) return true;
+
+    if (!existy(a) || !existy(b)) return false;
+
+    if (lodash.isArray(a) && lodash.isArray(b)) {
+        for (var i = 0; i < a.length; i += 1) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+	var keysA = Object.keys(a);
+	var keysB = Object.keys(b);
+
+	if (keysA.length !== keysB.length) {
+		return false;
+	}
+
+	// Test for A's keys different from B.
+	var hasOwn = Object.prototype.hasOwnProperty;
+	for (var i = 0; i < keysA.length; i += 1) {
+		if (!hasOwn.call(b, keysA[i]) || a[keysA[i]] !== b[keysA[i]]) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 /******* immutable *********/

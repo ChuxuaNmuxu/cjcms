@@ -8,73 +8,91 @@ import rotateSource from '../decorator/operation/rotate';
 import styles from './RotateSection.scss'
 import * as miaow from '../../../Utils/miaow'
 import blockActions from '../../../actions/block';
+import { getRotateAngle, getBlockCenterOffset } from '../../../utils/block';
 
 const spec = {
+    init: function (props, monitor) {
+        this.block = props.block;
+        this.initialClientOffset = monitor.getInitialClientOffset();
+
+        this.blockCenterOffset = getBlockCenterOffset(this.block, this.initialClientOffset)
+        return true;
+    },
+
     beginRotate: (props) => {
-        const {actStart} = props;
-        actStart && actStart(fromJS({
+        // 计算一些初始值
+        const {beginRotate} = props;
+        beginRotate && beginRotate(fromJS({
             type: 'rotating'
         }))
     },
 
-    canRotate: (props, monitor, component) => {
-        const {active} = props;
-        
-        return active;
+    rotate: function (props, monitor) {
+        if (!this.isInit) {
+            this.isInit = this.init(props, monitor)
+        }
+
+        const clientOffset = monitor.getClientOffset();
+        const rotateAngle = getRotateAngle(this.block, this.initialClientOffset, clientOffset)
+
+        const {rotate, block} = props;
+        const blockId = block.get('id');
+        rotate && rotate(fromJS({
+            rotateAngle,
+            blockId
+        }));
     },
 
-    endRotate: (props, monitor, component) => {
+    canRotate: (props, monitor, component) => {
+        const {canRotate} = props;
+        
+        return canRotate ? canRotate(props, monitor) : true;
+    },
+
+    endRotate: function (props, monitor, component) {
         const {block, rotateEnd} = props;
         const blockId = block.get('id');
-        const rotation = block.getIn(['data', 'props', 'rotation']);
-        const blockHeight = block.getIn(['data', 'props', 'height']);
-        const blockWidth = block.getIn(['data', 'props', 'width']);
 
-        const axelHeight = component.querySelector('.axle').getBoundingClientRect().height;
-        const radius = component.querySelector('.handle').getBoundingClientRect().height / 2;
+        // const axelHeight = component.querySelector('.axle').getBoundingClientRect().height;
+        // const radius = component.querySelector('.handle').getBoundingClientRect().height / 2;
 
         // 旋转半径
         // TODO: 轴高+旋转点半径为一个常量，不需要动态取
-        const rotateRadius = blockHeight / 2 + axelHeight + radius;
+        // const rotateRadius = blockHeight / 2 + axelHeight + radius;
 
         const clientOffset = monitor.getClientOffset();
-        const initialClientOffset = monitor.getInitialClientOffset();
-
-        const blockCenterClientOffset = {
-            x: initialClientOffset.x - rotateRadius * Math.sin(rotation * Math.PI / 180),
-            y: initialClientOffset.y + rotateRadius * Math.cos(rotation * Math.PI / 180)
-        }
-
-        const rotateAngle = miaow.getAngleByThreeCoord.apply(null, [blockCenterClientOffset, initialClientOffset, clientOffset].map(miaow.getCoord));
+        const rotateAngle = getRotateAngle(block, this.initialClientOffset, clientOffset)
 
         rotateEnd && rotateEnd(fromJS({
             rotateAngle,
             blockId
         }));
+
+        this.isInit = false;
     }
 }
 
 const collect = (monitor, connector) => ({
-    rotateSource: connector.connect(),
-    canRotate: monitor.canRotate()
+    rotateSource: connector.connect()
 })
 
 
 @rotateSource('container', spec, collect)
 @CSSModules(styles)
-class RotateSection extends Component {
+class RotateSection extends React.Component {
     static displayName = 'RotateSection'
 
     static propTypes = {
-        canRotate: PropTypes.bool,
         rotateSource: PropTypes.func,
         config: PropTypes.object,
         block: PropTypes.object,
         active: PropTypes.bool,
-        hamster: PropTypes.object,
-        clickBlock: PropTypes.func,
-        actStart: PropTypes.func,
+        beginRotate: PropTypes.func,
         rotateEnd: PropTypes.func
+    }
+
+    shouldComponentUpdate () {
+        return false;
     }
 
     render() {
@@ -91,9 +109,10 @@ class RotateSection extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps)  => {
     return {
-        actStart: (payload) => dispatch(blockActions.actStart(payload)),
+        beginRotate: (payload) => dispatch(blockActions.actStart(payload)),
+        canRotate: () => ownProps.active,
         rotateEnd: (payload) => dispatch(blockActions.rotateEnd(payload))
     }
 }

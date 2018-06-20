@@ -1,22 +1,11 @@
-/**
- * 解析content的配置，做容器和元素组件的分配
- * @simiao
- * 20180425
- */
-import React from 'react';
-import PropTypes from 'prop-types';
-// import CSSModules from 'react-css-modules';
-// import classNames from 'classnames';
-import {flowRight, isFunction} from 'lodash';
-
-import styles from './Block.scss';
-import configManager from '../../manager/ConfigManager';
-// import styleParser from '../block/decorator/style';
-import Container from '../block/container';
-import {dispatchMission, isValidateReactComponent} from '../../Utils/miaow';
+import React from 'react'
+import {isFunction} from 'lodash';
 import Immutable, { fromJS } from 'immutable';
-import {withHamster} from '../../hamster';
-import defaultBlockConfig from '../../config/block'
+
+import configManager from '../../../manager/ConfigManager';
+import {dispatchMission, isValidateReactComponent} from '../../../Utils/miaow';
+import Container from '../container';
+import defaultBlockConfig from '../../../config/block'
 const defaultContainerConfig = fromJS(defaultBlockConfig.content.container)
 
 // 其他情况
@@ -54,7 +43,7 @@ const containerIsObject = (config) => {
 // @config container: false 不需要容器
 const containerIsFalse = (config) => {
     if (config.get('container') !== false) return undefined;
-    
+
     const ContentComponent = config.get('component');
     return props => <ContentComponent {...props} />
 }
@@ -99,7 +88,7 @@ const contentIsObject = (config) => {
 }
 
 // @config reactComponent 配置組件,默认有容器包裹
-const contentIsComponent = (ContentComponent, props) => {
+const contentIsComponent = (ContentComponent) => {
     // function or class
     if (!isValidateReactComponent(ContentComponent)) return undefined;
 
@@ -108,46 +97,21 @@ const contentIsComponent = (ContentComponent, props) => {
     </Container>
 }
 
-@withHamster()
-// @styleParser()
-// @DragSource('block', spec, collect)
-class Component extends React.Component {
-    static propTypes = {
-        block: PropTypes.any
-    }
-
-    constructor(props, context) {
-        super(props, context);
-        
-        const {block} = props;
-        // 以type为依据的block的默认配置
-        const blockConfig = configManager.getBlock(block.getIn(['data', 'type']));
-        const contentConfig = blockConfig.get('content');
-        const Block = dispatchMission(
-                contentIsObject,
-                contentIsComponent,
-                someOthers
-            )(contentConfig);
-
-        this.state = {
-            Block
-        }
-    }
+/**
+ * 以type为依据的block的默认配置
+ * @param block
+ */
+const getDefaultBlock = block => {
+    if (!block) return;
     
+    const blockConfig = configManager.getBlock(block.getIn(['data', 'type']));
+    const contentConfig = blockConfig.get('content');
 
-    handleClick = (e) => {
-        const {hamster, block} = this.props;
-        const blockId = block.get('id');
-        hamster.blockManager.clickBlock({event: e, blockId});
-    }
-
-    render () {
-        const {Block} = this.state;
-
-        // 先判断默认情况即是否是配置对象，否则为自定义
-        return <Block {...this.props} />
-    }
+    return dispatchMission(
+        contentIsObject,
+        contentIsComponent,
+        someOthers
+    )(contentConfig);
 }
 
-export default Component;
-// CSSModules(Component, styles, {allowMultiple: true})
+export default getDefaultBlock;

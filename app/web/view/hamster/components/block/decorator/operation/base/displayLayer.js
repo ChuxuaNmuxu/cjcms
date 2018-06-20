@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
 import {isEqual} from 'lodash'
 
+import Manager from '../coreOperation/Manager'
+
 export default function displayLayerFactory (Manager) {
     const DisplayLayer = (collect, options={}) => DecoratedComponent => {
         const displayName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
@@ -65,3 +67,5 @@ export default function displayLayerFactory (Manager) {
 
     return DisplayLayer;
 } 
+
+export const displayLayer = displayLayerFactory(Manager)

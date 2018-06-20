@@ -71,6 +71,20 @@ export default class Backend {
         target.addEventListener('dragover', this.handleTopDragOver)
     }
 
+	clearCurrentDragSourceNode() {
+		if (this.currentDragSourceNode) {
+			this.currentDragSourceNode = null
+			return true
+		}
+
+		return false;
+	}
+
+	setCurrentDragSourceNode(node) {
+		this.clearCurrentDragSourceNode()
+		this.currentDragSourceNode = node
+	}
+
     handleDragStart (e, sourceId, options) {
         // 事件冒泡等同时触发多个drag事件
         this.dragStartSource.push({sourceId, options})
@@ -78,6 +92,7 @@ export default class Backend {
 
     handleTopDragStart = (e) => {
         const {dragStartSource} = this;
+        if (dragStartSource.length === 0) return;
 
         this.dragStartSource = [];
         // 鼠标位置
@@ -96,26 +111,31 @@ export default class Backend {
 
             const dragPreview = preview || getEmptyImage();
 
+            this.setCurrentDragSourceNode(e.target)
+
             // TODO: preview位置计算、浏览器兼容
             dataTransfer.setDragImage(dragPreview, 0, 0)
+        } else {
+            e.preventDefault();
         }
 
 
         // TODO: 拖动过程中，dom节点被移除，drag事件中断，需要手动处理dragEnd事件
-
-        if (!this.monitor.isActing()) e.preventDefault();
-
     }
 
     handleTopDragEnd = () => {
-        this.actions.dragEnd()
+        if (this.clearCurrentDragSourceNode()) {
+            this.actions.dragEnd()
+        }
     }
 
     handleTopDragOver = (e) => {
         e.preventDefault()
-        this.actions.hover({
-            clientOffset: this.getEventClientOffset(e),
-		})
+        if (this.monitor.isActing()) {
+            this.actions.hover({
+                clientOffset: this.getEventClientOffset(e),
+            })
+		}
     }
 
     getEventClientOffset (e) {

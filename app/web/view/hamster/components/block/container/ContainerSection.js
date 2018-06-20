@@ -48,4 +48,5 @@ class ContainerSection extends Component {
     }
 }
 
+export {ContainerSection}
 export default ContainerSection;

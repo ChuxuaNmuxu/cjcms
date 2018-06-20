@@ -1,6 +1,6 @@
-import Block from './block';
+import Block, {Component} from './block';
 
-export const Component = Block.Component;
+Block.Component = Component;
 // TODO: container等输出
-
+export {Component}
 export default Block;

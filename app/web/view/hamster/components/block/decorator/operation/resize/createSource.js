@@ -9,6 +9,10 @@ class ResizeSource extends SourceHandles {
         this.spec.beginResize(this.props, this.monitor, this.component)
     }
 
+    acting () {
+        this.spec.resize && this.spec.resize(this.props, this.monitor, this.component);
+    }
+
     canAct () {
         return true;
     }

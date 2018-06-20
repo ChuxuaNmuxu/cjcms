@@ -1,27 +1,24 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import DragLayer from '../decorator/operation/drag/DragLayer'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { fromJS } from 'immutable';
 
-@DragLayer((monitor, props) => ({
-    initialOffset: monitor.getInitialClientOffset(),
-    offset: monitor.getOffset(),
-    isDragging: monitor.isDragging()
-}))
-class CustomDragLayer extends Component {
-    static propTypes = {
-        isDragging: PropTypes.bool,
-        offset: PropTypes.object
-    }
+import {handleDrag} from '../../../reducers/helper/helper'
+import {getOperatingBlockId} from '../../../reducers/helper/current'
+import Block from '../../Viewport/Block'
 
-    render() {
-        if (!this.props.isDragging) return null
+const CustomDragLayer = props => {
+    const {hamster, offset} = props
+    const operatingBlockId = getOperatingBlockId(hamster);
+    const hamsterDragged = handleDrag(hamster, fromJS({
+        blockId: operatingBlockId,
+        offset
+    }))
 
-        return (
-            <div>
-                {this.props.offset.x}
-            </div>
-        )
-    }
+    return <div />
+}
+
+CustomDragLayer.propTypes = {
+    hamster: PropTypes.object
 }
 
 export default CustomDragLayer;

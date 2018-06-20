@@ -12,14 +12,28 @@ import blockActions from '../../../../actions/block';
 
 const spec = {
     beginResize: (props, monitor, component) => {
-        const {actStart} = props;
-        actStart && actStart(fromJS({
+        const {beginResize} = props;
+        beginResize && beginResize(fromJS({
             type: 'resizing'
         }))
     },
 
     canResize: (props, monitor, component) => {
-        return props.active;
+        const {canResize} = props;
+        
+        return canResize ? canResize(props, monitor) : true;
+    },
+
+    resize: (props, monitor) => {
+        const {resize, block} = props;
+        const offset = monitor.getOffset();
+        const direction = monitor.getDirection()
+
+        resize && resize(fromJS({
+            blockId: block.get('id'),
+            offset,
+            direction
+        }));
     },
 
     endResize: (props, monitor, component) => {
@@ -43,13 +57,11 @@ const collect = (monitor, connect) => ({
     resizeNE: connect.resizeNE(),
     resizeSE: connect.resizeSE(),
     resizeSW: connect.resizeSW(),
-
-    offset: monitor.getOffset()
 })
 
 @resizeSource('container', spec, collect)
 @CSSModules(styles)
-class ResizeSection extends Component {
+class ResizeSection extends React.Component {
     static propTypes = {
         resizeNorth: PropTypes.func,
         resizeSouth: PropTypes.func,
@@ -62,15 +74,18 @@ class ResizeSection extends Component {
         config: PropTypes.object,
         block: PropTypes.object,
         active: PropTypes.bool,
-        hamster: PropTypes.object,
-        clickBlock: PropTypes.func,
-        actStart: PropTypes.func,
+        beginResize: PropTypes.func,
         resizeEnd: PropTypes.func
     }
 
     static displayName = 'ResizeSection'
 
+    shouldComponentUpdate(nextProps) {
+        return this.props.config !== nextProps.config
+    }
+
     render() {
+        console.log('resize render')
         const {resizeNorth, resizeSouth, resizeEast, resizeWest, resizeNW, resizeNE,  resizeSW, resizeSE} = this.props;
         const {config = fromJS({resizable: true})} = this.props;
 
@@ -91,9 +106,10 @@ class ResizeSection extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        actStart: (payload) => dispatch(blockActions.actStart(payload)),
+        beginResize: (payload) => dispatch(blockActions.actStart(payload)),
+        canResize: () => ownProps.active,
         resizeEnd: (payload) => dispatch(blockActions.resizeEnd(payload))
     }
 }

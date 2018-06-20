@@ -46,12 +46,8 @@ export function createDefaultBlockObjects (hamster, id) {
     return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
 
-/**
- *  拖动一个block
- * @param {*} hamster 
- * @param {*} payload {offset, blockId}
- */
-export function handleDragBlock (hamster, payload) {
+// 拖动blocks
+export function handleDragBlocks (hamster, payload) {
     const [offset, blockIds] = miaow.destruction(payload, 'offset', 'blockIds');
 
     return entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
@@ -61,6 +57,17 @@ export function handleDragBlock (hamster, payload) {
             'data.props.left': miaow.add(offset.get('left'))
         }
     }));
+}
+
+/**
+ *  拖动一个block
+ * @param {*} hamster 
+ * @param {*} payload {offset, blockId}
+ */
+export function handleDragBlock (hamster, payload) {
+    payload = payload.set('blockIds', payload.get('blockId'));
+
+    return handleDragBlocks(hamster, payload);
 }
 
 /**
@@ -79,7 +86,7 @@ export function handleDrag (hamster, payload) {
 
     // 移动blocks
     const needMoveBlockIds = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
-    hamster = handleDragBlock(hamster, Immutable.fromJS({
+    hamster = handleDragBlocks(hamster, Immutable.fromJS({
         offset,
         blockIds: needMoveBlockIds
     }))
@@ -216,7 +223,7 @@ export function handleResizeBlocks (hamster, blockId, direction, offset) {
      * 总的来说：在中心坐标系中计算，在普通坐标系中操作；先计算width，height，再以中心旋转，最后修正top, left
      */
     const entity = entityHelper.getEntity(hamster)(blockId);
-    const angle = entity.getIn(['data', 'props', 'rotation']);
+    const angle = entity.getIn(['data', 'props', 'rotation']) || 0;
 
     const pinPoint = directionConfig[direction]['oppsite'];
 
@@ -255,5 +262,21 @@ export function handleResizeBlocks (hamster, blockId, direction, offset) {
 
     hamster = blockHelper.updateBlockFourDimension(hamster, blockId, Immutable.fromJS(fourDimensionPinnedPoint));
 
+    return hamster;
+}
+
+/**
+ * 旋转
+ * @param {*} hamster 
+ * @param {*} blockIds 
+ * @param {*} angle 
+ */
+export const handleRotateBlocks = (hamster, blockIds, angle) => {
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: miaow.toList(blockIds),
+        operations: {
+            'data.props.rotation': miaow.add(angle)
+        }
+    }))
     return hamster;
 }

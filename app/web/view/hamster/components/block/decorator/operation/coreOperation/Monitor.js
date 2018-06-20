@@ -75,4 +75,8 @@ export default class Monitor {
     getInitialClientOffset () {
         return this.getState().dragOffset.initialClientOffset
     }
+
+    getTarget () {
+        return this.getState().dragOperation.target
+    }
 }
