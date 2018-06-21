@@ -28,7 +28,7 @@ class BoxSelection extends Component {
     render() {
         const {regions} = this.state;
         const {children} = this.props;
-        return <Region 
+        return <Region
             regions={regions}
             blockType={'boxSelection'}
             onChange={this.onChange}

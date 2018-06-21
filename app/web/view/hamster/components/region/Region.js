@@ -9,16 +9,13 @@ import CSSModules from 'react-css-modules'
 import styles from './Region.scss'
 import uuid from 'uuid'
 import Immutable, {fromJS} from 'immutable';
-import {flow, over, flatten} from 'lodash';
 
 import Slide from '../slide'
-import { getBox, shallowEqual, map, getCoord, destruction, get, dispatchMission, prevCheck, identity, always, isValidateReactComponent, isMap, and } from '../../Utils/miaow';
+import { getBox, shallowEqual, map, getCoord, destruction, get } from '../../Utils/miaow';
 import getEmptyImage from '../block/decorator/operation/base/getEmptyImage';
-import Block from '../block'
 import {ContainerSection, ResizeSection, RotateSection, DragSection} from '../block/container';
 import { handleDragBlock, handleResizeBlocks, handleRotateBlocks } from '../../reducers/helper/helper';
-import configManager from '../../manager/ConfigManager';
-import { defaultBlockConfig } from '../../config/config';
+import prevParseConfig from './helper';
 
 const getEntityAndIds = (regions) => {
     if (!regions) return [];
@@ -44,7 +41,7 @@ class Region extends Component {
     operatingId = null;
     clientCoord = null;
     initialClientCoord = null;
-    isRegioning = false;
+    isSelectRegion = false;
 
     constructor(props, context) {
         super(props, context);
@@ -61,39 +58,11 @@ class Region extends Component {
         })
 
         // 注入配置
-        const blockConfig = configManager.getBlock(blockType);
-        const contentConfig = blockConfig.get('content');
-        const config = flow(
-            dispatchMission(
-                prevCheck(identity)(
-                    over([
-                        flow(
-                            get('container'),
-                            dispatchMission(
-                                prevCheck(isMap)(identity),
-                                prevCheck(identity)(always(defaultBlockConfig.getIn(['content', 'container']))),
-                                always(Immutable.Map())
-                            ),
-                            destruction('draggable', 'rotatable', 'resizable')
-                        ),
-                        flow(
-                            get('component'),
-                            dispatchMission(
-                                prevCheck(and(identity, isValidateReactComponent))(identity),
-                                always(props => null)
-                            )
-                        )
-                    ])
-                ),
-                always([])
-            ),
-            flatten
-        )(contentConfig)
         
-        const [dragConfig, rotateConfig, resizeConfig, ContentComponent] = config;
+        const [dragConfig, rotateConfig, resizeConfig, ContentComponent] = prevParseConfig(blockType);
 
         const BoxComponent = blockProps => <ContainerSection {...blockProps}>
-                    <ContentComponent {...blockProps} config={contentConfig}/>
+                    <ContentComponent {...blockProps} />
                     <DragSection config={dragConfig} beginDrag={this.handleActStart} drag={this.handleDragBlock}/>
                     <RotateSection config={rotateConfig} beginRotate={this.handleActStart} rotate={this.handleRotateBlock}/>
                     <ResizeSection config={resizeConfig} beginResize={this.handleActStart} resize={this.handleResizeBlock}/>
@@ -182,7 +151,7 @@ class Region extends Component {
         // 更新一些信息
         const id = 'region-' + uuid.v4()
         this.operatingId = id;
-        this.isRegioning = true;
+        this.isSelectRegion = true;
         this.block = this.defaultBlock.set('id', id)
 
         const {beginDrag} = this.props;
@@ -190,7 +159,7 @@ class Region extends Component {
     }
 
     handleRegion = (initialClientCoord, clientCoord) => {
-        if (!this.isRegioning) return;
+        if (!this.isSelectRegion) return;
         const id = this.block.get('id');
 
         const fourDimension = getBox.apply(null, map(getCoord)([initialClientCoord, clientCoord]));
@@ -214,7 +183,7 @@ class Region extends Component {
     handleDragover = e => {
         // 去除禁止符号
         e.preventDefault()
-        if (!this.isRegioning) return;
+        if (!this.isSelectRegion) return;
 
         const clientCoord = {
             x: e.clientX,
@@ -230,7 +199,7 @@ class Region extends Component {
     }
 
     handleDragEnd = e => {
-        if (!this.isRegioning) return;
+        if (!this.isSelectRegion) return;
 
         // 新的block加入entities
         this.setState({
@@ -242,7 +211,7 @@ class Region extends Component {
 
         // 重置
         this.clientCoord = null;
-        this.isRegioning = false;
+        this.isSelectRegion = false;
         this.block = this.defaultBlock;
     }
 
