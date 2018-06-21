@@ -22,7 +22,7 @@ Component.propTypes = {
     blockIds: PropTypes.any,
     activatedIds: PropTypes.any,
     entities: PropTypes.any,
-    Block: PropTypes.node
+    Block: PropTypes.any
 };
 
 export default Component;

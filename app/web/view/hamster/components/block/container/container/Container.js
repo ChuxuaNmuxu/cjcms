@@ -9,7 +9,7 @@ import { isValidateReactComponent, destruction } from '../../../../Utils/miaow';
 
 class Container extends Component {
     static propTypes = {
-        config: PropTypes.object,
+        config: PropTypes.any,
         children: PropTypes.node,
         block: PropTypes.object,
         active: PropTypes.bool,

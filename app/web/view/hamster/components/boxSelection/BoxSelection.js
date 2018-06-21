@@ -6,7 +6,7 @@ import Region from '../region'
 
 class BoxSelection extends Component {
     static propTypes = {
-
+        children: PropTypes.node
     };
 
     constructor(props, context) {

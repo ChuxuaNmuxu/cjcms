@@ -71,7 +71,7 @@ class ResizeSection extends React.Component {
         resizeNE: PropTypes.func,
         resizeSW: PropTypes.func,
         resizeSE: PropTypes.func,
-        config: PropTypes.object,
+        config: PropTypes.any,
         block: PropTypes.object,
         active: PropTypes.bool,
         beginResize: PropTypes.func,

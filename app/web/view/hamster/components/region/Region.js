@@ -29,7 +29,7 @@ const getEntityAndIds = (regions) => {
 class Region extends Component {
     static propTypes = {
         exact: PropTypes.bool,
-        regions: PropTypes.array,
+        regions: PropTypes.any,
         beginDrag: PropTypes.func,
         endDrag: PropTypes.func,
         onFinish: PropTypes.func,

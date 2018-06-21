@@ -59,7 +59,7 @@ class DragSection extends React.Component {
     static displayName = 'DragSection'
 
     static propTypes = {
-        config: PropTypes.object,
+        config: PropTypes.any,
         block: PropTypes.object,
         active: PropTypes.bool,
         dragSource: PropTypes.func,
@@ -67,7 +67,7 @@ class DragSection extends React.Component {
         dragEnd: PropTypes.func
     }
 
-    shouldComponentUpdate = (nextProps, nextState) => {
+    shouldComponentUpdate = () => {
         return false;
     }
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import CSSModules from 'react-css-modules'
 import {fromJS} from 'immutable'
@@ -84,7 +84,7 @@ class RotateSection extends React.Component {
 
     static propTypes = {
         rotateSource: PropTypes.func,
-        config: PropTypes.object,
+        config: PropTypes.any,
         block: PropTypes.object,
         active: PropTypes.bool,
         beginRotate: PropTypes.func,
