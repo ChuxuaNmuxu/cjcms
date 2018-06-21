@@ -153,6 +153,12 @@ class Region extends Component {
         })
     }
 
+    getRegionList = () => {
+        const {blockIds, entities} = this.state;
+        const regionList = blockIds.map(id => entities.get(id));
+        return regionList;
+    }
+
     handleDragStart = e => {
         this.initialClientCoord = {
             x: e.clientX,
@@ -232,7 +238,7 @@ class Region extends Component {
         })
         
         const {onChange} = this.props;
-        onChange && onChange(this.block, this.state.entities);
+        onChange && onChange(this.block, this.getRegionList());
 
         // 重置
         this.clientCoord = null;

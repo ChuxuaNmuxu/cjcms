@@ -19,7 +19,7 @@ class Container extends Component {
     config;
     constructor(props, context) {
         super(props, context);
-        
+
         this.config = prevParseConfig(props.config);
     }
     

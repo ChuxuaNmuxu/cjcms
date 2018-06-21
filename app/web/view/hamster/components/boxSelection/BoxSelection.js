@@ -18,7 +18,8 @@ class BoxSelection extends Component {
     }
     
 
-    onChange = () => {
+    onChange = (region, regionList) => {
+        console.log('regionlist: ', regionList.toJS())
         this.setState({
             regions: Immutable.OrderedSet()
         })
