@@ -7,7 +7,7 @@ import Slide from '../slide'
 // import Block from './Block';
 // import CustomLayer from '../block/CustomLayer';
 
-import Region from '../../components/region'
+import BoxSelection from '../../components/boxSelection'
 
 class Viewport extends React.Component {
     render () {
@@ -15,9 +15,7 @@ class Viewport extends React.Component {
         // const blocks = entities.filter(entity => blockIds.includes(entity.get('id')));
         return (
             <div className='viewport' styleName='viewport'>
-                <Region
-                  exact={true}
-                >
+                <BoxSelection>
                     <div className='reveal'>
                         <div className='slides'>
                             {/* <CustomLayer /> */}
@@ -30,7 +28,7 @@ class Viewport extends React.Component {
                             </section>
                         </div>
                     </div>
-                </Region>
+                </BoxSelection>
             </div>
         )
     }

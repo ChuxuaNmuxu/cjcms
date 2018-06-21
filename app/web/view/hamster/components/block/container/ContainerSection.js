@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import classNames from 'classnames';
+import {connect} from 'react-redux'
 
 import styles from './ContainerSection.scss';
 import styleParser from '../decorator/style';
+import blockActions from '../../../actions/block';
 
 @styleParser()
 @CSSModules(styles, {allowMultiple: true})
@@ -12,7 +14,6 @@ class ContainerSection extends Component {
     static displayName = 'ContainerSection'
 
     static propTypes = {
-        config: PropTypes.object,
         children: PropTypes.node,
         block: PropTypes.object,
         active: PropTypes.bool,
@@ -21,8 +22,11 @@ class ContainerSection extends Component {
     }
 
     handleClick = e => {
-        const {clickBlock} = this.props;
-        clickBlock && clickBlock(e)
+        const {clickBlock, block} = this.props;
+        clickBlock && clickBlock({
+            event: e,
+            blockId: block.get('id')
+        })
     }
 
     render() {
@@ -48,5 +52,11 @@ class ContainerSection extends Component {
     }
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        clickBlock: (payload) => dispatch(blockActions.click(payload))
+    }
+}
+
 export {ContainerSection}
-export default ContainerSection;
+export default connect(null, mapDispatchToProps)(ContainerSection);

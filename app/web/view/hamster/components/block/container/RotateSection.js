@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 
 import rotateSource from '../decorator/operation/rotate';
 import styles from './RotateSection.scss'
-import * as miaow from '../../../Utils/miaow'
+import {isValidateReactComponent} from '../../../Utils/miaow'
 import blockActions from '../../../actions/block';
 import { getRotateAngle, getBlockCenterOffset } from '../../../utils/block';
 
@@ -96,7 +96,12 @@ class RotateSection extends React.Component {
     }
 
     render() {
-        const {rotateSource} = this.props;
+        const {rotateSource, config, ...rest} = this.props;
+
+        if (!config) return null;
+
+        const RotateComponent = config;
+        if (isValidateReactComponent(RotateComponent)) return <RotateComponent {...rest}/>
 
         return (
             <div styleName='rotate-wrap' className='rotate-wrap'>

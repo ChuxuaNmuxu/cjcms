@@ -66,7 +66,7 @@ function handleChangeProps (hamster, action) {
  */
 function handleDragEnd (hamster, action) {
     const {payload} = action;
-    const [offset, blockId] = miaow.destruction(payload, 'offset', 'blockId');
+    const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
 
     const {
         operateBlockId,

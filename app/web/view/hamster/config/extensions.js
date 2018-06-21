@@ -11,6 +11,7 @@ import * as BlockTest3 from '../extensions/Blocks/BlockTest3'
 import * as BlockTest4 from '../extensions/Blocks/BlockTest4'
 import * as BlockTest5 from '../extensions/Blocks/BlockTest5'
 import * as BlockGroup from '../extensions/Blocks/BlockGroup';
+import * as BlockSingleRegion from '../extensions/Blocks/BlockSingleRegion';
 
 export const blocks = fromJS([
     BlockText.manifest,
@@ -23,5 +24,6 @@ export const blocks = fromJS([
     BlockTest3.manifest,
     BlockTest4.manifest,
     BlockTest5.manifest,
-    BlockGroup.manifest
+    BlockGroup.manifest,
+    BlockSingleRegion.manifest,
 ]);

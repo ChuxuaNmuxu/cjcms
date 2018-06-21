@@ -87,7 +87,7 @@ export function toList (value) {
  * @param {*} data 
  * @param {*} args 
  */
-export function destruction (data, ...args) {
+export const destruction = (...args) => data => {
     return args.map(path => data.get && data.get(path))
 }
 
@@ -190,6 +190,7 @@ export function dispatchMission (...funs) {
 export const isValidateReactComponent = component => {
     // TODO: 其他情况判断
     // 实例化组件，function, 继承自Component的class
+    if (!component) return false;
     return isValidElement(component) || lodash.isFunction(component) || component.render;
 }
 
@@ -245,6 +246,8 @@ export function not (func) {
         return !result;
     }
 }
+
+export const isTrue = value => value === true;
 
 /**
  * 求与纵轴夹角
@@ -500,3 +503,5 @@ export const filter = func => list => list.filter(func);
 export const handle = operation => list => list[operation]();
 
 export const push = value => list => list.push(value);
+
+export const isMap = value => Immutable.Map.isMap(value);

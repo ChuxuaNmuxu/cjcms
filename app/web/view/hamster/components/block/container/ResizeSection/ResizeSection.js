@@ -80,27 +80,32 @@ class ResizeSection extends React.Component {
 
     static displayName = 'ResizeSection'
 
+    options;
+
+    constructor(props, context) {
+        super(props, context);
+        
+        this.options = parseConfig(props.config);
+    }
+    
+
     shouldComponentUpdate(nextProps) {
         return this.props.config !== nextProps.config
     }
 
     render() {
-        console.log('resize render')
         const {resizeNorth, resizeSouth, resizeEast, resizeWest, resizeNW, resizeNE,  resizeSW, resizeSE} = this.props;
-        const {config = fromJS({resizable: true})} = this.props;
-
-        const options = parseConfig(config.get( 'resizable'))
 
         return (
             <React.Fragment>
-                {options.n && resizeNorth(<div styleName='north'/>)}
-                {options.s && resizeSouth(<div styleName='south'/>)}
-                {options.e && resizeEast(<div styleName='east'/>)}
-                {options.w && resizeWest(<div styleName='west'/>)}
-                {options.nw && resizeNW(<div styleName='NW'/>)}
-                {options.ne && resizeNE(<div styleName='NE'/>)}
-                {options.sw && resizeSW(<div styleName='SW'/>)}
-                {options.se && resizeSE(<div styleName='SE'/>)}
+                {this.options.n && resizeNorth(<div styleName='north'/>)}
+                {this.options.s && resizeSouth(<div styleName='south'/>)}
+                {this.options.e && resizeEast(<div styleName='east'/>)}
+                {this.options.w && resizeWest(<div styleName='west'/>)}
+                {this.options.nw && resizeNW(<div styleName='NW'/>)}
+                {this.options.ne && resizeNE(<div styleName='NE'/>)}
+                {this.options.sw && resizeSW(<div styleName='SW'/>)}
+                {this.options.se && resizeSE(<div styleName='SE'/>)}
             </React.Fragment>
         );
     }

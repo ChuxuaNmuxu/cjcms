@@ -48,7 +48,7 @@ export function createDefaultBlockObjects (hamster, id) {
 
 // 拖动blocks
 export function handleDragBlocks (hamster, payload) {
-    const [offset, blockIds] = miaow.destruction(payload, 'offset', 'blockIds');
+    const [offset, blockIds] = miaow.destruction('offset', 'blockIds')(payload);
 
     return entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: miaow.toList(blockIds),
@@ -76,7 +76,7 @@ export function handleDragBlock (hamster, payload) {
  * @param {*} payload {blockId, offset}
  */
 export function handleDrag (hamster, payload) {
-    const [offset, blockId] = miaow.destruction(payload, 'offset', 'blockId');
+    const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
 
     const {
         operateBlockId,
@@ -228,7 +228,7 @@ export function handleResizeBlocks (hamster, blockId, direction, offset) {
     const pinPoint = directionConfig[direction]['oppsite'];
 
     // 中心坐标系中偏移量
-    const offsetInCCS = blockHelper.coordTransformation(miaow.destruction(offset, 'x', 'y'), angle);
+    const offsetInCCS = blockHelper.coordTransformation(miaow.destruction('x', 'y')(offset), angle);
 
     const sizeOffsetVector = lodash.zip(
         offsetInCCS,

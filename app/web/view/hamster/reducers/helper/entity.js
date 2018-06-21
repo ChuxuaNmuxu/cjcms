@@ -15,7 +15,7 @@ export const getEntity = hamster => id => hamster.getIn(['entities', id]);
  * @param {*} payload
  */
 export function handleEntitiesChanges (hamster, payload) {
-    const [ids, operations] = miaow.destruction(payload, 'ids', 'operations');
+    const [ids, operations] = miaow.destruction('ids', 'operations')(payload);
 
     const objectIds = miaow.toList(ids);
     return hamster.update('entities', entities => {

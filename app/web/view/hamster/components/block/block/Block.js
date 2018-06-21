@@ -21,14 +21,14 @@ export class Component extends React.Component {
         block: PropTypes.object,
         active: PropTypes.bool,
         // hamster: PropTypes.object,
-        clickBlock: PropTypes.func
+        // clickBlock: PropTypes.func
     }
 
     constructor(props, context) {
         super(props, context);
         
-        const {block, children} = props;
-        const Block = getDefaultBlock(block);
+        const {block} = props;
+        const Block = getDefaultBlock(block.getIn(['data', 'type']));
 
         this.state = {
             Block
@@ -43,26 +43,23 @@ export class Component extends React.Component {
         return active !== nextActive || (block !== nextBlock && !block.equals(nextBlock));
     }
 
-    handleClick = (e) => {
-        const {block, clickBlock} = this.props;
-        const blockId = block.get('id');
+    // handleClick = (e) => {
+    //     const {block, clickBlock} = this.props;
+    //     const blockId = block.get('id');
 
-        // hamster.blockManager.clickBlock({event: e, blockId});
-        clickBlock && clickBlock({event: e, blockId});
-    }
+    //     // hamster.blockManager.clickBlock({event: e, blockId});
+    //     clickBlock && clickBlock({event: e, blockId});
+    // }
 
     render () {
         const {children, ...rest} = this.props;
         const {Block} = this.state;
-        const props = {
-            ...rest,
-            clickBlock: this.handleClick
-        }
+        // const props = {
+        //     ...rest,
+        //     clickBlock: this.handleClick
+        // }
 
-        // block复用
-        if (children) return React.cloneElement(children, {...props})
-
-        return <Block {...props} />
+        return <Block {...rest} />
     }
 }
 

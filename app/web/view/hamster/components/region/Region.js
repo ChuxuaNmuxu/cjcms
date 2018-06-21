@@ -1,5 +1,7 @@
 /**
  * 画框框
+ * 基于slide和block组件开发
+ * TODO: 提供onFinish接口，如在componentWillUnmount中，可以完成截图功能等
  */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -7,21 +9,24 @@ import CSSModules from 'react-css-modules'
 import styles from './Region.scss'
 import uuid from 'uuid'
 import Immutable, {fromJS} from 'immutable';
+import {flow, over, flatten} from 'lodash';
 
 import Slide from '../slide'
-import Box from './Box';
-import { getBox, shallowEqual, map, getCoord, destruction } from '../../Utils/miaow';
+import { getBox, shallowEqual, map, getCoord, destruction, get, dispatchMission, prevCheck, identity, always, isValidateReactComponent, isMap, and } from '../../Utils/miaow';
 import getEmptyImage from '../block/decorator/operation/base/getEmptyImage';
 import Block from '../block'
 import {ContainerSection, ResizeSection, RotateSection, DragSection} from '../block/container';
 import { handleDragBlock, handleResizeBlocks, handleRotateBlocks } from '../../reducers/helper/helper';
+import configManager from '../../manager/ConfigManager';
+import { defaultBlockConfig } from '../../config/config';
 
-const defalutBlock = Immutable.fromJS({
-    type: 'block',
-    data: {
-        type: 'text'
-    }
-})
+const getEntityAndIds = (regions) => {
+    if (!regions) return [];
+
+    const blockIds = regions.map(get('id'));
+    const entities = regions.reduce((entity, region) => entity.set(region.get(id), region), Immutable.Map())
+    return [blockIds.toOrderedSet(), entities]
+}
 
 @CSSModules(styles)
 class Region extends Component {
@@ -35,7 +40,7 @@ class Region extends Component {
         getContainer: PropTypes.func
     }
 
-    newBlockId = null;
+    block = null;
     operatingId = null;
     clientCoord = null;
     initialClientCoord = null;
@@ -44,22 +49,81 @@ class Region extends Component {
     constructor(props, context) {
         super(props, context);
 
-        const BoxComponent = props => <Block.Component {...props}>
-                <ContainerSection {...props}>
-                    <DragSection {...props} beginDrag={this.handleActStart} drag={this.handleDragBlock}/>
-                    <RotateSection {...props} beginRotate={this.handleActStart} rotate={this.handleRotateBlock}/>
-                    <ResizeSection {...props} beginResize={this.handleActStart} resize={this.handleResizeBlock}/>
+        const {blockType='text'} = props;
+        this.defaultBlock = Immutable.fromJS({
+            type: 'block',
+            data: {
+                type: blockType,
+                props: {
+                    rotation: 0
+                }
+            }
+        })
+
+        // 注入配置
+        const blockConfig = configManager.getBlock(blockType);
+        const contentConfig = blockConfig.get('content');
+        const config = flow(
+            dispatchMission(
+                prevCheck(identity)(
+                    over([
+                        flow(
+                            get('container'),
+                            dispatchMission(
+                                prevCheck(isMap)(identity),
+                                prevCheck(identity)(always(defaultBlockConfig.getIn(['content', 'container']))),
+                                always(Immutable.Map())
+                            ),
+                            destruction('draggable', 'rotatable', 'resizable')
+                        ),
+                        flow(
+                            get('component'),
+                            dispatchMission(
+                                prevCheck(and(identity, isValidateReactComponent))(identity),
+                                always(props => null)
+                            )
+                        )
+                    ])
+                ),
+                always([])
+            ),
+            flatten
+        )(contentConfig)
+        
+        const [dragConfig, rotateConfig, resizeConfig, ContentComponent] = config;
+
+        const BoxComponent = blockProps => <ContainerSection {...blockProps}>
+                    <ContentComponent {...blockProps} config={contentConfig}/>
+                    <DragSection config={dragConfig} beginDrag={this.handleActStart} drag={this.handleDragBlock}/>
+                    <RotateSection config={rotateConfig} beginRotate={this.handleActStart} rotate={this.handleRotateBlock}/>
+                    <ResizeSection config={resizeConfig} beginResize={this.handleActStart} resize={this.handleResizeBlock}/>
                 </ContainerSection>
-            </Block.Component>
+            
+
+        const {regions, activatedIds} = props;
+        const [blockIds, entities] = getEntityAndIds(regions)
 
         this.state = {
-            blockIds: Immutable.OrderedSet(), 
-            activatedIds: Immutable.List(),
-            entities: Immutable.Map(),
+            blockIds: blockIds || Immutable.OrderedSet(),
+            activatedIds: activatedIds || Immutable.List(),
+            entities: entities || Immutable.Map(),
             BoxComponent
         }
     }
 
+    componentWillReceiveProps (nextProps) {
+        const {regions, activatedIds} = nextProps;
+
+        if (regions) {
+            const [blockIds, entities] = getEntityAndIds(regions)
+            this.setState({
+                blockIds,
+                entities
+            })
+        }
+
+        if (activatedIds) this.setState({activatedIds})
+    }
 
     handleActStart = () => {
         this.initialEntities = this.state.entities;
@@ -73,7 +137,7 @@ class Region extends Component {
     }
 
     handleResizeBlock = (payload) => {
-        const params = [fromJS({entities: this.initialEntities})].concat(destruction(payload, 'blockId', 'direction', 'offset'));
+        const params = [fromJS({entities: this.initialEntities})].concat(destruction('blockId', 'direction', 'offset')(payload));
         const hamster = handleResizeBlocks.apply(null, params)
         this.setState({
             entities: hamster.get('entities')
@@ -81,7 +145,7 @@ class Region extends Component {
     }
 
     handleRotateBlock = (payload) => {
-        const params = [fromJS({entities: this.initialEntities})].concat(destruction(payload, 'blockId', 'rotateAngle'))
+        const params = [fromJS({entities: this.initialEntities})].concat(destruction('blockId', 'rotateAngle')(payload))
         const hamster = handleRotateBlocks.apply(null, params);
 
         this.setState({
@@ -111,38 +175,33 @@ class Region extends Component {
         
         // 更新一些信息
         const id = 'region-' + uuid.v4()
-        this.newBlockId = id;
         this.operatingId = id;
         this.isRegioning = true;
-        
+        this.block = this.defaultBlock.set('id', id)
+
         const {beginDrag} = this.props;
-        beginDrag && beginDrag(Immutable.fromJS(this.block), entities);
+        beginDrag && beginDrag(entities);
     }
 
     handleRegion = (initialClientCoord, clientCoord) => {
         if (!this.isRegioning) return;
+        const id = this.block.get('id');
 
         const fourDimension = getBox.apply(null, map(getCoord)([initialClientCoord, clientCoord]));
-        
-        const {blockIds, entities} = this.state;
-        const {newBlockId: id} = this;
-        const block = Immutable.fromJS({
-            type: 'block',
-            id,
+        this.block = this.block.mergeDeep(Immutable.fromJS({
             data: {
-                type: 'text',
                 props: {
                     ...fourDimension,
                     top: fourDimension.top - this.containerPosition.top,
                     left: fourDimension.left - this.containerPosition.left,
-                    rotation: 0
                 }
             }
-        })
-
+        }))
+        
+        const {blockIds, entities} = this.state;
         this.setState({
             blockIds: blockIds.add(id),
-            entities: entities.set(id, block)
+            entities: entities.set(id, this.block)
         })
     }
 
@@ -178,7 +237,7 @@ class Region extends Component {
         // 重置
         this.clientCoord = null;
         this.isRegioning = false;
-        this.block = {};
+        this.block = this.defaultBlock;
     }
 
     render() {

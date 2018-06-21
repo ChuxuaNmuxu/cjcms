@@ -7,6 +7,7 @@ import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 
 import blockActions from '../../../actions/block';
+import { isValidateReactComponent } from '../../../Utils/miaow';
 
 const spec = {
     beginDrag (props, component) {
@@ -69,10 +70,14 @@ class DragSection extends React.Component {
     shouldComponentUpdate = (nextProps, nextState) => {
         return false;
     }
-    
 
     render() {
-        const {dragSource} = this.props;
+        const {dragSource, config, ...rest} = this.props;
+
+        if (!config) return null;
+
+        const DragComponent = config;
+        if (isValidateReactComponent(DragComponent)) return <DragComponent {...rest}/>
 
         return (
             dragSource(<div styleName='drag-wrap' className='drag-wrap' />)
