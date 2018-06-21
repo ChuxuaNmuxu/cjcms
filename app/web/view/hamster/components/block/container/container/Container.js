@@ -34,12 +34,13 @@ class Container extends Component {
         const {children, block, active} = this.props;
         const [dragConfig, rotateConfig, resizeConfig] = destruction('draggable', 'rotatable', 'resizable')(this.config)
 
+        const props = {block, active}
         return (
-            <ContainerSection block={block} active={active}>
+            <ContainerSection {...props}>
                 {children}
-                <DragSection config={dragConfig} block={block}/>
-                <ResizeSection config={resizeConfig} block={block}/>
-                <RotateSection config={rotateConfig} block={block}/>
+                <DragSection config={dragConfig} {...props}  />
+                <ResizeSection config={resizeConfig} {...props}/>
+                <RotateSection config={rotateConfig} {...props}/>
             </ContainerSection>
         );
     }

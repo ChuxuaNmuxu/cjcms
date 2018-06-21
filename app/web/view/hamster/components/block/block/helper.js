@@ -47,7 +47,7 @@ const componentIsComponent = (contentConfig) => {
 const componentIsNull = (contentConfig) => {
     if (contentConfig.get('component') !== null) return undefined;
 
-    const containerConfig = config.get('container');
+    const containerConfig = contentConfig.get('container');
     return props => <Container config={containerConfig} {...props}/>
 }
 
