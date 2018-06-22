@@ -12,17 +12,21 @@ import { isValidateReactComponent } from '../../../Utils/miaow';
 const spec = {
     beginDrag (props, component) {
         const {beginDrag, block} = props;
-        beginDrag && beginDrag(fromJS({
+
+        const item = {
             type: 'dragging',
             blockId: block.get('id')
-        }))
+        };
+        
+        beginDrag && beginDrag(fromJS(item))
+        return item;
     },
 
     drag (props, monitor) {
         const {drag, block} = props;
-        const {x: left, y: top} = monitor.getOffset();
+        const offset = monitor.getOffset();
         drag && drag(fromJS({
-            offset: {left, top},
+            offset,
             blockId: block.get('id')
         }))
     },
@@ -37,10 +41,10 @@ const spec = {
 
     endDrag (props, monitor, component) {
         const {dragEnd, block} = props;
-        const {x: left, y: top} = monitor.getOffset();
+        const offset = monitor.getOffset();
 
         dragEnd && dragEnd(fromJS({
-            offset: {left, top},
+            offset,
             blockId: block.get('id')
         }));
     }

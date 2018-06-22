@@ -79,4 +79,8 @@ export default class Monitor {
     getTarget () {
         return this.getState().dragOperation.target
     }
+
+    getItem () {
+        return this.getState().dragOperation.item
+    }
 }

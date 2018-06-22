@@ -5,6 +5,10 @@ class RotateMonitor {
     canRotate () {
         return true;
     }
+
+    isRotating () {
+        return this.isActing() && this.getItem().actType === 'rotate'
+    }
 }
 
 

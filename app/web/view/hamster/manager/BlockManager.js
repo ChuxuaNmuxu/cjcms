@@ -2,7 +2,7 @@ import {fromJS, Map} from 'immutable'
 
 import HamsterManager from './HamsterManager';
 import blockActions from '../actions/block';
-import {getActivatedBlockIds} from '../reducers/helper/current'
+import {getActivatedBlockIds, getOperatingBlockId, isDragging, isRotating, isResizing} from '../reducers/helper/current'
 import {extractBlockData} from '../utils/block'
 
 class BlockManager extends HamsterManager {
@@ -47,14 +47,31 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.rotateEnd(payload))
     }
 
-    getActivatedBlockIds () {
-        return getActivatedBlockIds(this.getState('hamster'))
-    }
-
     // 组合元素
     groupUnite () {
         this.dispatch(blockActions.groupUnite())
     }
+
+    getActivatedBlockIds () {
+        return getActivatedBlockIds(this.getState('hamster'))
+    }
+
+    getOperatingBlockId () {
+        return getOperatingBlockId(this.getState('hamster'))
+    }
+
+    isDragging () {
+        return isDragging(this.getState('hamster'))
+    }
+
+    isRotating () {
+        return isRotating(this.getState('hamster'))
+    }
+
+    isResizing () {
+        return isResizing(this.getState('hamster'))
+    }
+
 }
 
 export default BlockManager

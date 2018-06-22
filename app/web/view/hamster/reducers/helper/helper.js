@@ -73,10 +73,11 @@ export function handleDragBlock (hamster, payload) {
 /**
  * 拖拽
  * @param {*} hamster 
- * @param {*} payload {blockId, offset}
+ * @param {*} payload {blockId, offset: {x, y}}
  */
 export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
+    const [left, top] = miaow.destruction('x', 'y')(offset); 
 
     const {
         operateBlockId,
@@ -87,9 +88,12 @@ export function handleDrag (hamster, payload) {
     // 移动blocks
     const needMoveBlockIds = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
-        offset,
+        offset: {top, left},
         blockIds: needMoveBlockIds
     }))
+
+    // 更新组合元素
+    hamster = updateAllGroupFourDimension(hamster, needMoveBlockIds);
 
     return hamster;
 }
@@ -268,6 +272,25 @@ export function handleResizeBlocks (hamster, blockId, direction, offset) {
 /**
  * 旋转
  * @param {*} hamster 
+ * @param {*} payload {offset, direction}
+ */
+export const handleResize = (hamster, payload) => {
+    const offset = payload.get('offset');
+    const direction = payload.get('direction');
+
+    const activatedIds = currentHelper.getActivatedBlockIds(hamster);
+    const resizeBlockIds = activatedIds.filter(miaow.not(nodeHelper.isAncestor)(hamster));
+
+    hamster = resizeBlockIds.reduce((hamster, id) => handleResizeBlocks(hamster, id, direction, offset), hamster)
+
+    hamster = updateAllGroupFourDimension(hamster, activatedIds);
+
+    return hamster;
+}
+
+/**
+ * 旋转
+ * @param {*} hamster 
  * @param {*} blockIds 
  * @param {*} angle 
  */
@@ -276,6 +299,39 @@ export const handleRotateBlocks = (hamster, blockIds, angle) => {
         ids: miaow.toList(blockIds),
         operations: {
             'data.props.rotation': miaow.add(angle)
+        }
+    }))
+    return hamster;
+}
+
+/**
+ * 
+ * @param {*} hamster 
+ * @param {*} payload {blockId, rotateAngle}
+ */
+export const handleRotate = (hamster, payload) => {
+    const rotateAngle = payload.get('rotateAngle')
+    const blockId = payload.get('blockId');
+
+    const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, blockId);
+
+    let rotateBlockIds = activatedBlockIds;
+    // 攘外，叶子元素跟随祖先旋转
+    if (!isResistInside) {
+        // rotateBlockIds = activatedBlockIds.map(nodeHelper.getAllLeafIds(hamster)).concat(activatedBlockIds).flatten();
+        const ancestorIds = nodeHelper.filterAncestorIds(hamster)(activatedBlockIds);
+
+        hamster = ancestorIds.reduce((hamster, id) => {
+            if (!nodeHelper.isAncestor(id)) return hamster;
+            return blockHelper.leafsRotateWithAncestor(hamster)(id)(rotateAngle)
+        }, hamster)
+    }
+
+    // 安内
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: rotateBlockIds,
+        operations: {
+            'data.props.rotation': miaow.add(rotateAngle)
         }
     }))
     return hamster;

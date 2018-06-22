@@ -15,16 +15,23 @@ const spec = {
         this.block = props.block;
         this.initialClientOffset = monitor.getInitialClientOffset();
 
-        this.blockCenterOffset = getBlockCenterOffset(this.block, this.initialClientOffset)
+        // this.blockCenterOffset = getBlockCenterOffset(this.block, this.initialClientOffset)
         return true;
     },
 
     beginRotate: (props) => {
         // 计算一些初始值
-        const {beginRotate} = props;
-        beginRotate && beginRotate(fromJS({
-            type: 'rotating'
-        }))
+        const {beginRotate, block} = props;
+
+        const item = {
+            type: 'rotating',
+            blockId: block.get('id'),
+            initBlock: block
+        };
+
+        beginRotate && beginRotate(fromJS(item))
+
+        return item;
     },
 
     rotate: function (props, monitor) {
@@ -61,7 +68,7 @@ const spec = {
         // const rotateRadius = blockHeight / 2 + axelHeight + radius;
 
         const clientOffset = monitor.getClientOffset();
-        const rotateAngle = getRotateAngle(block, this.initialClientOffset, clientOffset)
+        const rotateAngle = getRotateAngle(this.block, this.initialClientOffset, clientOffset)
 
         rotateEnd && rotateEnd(fromJS({
             rotateAngle,

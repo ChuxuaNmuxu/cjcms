@@ -9,6 +9,10 @@ class ResizeMonitor {
     getDirection () {
         return this.getState().dragOperation.sourceOptions.dir
     }
+
+    isResizing () {
+        return this.isActing() && this.getItem().actType === 'resize'
+    }
 }
 
 

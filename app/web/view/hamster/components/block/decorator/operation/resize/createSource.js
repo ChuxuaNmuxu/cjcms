@@ -6,7 +6,15 @@ class ResizeSource extends SourceHandles {
     }
 
     beginAct (props, monitor, component) {
-        this.spec.beginResize(this.props, this.monitor, this.component)
+        const item = {
+            actType: 'resize'
+        }
+        const customItem = this.spec.beginResize ? this.spec.beginResize(this.props, this.monitor, this.component) : {};
+
+        return {
+            ...item,
+            ...customItem
+        }
     }
 
     acting () {

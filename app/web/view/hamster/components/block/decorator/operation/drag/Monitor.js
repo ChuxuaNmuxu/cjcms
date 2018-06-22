@@ -10,7 +10,7 @@ class DragMonitor {
     }
 
     isDragging () {
-        return this.isActing()
+        return this.isActing() && this.getItem().actType === 'drag'
     }
 }
 

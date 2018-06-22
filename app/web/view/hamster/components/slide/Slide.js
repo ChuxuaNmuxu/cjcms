@@ -3,7 +3,6 @@ import React from 'react';
 import SlideComponent from './Component';
 import Block from '../block'
 
-
 class Slide extends React.Component {
     static displayName = 'Slide';
 

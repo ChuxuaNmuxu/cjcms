@@ -6,7 +6,15 @@ class RotateSource extends SourceHandles {
     }
 
     beginAct (props, monitor, component) {
-        this.spec.beginRotate && this.spec.beginRotate(this.props, this.monitor, this.component)
+        const item = {
+            actType: 'rotate'
+        }
+        const customItem = this.spec.beginRotate ? this.spec.beginRotate(this.props, this.monitor, this.component) : {};
+
+        return {
+            ...item,
+            ...customItem
+        }
     }
 
     acting () {

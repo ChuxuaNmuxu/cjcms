@@ -1,6 +1,7 @@
 import React from 'react';
-import manager from './coreOperation/Manager';
+import hoistNonReactStatics  from 'hoist-non-react-statics'
 
+import manager from './coreOperation/Manager';
 
 const DragLayer = (collect, options) => DecoratedComponent => {
     class DragLayerContainer extends React.Component {
@@ -25,7 +26,7 @@ const DragLayer = (collect, options) => DecoratedComponent => {
             this.unSubscribeToOffsetChange()
         }
 
-        handleChange () {
+        handleChange = () => {
             const currentState = collect(this.monitor, this.props);
 
             this.setState({
@@ -43,7 +44,7 @@ const DragLayer = (collect, options) => DecoratedComponent => {
         }
     }
 
-    return DragLayerContainer;
+    return hoistNonReactStatics(DragLayerContainer, DecoratedComponent);
 }
 
 export default DragLayer;

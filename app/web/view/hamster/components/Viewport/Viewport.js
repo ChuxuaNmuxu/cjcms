@@ -4,15 +4,15 @@ import CSSModules from 'react-css-modules';
 
 import styles from './Viewport.scss';
 import Slide from '../slide'
-// import Block from './Block';
-// import CustomLayer from '../block/CustomLayer';
-
 import BoxSelection from '../../components/boxSelection'
+import customDisplayLayler from '../block/decorator/customLayer'
 
+@customDisplayLayler()
+@CSSModules(styles)
 class Viewport extends React.Component {
     render () {
         const {blockIds, currentBlocks, entities} = this.props;
-        // const blocks = entities.filter(entity => blockIds.includes(entity.get('id')));
+
         return (
             <div className='viewport' styleName='viewport'>
                 <BoxSelection>
@@ -40,4 +40,4 @@ Viewport.propTypes = {
     currentBlocks: PropTypes.any
 }
 
-export default CSSModules(Viewport, styles);
+export default Viewport;

@@ -264,16 +264,12 @@ export function angleToVerticalAxis (center, another) {
     const rotateRadian = Math.atan(offset.x / offset.y);
     let rotateAngle = rotateRadian * 180 / Math.PI;
 
-    console.log(246, rotateAngle)
-
     // 修正旋转角在0-360之间
     if (offset.y < 0) {
         rotateAngle += 180;
     } else if (offset.y > 0 && offset.x < 0) {
         rotateAngle += 360;
     }
-
-    console.log(273, rotateAngle)
 
     return rotateAngle;
 }

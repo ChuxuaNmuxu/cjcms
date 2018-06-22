@@ -12,10 +12,16 @@ import blockActions from '../../../../actions/block';
 
 const spec = {
     beginResize: (props, monitor, component) => {
-        const {beginResize} = props;
-        beginResize && beginResize(fromJS({
-            type: 'resizing'
-        }))
+        const {beginResize, block} = props;
+
+        const item = {
+            type: 'resizing',
+            blockId: block.get('id')
+        };
+
+        beginResize && beginResize(fromJS(item))
+
+        return item;
     },
 
     canResize: (props, monitor, component) => {
