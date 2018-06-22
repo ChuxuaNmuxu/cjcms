@@ -25,3 +25,5 @@ export const blocks = fromJS([
     BlockTest5.manifest,
     BlockGroup.manifest
 ]);
+
+export const navbarTabs = fromJS();

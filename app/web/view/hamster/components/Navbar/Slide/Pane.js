@@ -52,22 +52,6 @@ class SlidePane extends Component {
                     })
                 }
                 </div>
-                {/* <div style={{
-                  padding: 12,
-                  textAlign: 'center',
-                  borderTop: '1px solid #efefef',
-                  width: '100%',
-                  position: 'absolute',
-                  bottom: 0
-                }}>
-                    <Button size='small' onClick={this.handleAddSlide}>
-                        添加卡片
-                    </Button>
-                    &nbsp;&nbsp;
-                    <Button size='small' onClick={this.handleAddSlideGroup}>
-                        添加小节
-                    </Button>
-                </div> */}
             </div>
         );
     }

@@ -6,6 +6,7 @@ import { hideContextMenu } from '../../../../../component/ContextMenu';
 
 /**
  * 添加卡片
+ * position: before | after | first | last 四种情况
  * @param {*} hamster 
  * @param {*} payload 
  */
@@ -21,6 +22,7 @@ const handleAddSlide = (hamster, payload) => {
 
 /**
  * 添加卡片组
+ * position: before | after | first | last 四种情况
  * @param {*} hamster 
  * @param {*} payload 
  */
@@ -34,7 +36,7 @@ const handleAddSlideGroup = (hamster, payload) => {
     hamster.slideManager.addSlideGroup(null, {...payload, position});
 }
 
-// 菜单项配置
+// 菜单配置
 const menuConfig = {
     addSlide: {
         title: '添加卡片',
@@ -102,6 +104,7 @@ const menuConfig = {
     }
 }
 
+// 显示配置
 const displayConfig = {
     default: [
         'addSlide',
@@ -131,8 +134,6 @@ const displayConfig = {
 
 /**
  * 处理菜单项点击事件
- * position: before | after | first | last 四种情况
- * 配置化实现
  */
 const handleContextMenuClick = (e, hamster, payload) => {
     hideContextMenu();
@@ -155,6 +156,7 @@ const createContextMenu = (hamster, payload) => {
     return (<Menu theme='dark' onClick={e => handleContextMenuClick(e, hamster, payload)}>
         {map(dd, (key, i) => {
             if (key === '-') {
+                // TODO：如果在两头或者前一个也是-，该-则不显示
                 return <Menu.Divider key={key + i} />
             }
             const visible = menuConfig[key].visible;
