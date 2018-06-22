@@ -12,10 +12,12 @@ const spec = {
     },
 
     endDrag (props, monitor, component) {
-        console.log('group drag end ')
         const {x: left, y: top} = monitor.getOffset();
 
-        props.hamster.blockManager.dragEnd(fromJS({left, top}));
+        props.hamster.blockManager.dragEnd(fromJS({
+            offset: {left, top},
+            blockId: props.block.get('id')
+        }));
     }
 }
 

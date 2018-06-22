@@ -3,30 +3,32 @@ import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 
 import styles from './Viewport.scss';
-import Block from './Block';
-import CustomDragLayer from './CustomDragLayer';
+import Slide from '../slide'
+import BoxSelection from '../../components/boxSelection'
+import customDisplayLayler from '../block/decorator/customLayer'
 
-export class Viewport extends React.Component {
+@customDisplayLayler()
+@CSSModules(styles)
+class Viewport extends React.Component {
     render () {
         const {blockIds, currentBlocks, entities} = this.props;
+
         return (
             <div className='viewport' styleName='viewport'>
-                <div className='reveal'>
-                    <div className='slides'>
-                        <section className='section'>
-                            {/* <CustomDragLayer /> */}
-                            {
-                                blockIds.map(id =>
-                                    <Block
-                                      key={id}
-                                      block={entities.get(id)}
-                                      active={currentBlocks.includes(id)}
-                                    />
-                                )
-                            }
-                        </section>
+                <BoxSelection>
+                    <div className='reveal'>
+                        <div className='slides'>
+                            {/* <CustomLayer /> */}
+                            <section className='section'>
+                                <Slide
+                                  blockIds={blockIds}
+                                  entities={entities}
+                                  activatedIds={currentBlocks}
+                                />
+                            </section>
+                        </div>
                     </div>
-                </div>
+                </BoxSelection>
             </div>
         )
     }
@@ -38,4 +40,4 @@ Viewport.propTypes = {
     currentBlocks: PropTypes.any
 }
 
-export default CSSModules(Viewport, styles);
+export default Viewport;
