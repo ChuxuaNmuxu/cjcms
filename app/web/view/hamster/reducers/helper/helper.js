@@ -212,7 +212,7 @@ const directionConfig = {
  * @param {Map} offset {x, y}
  * @returns hamster
  */
-export function handleResizeBlocks (hamster, blockId, direction, offset) {
+export function handleResizeBlocks (hamster, blockId, direction='e', offset) {
     /**
      * 具体实现
      * @version 1.2
