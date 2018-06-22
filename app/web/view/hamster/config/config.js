@@ -11,12 +11,11 @@ export const defaultBlockConfig = fromJS(block);
  */
 export const blocks = fromJS([]);
 
-const config = {
-    toolbar: {
-        block: {
-            more: ['line']
-        }
+
+export const toolbar = {
+    // 块元素区域
+    blockArea: {
+        // 显示在更多区域的块元素
+        more: ['test', 'test2', 'test3', 'test4', 'test5']
     }
 }
-
-export default config;

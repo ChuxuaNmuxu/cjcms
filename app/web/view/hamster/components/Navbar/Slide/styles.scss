@@ -1,0 +1,36 @@
+.slide-pane {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+
+    :global {
+        .pane-content {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            overflow: auto;
+        }
+    }
+}
+
+.slide {
+    background: transparent;
+
+    :global {
+        .blank {
+            height: 20px;
+        }
+
+        .body {
+            padding: 0 15px;
+
+            .content {
+                height: 128px;
+                border: 1px solid #ddd;
+            }
+        }
+    }
+}
