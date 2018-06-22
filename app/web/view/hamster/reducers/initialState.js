@@ -1,3 +1,4 @@
+import uuid from 'uuid'
 import {createSlide} from '../utils/slide'
 
 /**
@@ -7,18 +8,29 @@ import {createSlide} from '../utils/slide'
 const initHamster = () => {
     const slide = createSlide();
     const slideId = slide.get('id')
+    const slideGroupId = 'slide.group-' + uuid.v4();
+    const slideGroup = {
+        id: slideGroupId,
+        type: 'slide.group',
+        data: {
+            slides: [slideId]
+        }
+    }
     return {
         sources: {},
         index: {
             blocks: [],
-            slides: [slideId]
+            slides: [slideId],
+            'slide.groups': [slideGroupId]
         },
         entities: {
-            [slideId]: slide
+            [slideId]: slide,
+            [slideGroupId]: slideGroup
         },
         current: {
             blocks: [],
-            slides: [slideId]
+            slides: [slideId],
+            'slide.group': slideGroupId
         }
     }
 }

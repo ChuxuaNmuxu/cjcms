@@ -399,6 +399,9 @@ export const shallowEqual = (a, b) => {
 	return true;
 }
 
+// omit
+export const omit = (...args) => props => lodash.omit.apply(null, [props].concat(args))
+
 /******* immutable *********/
 
 /**

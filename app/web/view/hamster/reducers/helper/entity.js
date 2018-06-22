@@ -1,6 +1,7 @@
 import {fromJS} from 'immutable';
 import * as miaow from '../../Utils/miaow';
 import * as lodash from 'lodash';
+import {immrPick} from '../../utils/utils'
 
 /**
  * 获取特定id的entity
@@ -33,4 +34,13 @@ export const getProp = hamster => id => propPath => {
         getEntity(hamster),
         miaow.get('data.props.' + propPath)
     )(id)
+}
+
+/**
+ * 根据实体类型获取实体集
+ * @param {*} hamster 
+ * @param {*} type 
+ */
+export const getEntitiesByType = (hamster, type) => {
+    return immrPick(hamster.get('entities'), hamster.getIn(['index', type]));
 }

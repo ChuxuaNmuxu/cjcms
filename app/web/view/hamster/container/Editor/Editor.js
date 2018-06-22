@@ -34,8 +34,12 @@ class Editor extends React.Component {
                         <Toolbar />
                     </header>
                     <main>
-                        <Propsbar />
-                        <Navbar />
+                        <div className='sidebar right'>
+                            <Propsbar />
+                        </div>
+                        <div className='sidebar left'>
+                            <Navbar />
+                        </div>
                         <Viewport />
                     </main>
                 </div>
@@ -45,11 +49,11 @@ class Editor extends React.Component {
 }
 
 Editor.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func
 }
 
 const mapStateToProps = ({hamster}) => ({
-
+    
 });
 
 export default StoreProvider(connect(mapStateToProps)(CSSModules(Editor, styles)));

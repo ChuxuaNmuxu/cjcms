@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import {connect} from 'react-redux';
-import {omit} from 'lodash'
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 
 import { handleRotate } from '../../../../reducers/helper/helper';
 import rotateLayler from '../../decorator/operation/rotate/RotateLayer';
 import { getRotateAngle } from '../../../../utils/block';
+import { omit, shallowEqual } from '../../../../Utils/miaow';
+
+const omitProps = omit('initialClientOffset', 'item', 'clientOffset', 'isRotating');
 
 const collect = (monitor, props) => ({
     initialClientOffset: monitor.getInitialClientOffset(),
@@ -31,10 +33,12 @@ export const customRotateLayer = () => DecoratedComponent => {
 
         shouldComponentUpdate (nextProps) {
             // 引入hamster的优化
+            const prevProps = omitProps(this.props);
+            const props = omitProps(nextProps);
             if (
                ( this.props.isRotating
                 && (nextProps.offset && nextProps.offset.x !== 0 && nextProps.offset.y !== 0))
-                || !this.props.entities.equals(nextProps.entities)
+                || !shallowEqual(prevProps, props)
             ) return true;
             return false;
         }
@@ -42,7 +46,7 @@ export const customRotateLayer = () => DecoratedComponent => {
         render() {
             console.log('rotate')
             const {initialClientOffset, clientOffset, item, isRotating, hamster} = this.props;
-            const props = omit(this.props, 'initialClientOffset', 'item', 'clientOffset', 'isRotating');
+            const props = omitProps(this.props);
             let {entities} = props;
 
             if (isRotating && hamster) {

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
-import {omit} from 'lodash'
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 
 import dragLayer from '../../decorator/operation/drag/DragLayer';
 import { handleDrag} from '../../../../reducers/helper/helper';
+import { omit, shallowEqual } from '../../../../Utils/miaow';
+
+const omitProps = omit('offset', 'item', 'isDragging', 'hamster');
 
 const collect = (monitor, props) => ({
     item: monitor.getItem(),
@@ -33,17 +35,19 @@ export const customDragLayer = () => DecoratedComponent => {
              * 3. entities因为其他原因有改变，需要render将entities传递下去
              * 
             */
+            const prevProps = omitProps(this.props);
+            const props = omitProps(nextProps);
             if (
                 (this.props.isDragging
                 && (nextProps.offset && nextProps.offset.x !== 0 && nextProps.offset.y !== 0))
-                || !this.props.entities.equals(nextProps.entities)
+                || !shallowEqual(prevProps, props)
             ) return true;
             return false;
         }
 
         render() {
             const {offset, item, isDragging, hamster} = this.props;
-            const props = omit(this.props, 'offset', 'item', 'isDragging', 'hamster');
+            const props = omitProps(this.props);
             let {entities} = props;
 
             if (isDragging && hamster) {

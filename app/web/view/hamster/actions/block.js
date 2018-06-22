@@ -1,8 +1,6 @@
 import { createActions } from 'redux-actions';
 
-const payloadCreator = payload => payload;
-const metaCreater = (payload, meta) => meta;
-const pmCreater = [payloadCreator, metaCreater]
+import {pmCreater} from './helper'
 
 const actionCreaters = createActions({
     'BLOCK': {

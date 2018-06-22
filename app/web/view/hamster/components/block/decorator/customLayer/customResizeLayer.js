@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import {connect} from 'react-redux'
-import {omit} from 'lodash'
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 
 import { handleResize } from '../../../../reducers/helper/helper';
 import resizeLayler from '../../decorator/operation/resize/ResizeLayer';
+import { omit, shallowEqual } from '../../../../Utils/miaow';
+
+const omitProps = omit('offset', 'isResizing')
 
 const collect = (monitor, props) => ({
     offset: monitor.getOffset(),
@@ -26,18 +28,19 @@ export const customResizeLayer = () => DecoratedComponent => {
     
         shouldComponentUpdate (nextProps) {
             // 引入hamster的优化
+            const prevProps = omitProps(this.props);
+            const props = omitProps(nextProps);
             if (
                 (this.props.isResizing
                 && (nextProps.offset && nextProps.offset.x !== 0 && nextProps.offset.y !== 0))
-                || !this.props.entities.equals(nextProps.entities)
+                || !shallowEqual(prevProps, props)
             ) return true;
             return false;
         }
 
         render() {
-            console.log('resize')
             const {offset, isResizing, hamster, direction} = this.props;
-            const props = omit(this.props, 'offset', 'isResizing');
+            const props = omitProps(this.props);
             let {entities} = props;
             
             if (isResizing && hamster) {

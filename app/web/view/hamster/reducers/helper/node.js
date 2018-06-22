@@ -105,8 +105,8 @@ export const isOrphan = miaow.not(isInTree)
 
 /**
  * 获取元素的祖先节点id
- * @param {*} hamster 
- * @param {*} id 
+ * @param {*} hamster
+ * @param {*} id
  */
 // 无祖先返回当前节点
 export const getMaybeAncestorId = (hamster, id) => {
@@ -122,7 +122,7 @@ export const getAncestorId = hamster => id => {
 
 /**
  * 获取某节点下的所有叶子节点id
- * @param {*} hamster 
+ * @param {*} hamster
  * @param {*} id 单个id或id数组
  * @param {*} seen 累加器，主要作用是为记录回调的结果，一般使用不需要传值；传值则为初始的叶子节点数组
  */

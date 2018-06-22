@@ -1,5 +1,5 @@
 // navbar
-$navbarWidth: 200px;
+$navbarWidth: 320px;
 // propsbar
 $propsbarWidth: 320px;
 
@@ -27,30 +27,42 @@ $lineColor: #e8e8e8;
             bottom: 0;
             width: 100%;
 
-            .navbar, .propsbar {
+            .sidebar {
                 position: absolute;
-                top: 0;
-                bottom: 0;
+                height: 100%;
+
+                &.left {
+                    width: $navbarWidth;
+
+                    &.hidden {
+                        left: -$navbarWidth;
+                    }
+                }
+
+                &.right {
+                    width: $propsbarWidth;
+                    right: 0;
+
+                    &.hidden {
+                        right: -$propsbarWidth;
+                    }
+                }
+            }
+
+            .navbar, .propsbar {
+                height: 100%;
             }
 
             .navbar {
                 left: 0;
                 width: $navbarWidth;
                 border-right: 1px solid $lineColor;
-
-                &.hidden {
-                    left: -$navbarWidth;
-                }
             }
 
             .propsbar {
                 right: 0;
                 width: $propsbarWidth;
                 border-left: 1px solid $lineColor;
-
-                &.hidden {
-                    right: -$propsbarWidth;
-                }
             }
 
             .viewport {
@@ -62,11 +74,11 @@ $lineColor: #e8e8e8;
                 // background: lightblue;
             }
 
-            .navbar.hidden ~ .viewport {
+            .sidebar.left.hidden ~ .viewport {
                 left: 0;
             }
 
-            .propsbar.hidden ~ .viewport {
+            .sidebar.right.hidden ~ .viewport {
                 right: 0;
             }
         }
