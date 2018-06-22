@@ -1,6 +1,6 @@
-import manager from './core';
+import manager from './rotateManager';
 import createSource from './createSource';
-import createMonitor from './createMonitor';
+// import createMonitor from './createMonitor';
 import handleConnect from './handleConnect';
 import decorateSource from '../base/decorateSource';
 
@@ -12,7 +12,7 @@ const rotateSource = (type, spec, collect, options={}) => {
         spec,
         collect,
         options,
-        createMonitor,
+        // createMonitor,
         createSource,
         handleConnect,
         manager

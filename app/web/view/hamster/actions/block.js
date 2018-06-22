@@ -7,9 +7,13 @@ const actionCreaters = createActions({
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
         'PROPS_CHANGE': pmCreater,
-        'DRAG_END': pmCreater,
         'CLICK': pmCreater,
-        'GROUP_UNITE': pmCreater
+        'GROUP_UNITE': pmCreater,
+        'ACT_START': pmCreater,
+        'DRAG_END': pmCreater,
+        'ROTATE_END': pmCreater ,
+        'RESIZE_END': pmCreater,
+        'BLOCK_DELETE': pmCreater,
     }
 })
 

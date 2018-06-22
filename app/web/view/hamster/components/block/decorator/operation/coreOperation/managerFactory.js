@@ -2,13 +2,13 @@
  * Manager工厂函数，保证Manager单例
  */
 import manager from './Manager';
+import Monitor from './Monitor'
+import {extend} from '../../../../../Utils/miaow';
 
 const createManager = (options) => class {
-    // extendMonitor () {
-    //     return extend(Monitor, monitor)
-    // }
     constructor () {
-        manager.extend(options);
+        const MixMonitor = extend(Monitor, options.Monitor);
+        this.monitor = new MixMonitor(manager.store);
     }
 
     getBackend () {
@@ -16,7 +16,7 @@ const createManager = (options) => class {
     }
 
     getMonitor () {
-        return manager.monitor;
+        return this.monitor;
     }
 
     getRegistry () {

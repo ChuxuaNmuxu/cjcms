@@ -1,11 +1,9 @@
 import {fromJS, Map} from 'immutable'
-import uuid from 'uuid';
 
 import HamsterManager from './HamsterManager';
 import blockActions from '../actions/block';
-import {getActivatedBlockIds} from '../reducers/helper/current'
+import {getActivatedBlockIds, getOperatingBlockId, isDragging, isRotating, isResizing} from '../reducers/helper/current'
 import {extractBlockData} from '../utils/block'
-import * as miaow from '../Utils/miaow'
 
 class BlockManager extends HamsterManager {
     /**
@@ -28,18 +26,51 @@ class BlockManager extends HamsterManager {
         this.dispatch(blockActions.click(payload))
     }
 
+    blockDelete (payload) {
+        this.dispatch(blockActions.blockDelete(payload))
+    }
+
+    actStart (payload) {
+        this.dispatch(blockActions.actStart(payload))
+    }
+
     dragEnd (payload) {
         this.dispatch(blockActions.dragEnd(payload))
     }
 
-    getActivatedBlockIds () {
-        return getActivatedBlockIds(this.getState('hamster'))
+    resizeEnd (payload) {
+        this.dispatch(blockActions.resizeEnd(payload))
+    }
+
+    rotateEnd (payload) {
+        this.dispatch(blockActions.rotateEnd(payload))
     }
 
     // 组合元素
     groupUnite () {
         this.dispatch(blockActions.groupUnite())
     }
+
+    getActivatedBlockIds () {
+        return getActivatedBlockIds(this.getState('hamster'))
+    }
+
+    getOperatingBlockId () {
+        return getOperatingBlockId(this.getState('hamster'))
+    }
+
+    isDragging () {
+        return isDragging(this.getState('hamster'))
+    }
+
+    isRotating () {
+        return isRotating(this.getState('hamster'))
+    }
+
+    isResizing () {
+        return isResizing(this.getState('hamster'))
+    }
+
 }
 
 export default BlockManager

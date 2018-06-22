@@ -21,7 +21,9 @@ const handleNestProps = (props, initData, propsConfig) => {
     return props.reduce((acc, v, k) => {
         // 优先取数据内的formatter
         const formatter = propsConfig.getIn([k, 'formatter']);
+        const name = propsConfig.getIn([k, 'name']) || k;
         
+
         if (!formatter) {
             // 嵌套属性
             if (Map.isMap(v)) {
@@ -29,12 +31,12 @@ const handleNestProps = (props, initData, propsConfig) => {
                 return acc;
             }
             // 没有formatter直接取值
-            acc[k] = v;
+            acc[name] = v;
             return acc;
         }
 
         // 有formatter使用formatter
-        acc[k] = isFunction(formatter) ? formatter(v) : null;
+        acc[name] = isFunction(formatter) ? formatter(v) : null;
         return acc;
     }, initData)
 }

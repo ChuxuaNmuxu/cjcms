@@ -6,7 +6,8 @@ const initialState = {
 	sourceId: null,
 	targetIds: [],
 	dropResult: null,
-	didDrop: false
+	didDrop: false,
+	sourceOptions: {}
 }
 
 export default function (state=initialState, action) {

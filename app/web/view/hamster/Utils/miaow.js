@@ -66,7 +66,10 @@ export function minus (minuend) {
     }, value)
 }
 
-//
+/**
+ * 替换
+ * @param {*} value 
+ */
 export function replaceAs (value) {
     return () => value
 }
@@ -84,7 +87,7 @@ export function toList (value) {
  * @param {*} data 
  * @param {*} args 
  */
-export function destruction (data, ...args) {
+export const destruction = (...args) => data => {
     return args.map(path => data.get && data.get(path))
 }
 
@@ -107,7 +110,7 @@ export const reset = dispatchMission(
  * @param {any} args
  */
 export function prevCheck (...funcs) {
-    const andFuncs = and(funcs);
+    const andFuncs = and.apply(null, funcs);
     return (execFunc) => (...args) => {
         if (!andFuncs.apply(null, args)) return undefined;
         return execFunc.apply(null, args)
@@ -118,19 +121,38 @@ export function prevCheck (...funcs) {
  * 判断value是否存在(不为undefined或null)
  * @param {any} value 
  */
-function existy (value) {
+export function existy (value) {
     return value != null;
 }
+
+// export function identity (value) {
+//     return () => value;
+// }
+
+export const identity = value => value
 
 /**
  * 与
  * @param {Array} funcs 
  */
-export function and (funcs) {
+export function and (...funcs) {
+    return function (...args) {
+        return lodash.reduce(funcs, (accu, func) => {
+            if (!lodash.isFunction(func)) func = always(Boolean(func));
+            return accu && func.apply(func, args);
+        }, true);
+    }
+}
+
+/**
+ * 或
+ * @param {*} funcs 
+ */
+export function or (...funcs) {
     return (...args) => lodash.reduce(funcs, (accu, func) => {
-        if (!lodash.isFunction(func)) func = () => !!func;
-        return accu && func.apply(func, args);
-    }, true);
+        if (!lodash.isFunction(func)) func = always(Boolean(func));
+        return accu || func.apply(func, args);
+    }, false);
 }
 
 /**
@@ -168,6 +190,7 @@ export function dispatchMission (...funs) {
 export const isValidateReactComponent = component => {
     // TODO: 其他情况判断
     // 实例化组件，function, 继承自Component的class
+    if (!component) return false;
     return isValidElement(component) || lodash.isFunction(component) || component.render;
 }
 
@@ -213,8 +236,171 @@ export function ultimate (defaultHandle) {
         const funcs = args.concat(defaultHandle);
         return dispatchMission.apply(null, funcs)
     }
-
 }
+
+export function not (func) {
+    return (...args) => {
+        const result = func.apply(null, args)
+
+        if (lodash.isFunction(result)) return not(result)
+        return !result;
+    }
+}
+
+export const isTrue = value => value === true;
+
+/**
+ * 求与纵轴夹角
+ * @param {Array} center 顶角坐标
+ * @param {Array} another 另一点坐标
+ * @returns {number} 取值范围: 0~360度
+ */
+export function angleToVerticalAxis (center, another) {
+    const offset = {
+        x: another[0] - center[0],
+        y: center[1] - another[1]
+    }
+
+    const rotateRadian = Math.atan(offset.x / offset.y);
+    let rotateAngle = rotateRadian * 180 / Math.PI;
+
+    // 修正旋转角在0-360之间
+    if (offset.y < 0) {
+        rotateAngle += 180;
+    } else if (offset.y > 0 && offset.x < 0) {
+        rotateAngle += 360;
+    }
+
+    return rotateAngle;
+}
+
+/**
+ * 已知3个坐标，求夹角
+ * @param {Array} center 顶角坐标
+ * @param {Array} start 起始点坐标
+ * @param {Array} end 终点坐标
+ * @returns {number} 取值范围: -360~360度
+ */
+export function getAngleByThreeCoord (center, start, end) {
+    const startAngel = angleToVerticalAxis(center, start);
+    const endAngel = angleToVerticalAxis(center, end);
+    return endAngel - startAngel
+}
+
+/**
+ * 勾股定理求直角三角形第三边
+ * @param {*} a 
+ * @param {*} b 
+ */
+export const getThirdSideLengthInRightTriangle = (a, b) => Math.sqrt(a * a + b * b);
+
+/**
+ * 极坐标转笛卡尔坐标
+ * @param{Array} coord 极坐标 [angle, r]
+ */
+export const coordPCSToDescartes = coord => {
+    const [angle, r] = coord;
+    const radian = angle * Math.PI / 180;
+
+    return [
+        r * Math.sin(radian),
+        -r * Math.cos(radian),
+    ]
+}
+
+export function always (value) {
+    return () => value
+}
+
+/**
+ * 恒为真
+ */
+export const alwaysTrue = always(true);
+
+
+/**
+ * 恒为假
+ */
+export const alwaysFalse = always(false);
+
+/**
+ * 数组对应位置相减 a - b
+ * @param {*} a 
+ * @param {*} b
+ */
+export const arrMinus = a => b => {
+    return lodash.flow(
+        lodash.zip,
+        map(
+            arr => lodash.subtract.apply(null, arr)
+        )
+    )(a, b)
+}
+
+// {x, y}转换为坐标形式
+export const getCoord = maybeCoord => {
+    if (maybeCoord.x && maybeCoord.y) return [maybeCoord.x, maybeCoord.y];
+    if (maybeCoord.top && maybeCoord.left) return [maybeCoord.left, maybeCoord.top]
+    return maybeCoord;
+}
+
+/**
+ * 根据两个坐标求四维
+ * @param {Array} c1 
+ * @param {Array} c2 
+ */
+export const getBox = (a, b) => {
+    const zip = lodash.zip(a, b);
+
+    const [left, top] = zip.map(v => Math.min.apply(null, v))
+    const [right, bottom] = zip.map(v => Math.max.apply(null, v))
+    return {
+        left,
+        top,
+        width: right - left,
+        height: bottom - top
+    }
+}
+
+/**
+ * 浅比较
+ * @param {*} a 
+ * @param {*} b 
+ */
+export const shallowEqual = (a, b) => {
+    if (a === b) return true;
+
+    if (!existy(a) || !existy(b)) return false;
+
+    if (lodash.isArray(a) && lodash.isArray(b)) {
+        for (var i = 0; i < a.length; i += 1) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+	var keysA = Object.keys(a);
+	var keysB = Object.keys(b);
+
+	if (keysA.length !== keysB.length) {
+		return false;
+	}
+
+	// Test for A's keys different from B.
+	var hasOwn = Object.prototype.hasOwnProperty;
+	for (var i = 0; i < keysA.length; i += 1) {
+		if (!hasOwn.call(b, keysA[i]) || a[keysA[i]] !== b[keysA[i]]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// omit
+export const omit = (...args) => props => lodash.omit.apply(null, [props].concat(args))
 
 /******* immutable *********/
 
@@ -281,3 +467,40 @@ export function uniq (a) {
 export function effect (a) {
     return a.filter(v => existy(v))
 }
+
+/**
+ * get
+ * @param {*} value 
+ * @param {*} path 
+ */
+export function get (path) {
+    path = lodash.isArray(path) ? path : path.split('.');
+    return value => value.getIn(path)
+}
+
+/**
+ * 求和
+ * @param {*} list
+ */
+export function sum (list) {
+    return list.reduce((sum, v) => sum + v, 0)
+}
+
+/**
+ * 数组对应位置求和
+ * @param {*} a 
+ * @param {*} b 
+ */
+export function listAdd (a, b) {
+    return a.zip(b).map(sum)
+}
+
+export const map = func => param => param.map(func) ;
+
+export const filter = func => list => list.filter(func);
+
+export const handle = operation => list => list[operation]();
+
+export const push = value => list => list.push(value);
+
+export const isMap = value => Immutable.Map.isMap(value);

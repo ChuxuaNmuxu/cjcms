@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import classNames from 'classnames';
+import {connect} from 'react-redux'
 
 import styles from './ContainerSection.scss';
 import styleParser from '../decorator/style';
+import blockActions from '../../../actions/block';
 
 @styleParser()
 @CSSModules(styles, {allowMultiple: true})
@@ -12,19 +14,22 @@ class ContainerSection extends Component {
     static displayName = 'ContainerSection'
 
     static propTypes = {
-        config: PropTypes.object,
         children: PropTypes.node,
-        handleClick: PropTypes.func
+        block: PropTypes.object,
+        active: PropTypes.bool,
+        clickBlock: PropTypes.func,
+        style: PropTypes.object
     }
 
     handleClick = e => {
-        const {handleClick} = this.props;
-        handleClick && handleClick(e)
+        const {clickBlock, block} = this.props;
+        clickBlock && clickBlock({
+            event: e,
+            blockId: block.get('id')
+        })
     }
 
     render() {
-        console.log(233, this.props)
-
         const {block, active, children, style={}} = this.props;
 
         let classes = ['wrap'];
@@ -38,7 +43,7 @@ class ContainerSection extends Component {
         const containerStyle = Object.assign({}, style, currentStyle);
 
         return (
-            <div className={classes} styleName={classes} style={containerStyle} onClick={this.handleClick} >
+            <div id={block.get('id')} className={classes} styleName={classes} style={containerStyle} onClick={this.handleClick} >
                 {
                     children
                 }
@@ -47,4 +52,11 @@ class ContainerSection extends Component {
     }
 }
 
-export default ContainerSection;
+const mapDispatchToProps = dispatch => {
+    return {
+        clickBlock: (payload) => dispatch(blockActions.click(payload))
+    }
+}
+
+export {ContainerSection}
+export default connect(null, mapDispatchToProps)(ContainerSection);

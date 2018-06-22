@@ -45,6 +45,15 @@ export function beginDrag (
 }
 
 export function hover ({ clientOffset = null } = {}) {
+    const monitor = this.getMonitor()
+	const registry = this.getRegistry()
+    const sourceId = monitor.getSourceId();
+    if (sourceId) {
+        const source = registry.getSource(sourceId, true)
+        // 自定义endDrag回调
+        // source.endDrag(monitor, sourceId)
+        source.acting()
+    }
 	return {
 		type: HOVER,
 		clientOffset
