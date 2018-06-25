@@ -26,6 +26,16 @@ class Editor extends React.Component {
         // if (this.context.store) this.hamster.setDragDropManager(this.context.store);
     }
 
+    componentDidMount () {
+        const slideContainer = document.querySelector('.cj-slide');
+        const revealContainer = document.querySelector('.reveal');
+        this.hamster.Registry.registry('slide', slideContainer.getBoundingClientRect());
+        this.hamster.Registry.registry('reveal', revealContainer.getBoundingClientRect());
+
+        // ppt editor 初始化的一些工作
+        this.hamster.pptManager.initEditor();
+    }
+
     render () {
         return (
             <HamsterContext.Provider value={this.hamster}>

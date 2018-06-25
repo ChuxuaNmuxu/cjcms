@@ -7,7 +7,7 @@ const actionCreaters = createActions({
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
         'ADD_GROUP': pmCreater,
-        'SLIDE_MOUSE_DOWN': pmCreater,
+        'SLIDE_MOUSE_DOWN': pmCreater
     }
 })
 

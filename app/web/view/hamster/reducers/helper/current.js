@@ -1,6 +1,7 @@
 import * as nodeHelper from './node';
 import lodash from 'lodash';
 import * as miaow from '../../Utils/miaow';
+import { getEntity } from './entity';
 
 /**
  * current数组中可能包含祖先节点，独立节点和叶子节点
@@ -202,7 +203,7 @@ export function judgeSituationWhenDrag (hamster, operateBlockId) {
 export function getRightBlocks (hamster, activatedBlockId, operateBlockId) {
     // 被操作元素已激活，选中所有激活元素；未激活则选中自己
     const rightBlocksByActivate = miaow.dispatchMission(
-        miaow.prevCheck(isActivated(hamster))(
+        miaow.prevCheck(isBlockActivated(hamster))(
             miaow.always(activatedBlockId)
         ),
         miaow.toList
@@ -255,7 +256,7 @@ export function getBlockToDrag (hamster, id) {
  * @param {*} hamster 
  * @param {*} id 
  */
-export function isActivated (hamster) {
+export function isBlockActivated (hamster) {
     return id => {
         const activatedIds = getActivatedBlockIds(hamster);
         return activatedIds.includes(id)
@@ -268,11 +269,13 @@ export function isActivated (hamster) {
  * @param {*} path 路径 
  * @param {*} operation
  */
-export const updateCurrent = hamster => path => operation => {
-    operation = lodash.isFunction(operation) ? operation : miaow.replaceAs(operation);
+export const updateCurrent = hamster => (path = '') => operation => {
+    // operation = lodash.isFunction(operation) ? operation : miaow.replaceAs(operation);
+    const currentPath = ['current'].concat(path.split('.'))
 
-    const currentPath = path.split('.')
-    return hamster.updateIn(['current'].concat(currentPath), operation);
+    return hamster.getIn(currentPath)
+    ? hamster.updateIn(currentPath, lodash.isFunction(operation) ? operation : miaow.replaceAs(operation))
+    : hamster.setIn(currentPath, operation)
 }
 
 export const isDragging = hamster => hamster.getIn(['current', 'dragging']);
@@ -281,3 +284,17 @@ export const isRotating = hamster => hamster.getIn(['current', 'rotating']);
 
 // 正在操作的blockId
 export const getOperatingBlockId = hamster => hamster.getIn(['current', 'operatingBlockId']);
+
+export const getOperatingSlideId = hamster => hamster.getIn(['current', 'operatingSlideId'])
+
+/**
+ * 获取当前操作的slide中的所有blockIds
+ * @param {*} hamster
+ */
+export const getAllBlockIdsInOperatingSlide = hamster => {
+    return lodash.flow(
+        getOperatingSlideId,
+        getEntity(hamster),
+        miaow.get('data.blocks')
+    )(hamster)
+}

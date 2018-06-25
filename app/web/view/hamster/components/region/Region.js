@@ -207,7 +207,7 @@ class Region extends Component {
         })
         
         const {onChange} = this.props;
-        onChange && onChange(this.block, this.getRegionList());
+        onChange && onChange(this.block.getIn(['data', 'props']), this.getRegionList());
 
         // 重置
         this.clientCoord = null;

@@ -3,10 +3,12 @@ import reduceReducers from 'reduce-reducers'
 
 import block from './block'
 import slide from './slide'
+import ppt from './ppt'
 
 const hamster = reduceReducers(
     block,
-    slide
+    slide,
+    ppt
 )
 
 let reducers = {
