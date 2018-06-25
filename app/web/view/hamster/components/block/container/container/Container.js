@@ -37,8 +37,7 @@ class Container extends Component {
         const props = {block, active}
         return (
             <ContainerSection {...props}>
-                {children}
-                <DragSection config={dragConfig} {...props}  />
+                <DragSection config={dragConfig} {...props}>{children}</DragSection>
                 <ResizeSection config={resizeConfig} {...props}/>
                 <RotateSection config={rotateConfig} {...props}/>
             </ContainerSection>
