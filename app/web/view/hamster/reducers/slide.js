@@ -174,6 +174,14 @@ function handleActivateSlide (hamster, action) {
     return hamster;
 }
 
+function handleSlideMouseDown (hamster, action) {
+    const activatedBlockIds = currentHelper.getActivatedBlockIds(hamster);
+
+    hamster = helper.handleCancelActivateBlocks(hamster)(activatedBlockIds);
+
+    return hamster;
+}
+
 // reducer生成函数，减少样板代码
 const createReducer = (initialState, handlers) => {
     return (state, action) => {
@@ -191,6 +199,7 @@ const slide = {
     [slideType('ADD')]: handleAddSlide,
     [slideType('ACTIVATE')]: handleActivateSlide,
     [slideType('ADD_GROUP')]: handleAddSlideGroup,
+    [slideType('SLIDE_MOUSE_DOWN')]: handleSlideMouseDown,
 }
 
 export default createReducer(initialState.hamster, slide);

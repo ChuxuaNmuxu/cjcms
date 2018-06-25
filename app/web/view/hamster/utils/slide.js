@@ -5,7 +5,7 @@ import {createEntity} from './entity'
  * 创建slide元素
  */
 const createSlide = () => {
-    return createEntity('slide', fromJS({}))
+    return createEntity('slide', fromJS({blocks: []}))
 }
 
 /**

@@ -12,27 +12,8 @@ import * as blockHelper from './helper/block';
 function handleAddBlock (hamster, action) {
     console.log(5, action)
     const {payload: {blocks}} = action;
-    const blockIds = blocks.map(block => block.get('id'));
-    hamster = hamster.withMutations(hamster => {
-        // 添加blocks
-        hamster.updateIn(
-            ['index', 'blocks'],
-            blocks => blocks.concat(blockIds)
-        );
-        // 添加object
-        hamster.update(
-            'entities',
-            entities => blocks.reduce(
-                (acc, block) => entities.set(block.get('id'), block),
-                entities
-            )
-        );
-        // 修改current
-        hamster.updateIn(
-            ['current', 'blocks'],
-            blocks => blocks.clear().concat(blockIds)
-        )
-    })
+
+    hamster = helper.handleAddBlock(hamster, blocks);
     return hamster;
 }
 
@@ -225,6 +206,30 @@ function handleActStart (hamster, action) {
     return hamster;
 }
 
+/**
+ * 框选
+ * @param {*} hamster 
+ * @param {*} action 
+ */
+function handleBoxSelect (hamster, action) {
+    const {payload} = action;
+    // TODO: 缩小范围为当前slide的block
+    const [top, left, width, height] = miaow.destruction('top', 'left', 'width', 'height')(payload)
+    const bottom = top + height;
+    const right = left + width;
+
+    // const blockIds = hamster.get('entities').filter(entity => )
+    const blockIdsInSlide = currentHelper.getAllBlockIdsInOperatingSlide(hamster);
+    const blockIdsToActivated = blockIdsInSlide.filter(blockId => {
+        const box = blockHelper.packageBlocks(hamster, blockId);
+        return box.top < bottom && top < box.bottom && box.right > left && right > box.left
+    })
+
+    hamster = helper.handleReactivateBlocks(hamster)(blockIdsToActivated);
+
+    return hamster;
+}
+
 function handleDeleteBlock (hamster, action) {
     const activateIds = currentHelper.getActivatedBlockIds(hamster);
     hamster = hamster.updateIn(['index', 'blocks'], miaow.minus(activateIds));
@@ -254,6 +259,7 @@ const block = {
     [blockType('RESIZE_END')]: handleResizeEnd,
     [blockType('BLOCK_DELETE')]: handleDeleteBlock,
     [blockType('ACT_START')]: handleActStart,
+    [blockType('BOX_SELECT')]: handleBoxSelect,
 }
 
 export default createReducer(initialState.hamster, block);

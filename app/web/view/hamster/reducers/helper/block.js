@@ -179,7 +179,7 @@ export const samePointDifferenceVector = oldFourDimension=> newFourDimension=> p
  * @param {Object} coord 坐标
  * @param {Number} angle 坐标系旋转角，角度
  */
-export function coordTransformation (coord, angle) {
+export function coordTransformation (coord=[0, 0], angle=0) {
     const radian = angle * Math.PI / 180;
 
     const [x, y] = coord;

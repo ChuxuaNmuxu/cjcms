@@ -35,7 +35,7 @@ const componentIsComponent = (contentConfig) => {
     const ContentComponent = contentConfig.get('component');
     if (!isValidateReactComponent(ContentComponent)) return undefined;
 
-    const containerConfig = config.get('container');
+    const containerConfig = contentConfig.get('container');
     if (!containerConfig) return contentIsComponent(ContentComponent)
 
     return props => <Container config={containerConfig} {...props}>

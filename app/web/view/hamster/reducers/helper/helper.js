@@ -140,13 +140,13 @@ export function updateAllGroupFourDimension (hamster, ids) {
 export function activateBlock (hamster, id, isMultiply) {
     const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, id);
     const rightBlocks = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
-    const isActivated = currentHelper.isActivated(hamster)(operateBlockId);
+    const isBlockActivated = currentHelper.isBlockActivated(hamster)(operateBlockId);
 
     // 攘外取消叶子元素的激活
     if (!isResistInside) hamster = handleReactivateBlocks(hamster)(activatedBlockIds);
     
     /**
-     * 操作符 isMultiply + isActivated 判断
+     * 操作符 isMultiply + isBlockActivated 判断
      * 激活    多选    操作
      *  y       y     handleCancelActivateBlocks
      *  y       x     handleActivateBlocks
@@ -156,8 +156,8 @@ export function activateBlock (hamster, id, isMultiply) {
     */
 
     let operation = handleActivateBlocks(hamster)
-    if (isActivated && isMultiply) operation = handleCancelActivateBlocks(hamster)
-    if (!isActivated && !isMultiply) operation = handleReactivateBlocks(hamster)
+    if (isBlockActivated && isMultiply) operation = handleCancelActivateBlocks(hamster)
+    if (!isBlockActivated && !isMultiply) operation = handleReactivateBlocks(hamster)
 
     hamster = operation(operateBlockId);
 
@@ -212,7 +212,7 @@ const directionConfig = {
  * @param {Map} offset {x, y}
  * @returns hamster
  */
-export function handleResizeBlocks (hamster, blockId, direction, offset) {
+export function handleResizeBlocks (hamster, blockId, direction='e', offset) {
     /**
      * 具体实现
      * @version 1.2
@@ -335,4 +335,43 @@ export const handleRotate = (hamster, payload) => {
         }
     }))
     return hamster;
+}
+
+/**
+ * 新增block
+ * @param {*} hamster 
+ * @param {*} blocks 
+ */
+export const handleAddBlock = (hamster, blocks) => {
+    const blockIds = blocks.map(block => block.get('id'));
+    hamster = hamster.withMutations(hamster => {
+        // 添加blocks
+        hamster.updateIn(
+            ['index', 'blocks'],
+            blocks => blocks.concat(blockIds)
+        );
+        // 添加object
+        hamster.update(
+            'entities',
+            entities => blocks.reduce(
+                (acc, block) => entities.set(block.get('id'), block),
+                entities
+            )
+        );
+        // 修改current
+        hamster.updateIn(
+            ['current', 'blocks'],
+            blocks => blocks.clear().concat(blockIds)
+        )
+    })
+
+    const operatingSlideId = currentHelper.getOperatingSlideId(hamster);
+    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+        ids: operatingSlideId,
+        operations: {
+            'data.blocks': miaow.add(blockIds)
+        }
+    }))
+
+    return hamster
 }

@@ -1,13 +1,14 @@
 import React from 'react';
 
 import configManager from './ConfigManager';
+import PPTManager from './PPTManager'
 import EntityManager from './EntityManager'
 import SourceManager from './SourceManager'
 import StoreManager from './StoreManager'
 import BlockManager from './BlockManager'
 import SlideManager from './SlideManager'
 import Subscriber from './Subscriber';
-import hamster from '.';
+import Registry from './Registry';
 
 export const HamsterContext = React.createContext();
 
@@ -35,11 +36,13 @@ class Hamster extends StoreManager {
         super(store);
 
         this.configManager = configManager;
+        this.pptManager = new PPTManager(this);
         this.entityManager = new EntityManager(this);
         this.sourceManager = new SourceManager(this);
         this.blockManager = new BlockManager(this);
         this.slideManager = new SlideManager(this);
         this.subscriber = new Subscriber(store);
+        this.Registry = new Registry();
     }
 
     /**

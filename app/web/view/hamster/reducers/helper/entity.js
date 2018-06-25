@@ -13,7 +13,7 @@ export const getEntity = hamster => id => hamster.getIn(['entities', id]);
 /**
  * entities数据增删改
  * @param {*} hamster 
- * @param {*} payload
+ * @param {*} payload {ids, operations}
  */
 export function handleEntitiesChanges (hamster, payload) {
     const [ids, operations] = miaow.destruction('ids', 'operations')(payload);

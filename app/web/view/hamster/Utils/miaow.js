@@ -86,9 +86,13 @@ export function toList (value) {
  * 浅解构
  * @param {*} data 
  * @param {*} args 
+ * @return {Array}
  */
 export const destruction = (...args) => data => {
-    return args.map(path => data.get && data.get(path))
+    return args.map(path => {
+        if (!(path && data.get)) return []
+        return data.get(path)
+    })
 }
 
 /**
