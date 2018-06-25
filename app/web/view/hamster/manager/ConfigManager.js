@@ -14,7 +14,13 @@ class ConfigManager {
     }
 
     init () {
+        this.initSlide();
         this.initBlocks();
+    }
+
+    initSlide () {
+        let slide = config.slide;
+        this.slide = slide.update('props', this.handleProps)
     }
 
     initBlocks () {
@@ -22,7 +28,7 @@ class ConfigManager {
         this.blocks = blocks.map(block => {
             block = block.update('propsbar', this.handleBlockPropsLayout);
             block = config.defaultBlockConfig.mergeDeep(block)
-            return block.update('props', this.handleBlockProps);
+            return block.update('props', this.handleProps);
         });
     }
 
@@ -61,7 +67,7 @@ class ConfigManager {
         }, null);
         // 跟默认属性合并
         props = config.defaultBlockConfig.get('props').mergeDeep(props)
-        return this.handleBlockProps(props)
+        return this.handleProps(props)
     }
 
     /**
@@ -90,6 +96,18 @@ class ConfigManager {
         };
     }
 
+    getSlidesPropsbar (slides) {
+        const slideConfig = this.getSlideConfig();
+        return {
+            props: slideConfig.get('props'),
+            layout: slideConfig.get('propsbar')
+        }
+    }
+
+    getSlideConfig () {
+        return this.slide;
+    }
+
     /**
      * 捡出value属性
      */
@@ -108,10 +126,10 @@ class ConfigManager {
     }
 
     /**
-     * 递归处理block属性
-     * @param {*} block 
+     * 递归处理props属性
+     * @param {*} props 
      */
-    handleBlockProps = (props) => {
+    handleProps = (props) => {
         return props.map((v, k) => {
             // 处理属性套件
             let widget = v.get('widget')
@@ -119,10 +137,14 @@ class ConfigManager {
                 if (isString(widget)) {
                     widget = require(`../widget/props/${widget}`).default
                 }
+                /**
+                 * 从引用该widget的地方取：value、widget、props配置合并过来
+                 * 以方便引用该widget的地方可以自定义默认值，扩展属性配置
+                 */
                 v = fromJS(widget).mergeDeep(this.pickValueProps(v))
             }
             if (v.has('props')) {
-                v = v.update('props', this.handleBlockProps);
+                v = v.update('props', this.handleProps);
             }
             return v.set('name', k)
         })

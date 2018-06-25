@@ -6,7 +6,7 @@ const actionCreaters = createActions({
     'SLIDE': {
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
-        'ADD_GROUP': pmCreater
+        'ADD_GROUP': pmCreater,
     }
 })
 

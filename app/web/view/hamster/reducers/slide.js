@@ -1,10 +1,8 @@
 import Immutable from 'immutable';
 
 import initialState from './initialState';
-import * as helper from './helper/helper';
-import * as miaow from '../Utils/miaow';
-import * as currentHelper from './helper/current'
 import slideHelper from './helper/slide'
+import * as entityHelper from './helper/entity'
 
 /**
  * 添加slides
@@ -172,6 +170,15 @@ function handleActivateSlide (hamster, action) {
     // 修改current
     hamster = hamster.setIn(['current', 'slides'], slideIds)
     return hamster;
+}
+
+function handleChangeProps (hamster, action) {
+    const {slideIds, props} = action.payload;
+
+    return entityHelper.changeEntitiesProps(hamster, {
+        entityIds: slideIds,
+        props
+    })
 }
 
 // reducer生成函数，减少样板代码
