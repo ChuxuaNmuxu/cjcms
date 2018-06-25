@@ -1,68 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Button, Menu} from 'antd';
+import {Button} from 'antd';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import CSSModules from 'react-css-modules';
 
+import styles from './styles.scss'
 import { withHamster } from '../../../manager';
 import Slide from './';
-import { onContextMenu, hideContextMenu } from '../../../../../component/ContextMenu';
+import { onContextMenu } from '../../../../../component/ContextMenu';
+import createContextMenu from './Menu'
 const SlideGroup = Slide.Group
 
 @withHamster()
+@CSSModules(styles)
 class SlidePane extends Component {
-    handleAddSlide = () => {
-        const {hamster} = this.props;
-        hamster.slideManager.addSlide();
-    }
-
-    handleAddSlideGroup = () => {
-        const {hamster} = this.props;
-        hamster.slideManager.addSlideGroup();
-    }
-
     handleContextMenu = (e, data, position = 'body') => {
         e.preventDefault();
         e.stopPropagation();
-        const target = data ? data.get('type') : 'pane';
-        const targetId = data && data.get('id');
-        const payload = {target, targetId, position}
-        onContextMenu(e, (
-            <Menu theme='dark' onClick={e => this.handleContextMenuClick(e, payload)}>
-                <Menu.Item key='addSlide'>添加卡片</Menu.Item>
-                <Menu.Item key='addGroup'>添加小节</Menu.Item>
-            </Menu>
-        ));
-    }
-
-    /**
-     * TODO:
-     * position: before | after | first | last 四种情况
-     */
-    handleContextMenuClick = (e, payload) => {
-        hideContextMenu();
         const {hamster} = this.props;
-        const {target, position} = payload;
-        switch (e.key) {
-        case 'addSlide':
-            hamster.slideManager.addSlide(null, {
-                ...payload,
-                position: target === 'slide' ? (position === 'header' ? 'before' : 'after') : (position === 'header' ? 'first' : 'last')
-            });
-            break;
-        case 'addGroup':
-            hamster.slideManager.addSlideGroup(null, {
-                ...payload,
-                position: target === 'pane' ? (position === 'body' ? 'last' : 'first') : (position === 'header' ? 'before' : 'after')
-            });
-            break;
+        const payload = {
+            target: data ? data.get('type') : 'pane',
+            targetId: data && data.get('id'),
+            position
         }
+        onContextMenu(e, createContextMenu(hamster, payload));
     }
 
     render() {
         const {slideGroups, entities, slides} = this.props;
         return (
-            <div className='slide-pane' style={{position: 'absolute', top: 0, bottom: 0, width: '100%', overflow: 'hidden'}}>
-                <div className='content' onContextMenu={this.handleContextMenu} style={{position: 'absolute', top: 0, bottom: 0, width: '100%', overflow: 'auto'}}>
+            <div className='slide-pane' styleName='slide-pane'>
+                <div className='pane-content' onContextMenu={this.handleContextMenu}>
                 {
                     slideGroups.map(groupId => {
                         const groupData = entities.get(groupId);
@@ -84,22 +52,6 @@ class SlidePane extends Component {
                     })
                 }
                 </div>
-                {/* <div style={{
-                  padding: 12,
-                  textAlign: 'center',
-                  borderTop: '1px solid #efefef',
-                  width: '100%',
-                  position: 'absolute',
-                  bottom: 0
-                }}>
-                    <Button size='small' onClick={this.handleAddSlide}>
-                        添加卡片
-                    </Button>
-                    &nbsp;&nbsp;
-                    <Button size='small' onClick={this.handleAddSlideGroup}>
-                        添加小节
-                    </Button>
-                </div> */}
             </div>
         );
     }

@@ -19,29 +19,6 @@ class SlideGroup extends Component {
         );
     }
 }
-// class SlideGroup extends Component {
-//     render() {
-//         const {slides, data, entities} = this.props;
-//         let groupIndex = 0;
-//         const groupSlides = data.getIn(['data', 'slides'])
-//         return (
-//             <div>
-//                 <p>{data.get('title')}</p>
-//             {
-//                 slides.map((slideId, index) => {
-//                     if (groupSlides.includes(slideId)) {
-//                         return <Slide
-//                           data={entities.get(slideId)}
-//                           index={index}
-//                           groupIndex={groupIndex++}
-//                         />
-//                     }
-//                 })
-//             }
-//             </div>
-//         );
-//     }
-// }
 
 SlideGroup.propTypes = {
     data: ImmutablePropTypes.map

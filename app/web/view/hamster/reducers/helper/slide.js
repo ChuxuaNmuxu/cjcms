@@ -57,10 +57,31 @@ const getGroupIdBySlideId = (hamster, slideId) => {
     return getGroupBySlideId(hamster, slideId).get('id');
 }
 
+/**
+ * TODO:
+ * 移到entity
+ * @param {*} hamster 
+ * @param {*} param1 
+ */
+const getEntityByIndex = (hamster, {index = 0, type}) => {
+    index = index === 'first' ? 0 : index === 'last' ? -1 : index;
+    return hamster.getIn(['entities', hamster.getIn(['index', type]).get(index)]);
+}
+
+const getSlideByIndex = (hamster, index) => {
+    return getEntityByIndex(hamster, {type: 'slides', index});
+}
+
+const getSlideGroupByIndex = (hamster, index) => {
+    return getEntityByIndex(hamster, {type: 'slide.groups', index});
+}
+
 export default {
     getSlideIdxesBySlideIds,
     getSlideIdxesByGroupId,
     getSlideIdxesByGroupIndex,
     getGroupBySlideId,
-    getGroupIdBySlideId
+    getGroupIdBySlideId,
+    getSlideByIndex,
+    getSlideGroupByIndex
 }
