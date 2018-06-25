@@ -76,15 +76,15 @@ class DragSection extends React.Component {
     }
 
     render() {
-        const {dragSource, config, ...rest} = this.props;
+        const {dragSource, config, children, ...rest} = this.props;
 
         if (!config) return null;
 
         const DragComponent = config;
-        if (isValidateReactComponent(DragComponent)) return <DragComponent {...rest}/>
+        if (isValidateReactComponent(DragComponent)) return <DragComponent {...{children, ...rest}}/>
 
         return (
-            dragSource(<div styleName='drag-wrap' className='drag-wrap' />)
+            dragSource(<div styleName='drag-wrap' className='drag-wrap' >{children}</div>)  
         )
     }
 }
