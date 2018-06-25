@@ -46,6 +46,10 @@ class PropsbarView extends Component {
         dispatch(entityActions.propsChange({entityIds, props: value}))
     }
 
+    handleDoAction = (type, params) => {
+        console.log(50, type, params)
+    }
+
     render() {
         const {entities} = this.props;
         const data = entities.last().getIn(['data', 'props']);
@@ -53,6 +57,7 @@ class PropsbarView extends Component {
         return (
             <Propsbar
               onPropsChange={this.handlePropsChange}
+              doAction={this.handleDoAction}
               data={data}
               k={key}
               propsLayout={this.propsLayout}

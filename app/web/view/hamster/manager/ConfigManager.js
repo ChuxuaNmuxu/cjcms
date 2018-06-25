@@ -1,7 +1,10 @@
+import React from 'react';
+import {Button} from 'antd'
 import {List, Map, fromJS} from 'immutable';
 import { isString } from 'lodash';
 
 import config, {extensions} from '../config';
+import blockGroupProps from '../config/block/groupProps';
 
 /**
  * 配置管理类
@@ -67,6 +70,10 @@ class ConfigManager {
         }, null);
         // 跟默认属性合并
         props = config.defaultBlockConfig.get('props').mergeDeep(props)
+        // 组
+        if (blocks.size > 1) {
+            props = props.mergeDeep(blockGroupProps)
+        }
         return this.handleProps(props)
     }
 
@@ -76,11 +83,14 @@ class ConfigManager {
      */
     getBlocksLayout (blocks) {
         const props = this.getBlocksProps(blocks)
+        console.log(87, props)
         let layout;
         if (blocks.size > 1) {
             const defaultProps = config.defaultBlockConfig.get('props');
             const customProps = props.filterNot((item, k) => defaultProps.has(k))
-            const customLayout = customProps.map(p => p.get('name')).toList()
+            const customLayout = customProps.map(p => p.get('name'))
+                .toList()
+                .sortBy(name => blockGroupProps.hasOwnProperty(name))
             const defaultLayout = this.getBlock('text').get('propsbar').slice(0, 2);
             layout = defaultLayout.push(Map({
                 name: 'custom',

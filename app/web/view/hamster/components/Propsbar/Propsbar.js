@@ -19,13 +19,14 @@ const TabPane = Tabs.TabPane;
  */
 class Propsbar extends React.Component {
     renderPropsPane = (item) => {
-        const {data, propsConfig, onPropsChange} = this.props;
+        const {data, propsConfig, onPropsChange, doAction} = this.props;
         const Layout = item.get('layout');
         const props = {
             propsConfig,
             propsLayout: Layout,
             value: data,
-            onChange: v => onPropsChange(v)
+            onChange: onPropsChange,
+            doAction: doAction
         }
         return List.isList(Layout) ? <PropsPane {...props} /> : <Layout {...props} />
     }
@@ -58,6 +59,7 @@ Propsbar.propTypes = {
     propsLayout: PropTypes.any,
     propsConfig: PropTypes.any,
     onPropsChange: PropTypes.func.isRequired,
+    doAction: PropTypes.func
 }
 
 export default CSSModules(Propsbar, styles);
