@@ -7,7 +7,7 @@ import styles from './ContainerSection.scss';
 @CSSModules(styles)
 export default class ContainerSection extends Component {
     static propTypes = {
-        config: PropTypes.object,
+        config: PropTypes.any,
         dragSource: PropTypes.func
     }
 
