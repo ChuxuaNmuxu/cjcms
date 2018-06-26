@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { handleRotate } from '../../../../reducers/helper/helper';
 import rotateLayler from '../../decorator/operation/rotate/RotateLayer';
 import { getRotateAngle } from '../../../../utils/block';
-import { omit } from '../../../../Utils/miaow';
+import { omit } from '../../../../utils/miaow';
 import customDragLayerFactory from './CustomLayer';
 
 const omitProps = omit('initialClientOffset', 'item', 'clientOffset', 'isRotating', 'offset');

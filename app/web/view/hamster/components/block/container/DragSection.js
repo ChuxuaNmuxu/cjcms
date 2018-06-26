@@ -7,7 +7,7 @@ import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 
 import blockActions from '../../../actions/block';
-import { isValidateReactComponent } from '../../../Utils/miaow';
+import { isValidateReactComponent } from '../../../utils/miaow';
 
 const spec = {
     beginDrag (props, component) {

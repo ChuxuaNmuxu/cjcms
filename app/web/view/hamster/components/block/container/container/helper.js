@@ -4,7 +4,7 @@
 import {Map} from 'immutable'
 
 import { defaultBlockConfig } from "../../../../config/config";
-import {isTrue, dispatchMission, prevCheck, always, identity} from '../../../../Utils/miaow'
+import {isTrue, dispatchMission, prevCheck, always, identity} from '../../../../utils/miaow'
 const defaultContainerConfig = defaultBlockConfig.getIn(['content', 'container'])
 
 const prevParseConfig = dispatchMission(

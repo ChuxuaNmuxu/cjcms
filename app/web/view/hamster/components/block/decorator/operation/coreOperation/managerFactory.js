@@ -3,7 +3,7 @@
  */
 import manager from './Manager';
 import Monitor from './Monitor'
-import {extend} from '../../../../../Utils/miaow';
+import {extend} from '../../../../../utils/miaow';
 
 const createManager = (options) => class {
     constructor () {

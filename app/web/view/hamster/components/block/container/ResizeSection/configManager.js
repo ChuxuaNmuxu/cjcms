@@ -7,7 +7,7 @@
  */
 
 import defaultBlockConfig from '../../../../config/block';
-import { alwaysFalse, identity, dispatchMission, always } from '../../../../Utils/miaow';
+import { alwaysFalse, identity, dispatchMission, always } from '../../../../utils/miaow';
 import { List } from 'immutable';
 const defaultResizeConfig = defaultBlockConfig.content.container.resizable;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {Map} from 'immutable';
 import {flow, over, flatten} from 'lodash';
 
-import { destruction, get, dispatchMission, prevCheck, identity, always, isValidateReactComponent, isMap, and } from '../../Utils/miaow';
+import { destruction, get, dispatchMission, prevCheck, identity, always, isValidateReactComponent, isMap, and } from '../../utils/miaow';
 import configManager from '../../manager/ConfigManager';
 import { defaultBlockConfig } from '../../config/config';
 

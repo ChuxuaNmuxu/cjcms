@@ -2,7 +2,7 @@ import { fromJS } from 'immutable';
 
 import dragLayer from '../../decorator/operation/drag/DragLayer';
 import { handleDrag} from '../../../../reducers/helper/helper';
-import { omit } from '../../../../Utils/miaow';
+import { omit } from '../../../../utils/miaow';
 import customLayerFactory from './CustomLayer';
 
 const omitProps = omit('offset', 'item', 'isDragging', 'hamster');
