@@ -5,9 +5,10 @@ import styles from './DragSection.scss';
 import {DragSource} from '../decorator/operation/drag';
 import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
+import {omit} from 'lodash'
 
 import blockActions from '../../../actions/block';
-import { isValidateReactComponent } from '../../../Utils/miaow';
+import { isValidateReactComponent, shallowEqual } from '../../../Utils/miaow';
 
 const spec = {
     beginDrag (props, component) {
@@ -71,8 +72,11 @@ class DragSection extends React.Component {
         dragEnd: PropTypes.func
     }
 
-    shouldComponentUpdate = () => {
-        return false;
+    shouldComponentUpdate = (nextProps) => {
+        const prevProps = omit(this.props, 'children');
+        const props = omit(nextProps, 'children');
+
+        return !shallowEqual(prevProps, props)
     }
 
     render() {
@@ -84,7 +88,7 @@ class DragSection extends React.Component {
         if (isValidateReactComponent(DragComponent)) return <DragComponent {...this.props}/>
 
         return (
-            dragSource(<div styleName='drag-wrap' className='drag-wrap' >{children}</div>)  
+            dragSource(<div styleName='drag-wrap' className='drag-wrap' >{children}</div>)
         )
     }
 }
