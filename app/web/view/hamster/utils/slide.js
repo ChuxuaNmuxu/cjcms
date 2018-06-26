@@ -1,5 +1,5 @@
 import {fromJS, Map} from 'immutable'
-import {createEntity, extractProps} from './entity'
+import {createEntity, extractEntityProps} from './entity'
 import ConfigManager from '../manager/ConfigManager';
 
 /**
@@ -8,7 +8,7 @@ import ConfigManager from '../manager/ConfigManager';
 const createSlide = (slideConfig = null) => {
     slideConfig = slideConfig || ConfigManager.getSlideConfig();
     let data = (slideConfig.get('data') || Map()).merge({
-        props: extractProps(slideConfig),
+        props: extractEntityProps(slideConfig),
         blocks: []
     });
     return createEntity('slide', data)
