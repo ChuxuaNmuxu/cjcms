@@ -1,6 +1,6 @@
-import lodash from 'lodash';
+import lodash, {mapKeys} from 'lodash';
 import uuid from 'uuid';
-import Immutable from 'immutable'
+import Immutable, {fromJS} from 'immutable'
 
 import * as miaow from '../../Utils/miaow';
 // import BlockUtils from '../../Utils/BlockUtils';
@@ -10,11 +10,11 @@ import * as entityHelper from './entity';
 import * as blockHelper from './block';
 import * as nodeHelper from './node';
 import * as currentHelper from './current';
-import {extractBlockData} from '../../utils/block';
+import {createBlock} from '../../utils/block';
 
 // 生成ID
-export function createId (prefix='', suffix='') {
-    return prefix + uuid.v4() + suffix
+export function createId (namespace='', suffix='') {
+    return namespace + uuid.v4() + suffix
 }
 
 // 激活元素,已激活等于没有操作
@@ -43,7 +43,7 @@ export const handleReactivateBlocks = hamster => blockIds => (
 export function createDefaultBlockObjects (hamster, id) {
     const groupConfig = ConfigManager.getBlock('group');
     // 默认group数据，并修改ID
-    const defaultBlockData = extractBlockData(groupConfig).set('id', id);
+    const defaultBlockData = createBlock(groupConfig).set('id', id);
     return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
 
@@ -375,4 +375,33 @@ export const handleAddBlock = (hamster, blocks) => {
     }))
 
     return hamster
+}
+
+/**
+ * 创建action名带命名空间的handler映射表
+ * @param {*} namespace 
+ */
+const createHandlers = namespace => handlers => (
+    namespace ? mapKeys(handlers, (value, type) => `${namespace}/${type}`) : handlers
+)
+
+/**
+ * reducer生成函数，减少样板代码
+ * @param {*} initialState 
+ * @param {*} handlers 
+ * @param {*} namespace action的前缀，方便区分
+ */
+const createReducer = (initialState, handlers, namespace = '') => {
+    handlers = createHandlers(namespace)(handlers);
+    return (state, action) => {
+        state = state ? (state.toJS ? state : fromJS(state)) : fromJS(initialState)
+        if (handlers.hasOwnProperty(action.type)) {
+            state = handlers[action.type](state, action);
+        }
+        return state;
+    }
+}
+
+export {
+    createReducer // reducer生成函数，减少样板代码
 }

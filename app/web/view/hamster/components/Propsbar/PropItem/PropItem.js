@@ -39,7 +39,6 @@ class PropItem extends Component {
 
     async componentDidMount () {
         const {config} = this.props;
-        console.log(21, config.get('props'))
         // 优先级：配置的组件 -> 默认组件
         let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : InputItem);
 

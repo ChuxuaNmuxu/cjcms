@@ -3,7 +3,7 @@ import {fromJS, Map} from 'immutable'
 import HamsterManager from './HamsterManager';
 import blockActions from '../actions/block';
 import {getActivatedBlockIds, getOperatingBlockId, isDragging, isRotating, isResizing} from '../reducers/helper/current'
-import {extractBlockData} from '../utils/block'
+import {createBlock} from '../utils/block'
 
 class BlockManager extends HamsterManager {
     /**
@@ -18,7 +18,7 @@ class BlockManager extends HamsterManager {
      */
     addBlocks (blocks) {
         blocks = fromJS(blocks);
-        blocks = blocks.map(extractBlockData);
+        blocks = blocks.map(createBlock);
         this.dispatch(blockActions.add({blocks}));
     }
 

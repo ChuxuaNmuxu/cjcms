@@ -1,14 +1,13 @@
-import Immutable from 'immutable';
-
 import initialState from './initialState';
 import slideHelper from './helper/slide'
+import {createReducer} from './helper/helper'
 
 /**
  * 添加slides
  * 1. 添加到entities
  * 2. 添加到index，需要位置
  * 3. 添加到group，需要groupId
- * 4. 修改current，取第一个
+ * 4. 修改current，取最后一个
  * 5. 修改selected，所有
  * @param {*} hamster 
  * @param {*} slides 
@@ -35,10 +34,10 @@ function addSlides (hamster, slides, {index, groupId}) {
             ['entities', groupId, 'data', 'slides'],
             slides => slides.concat(slideIds)
         )
-        // 修改current，取第一个
+        // 修改current，取最后一个
         hamster.update(
             'current',
-            current => current.set('slide', slideIds.get(0)).set('slide.group', groupId)
+            current => current.set('slide', slideIds.last()).set('slide.group', groupId)
         )
         // 修改selected，所有
         // hamster.update(
@@ -70,6 +69,11 @@ const getLastSlideFromBeforeGroup = (hamster, groupId) => {
     return null;
 }
 
+/**
+ * reducer 添加slide
+ * @param {*} hamster 
+ * @param {*} action 
+ */
 function handleAddSlide (hamster, action) {
     const {payload: {slides, target: {target, targetId, position}}} = action;
     let index;
@@ -106,6 +110,11 @@ function handleAddSlide (hamster, action) {
     })
 }
 
+/**
+ * 添加组
+ * @param {*} hamster 
+ * @param {*} param1 
+ */
 function addSlideGroup (hamster, {slideGroup, index}) {
     const groupId = slideGroup.get('id');
     return hamster.withMutations(hamster => {
@@ -125,6 +134,11 @@ function addSlideGroup (hamster, {slideGroup, index}) {
     })
 }
 
+/**
+ * reducer 添加slide.group
+ * @param {*} hamster 
+ * @param {*} action 
+ */
 function handleAddSlideGroup (hamster, action) {
     let {payload: {slideGroup, target: {target, targetId, position}}} = action;
     let index;
@@ -179,24 +193,12 @@ function handleSlideMouseDown (hamster, action) {
     return hamster;
 }
 
-// reducer生成函数，减少样板代码
-const createReducer = (initialState, handlers) => {
-    return (state, action) => {
-        state = state ? (state.toJS ? state : Immutable.fromJS(state)) : Immutable.fromJS(initialState)
-        if (handlers.hasOwnProperty(action.type)) {
-            state = handlers[action.type](state, action);
-        }
-        return state;
-    }
-}
-
-const slideType = type => 'SLIDE/' + type;
-
+const namespace = 'SLIDE';
 const slide = {
-    [slideType('ADD')]: handleAddSlide,
-    [slideType('ACTIVATE')]: handleActivateSlide,
-    [slideType('ADD_GROUP')]: handleAddSlideGroup,
-    [slideType('SLIDE_MOUSE_DOWN')]: handleSlideMouseDown,
+    'ADD': handleAddSlide,
+    'ACTIVATE': handleActivateSlide,
+    'ADD_GROUP': handleAddSlideGroup,
+    'SLIDE_MOUSE_DOWN': handleSlideMouseDown,
 }
 
-export default createReducer(initialState.hamster, slide);
+export default createReducer(initialState.hamster, slide, namespace);

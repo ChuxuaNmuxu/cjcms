@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import {fromJS} from 'immutable';
 
 import initialState from './initialState';
 import * as helper from './helper/helper';
@@ -142,7 +142,7 @@ function handleUnite (hamster, actions) {
     hamster = blockHelper.updateGroupFourDimension(hamster, idCluster, entityId);
 
     // 修改children属性
-    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+    hamster = entityHelper.handleEntitiesChanges(hamster, fromJS({
         ids: entityId,
         operations: {'data.children': miaow.replaceAs(childrenIds)}
     }))
@@ -152,7 +152,7 @@ function handleUnite (hamster, actions) {
     hamster = hamster.updateIn(['index', 'blocks'], miaow.add(entityId));
     
     // 修改blocks的parent属性
-    hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
+    hamster = entityHelper.handleEntitiesChanges(hamster, fromJS({
         ids: childrenIds,
         operations: {'data.parent': miaow.replaceAs(entityId)}
     }))
@@ -212,29 +212,17 @@ function handleDeleteBlock (hamster, action) {
     return hamster;
 }
 
-// reducer生成函数，减少样板代码
-const createReducer = (initialState, handlers) => {
-    return (state, action) => {
-        state = state ? (state.toJS ? state : Immutable.fromJS(state)) : Immutable.fromJS(initialState)
-        if (handlers.hasOwnProperty(action.type)) {
-            state = handlers[action.type](state, action);
-        }
-        return state;
-    }
-}
-
-const blockType = type => 'BLOCK/' + type;
-
+const namespace = 'BLOCK';
 const block = {
-    [blockType('ADD')]: handleAddBlock,
-    [blockType('DRAG_END')]: handleDragEnd,
-    [blockType('CLICK')]: handleClickBlock,
-    [blockType('GROUP_UNITE')]: handleUnite,
-    [blockType('ROTATE_END')]: handleRotateEnd,
-    [blockType('RESIZE_END')]: handleResizeEnd,
-    [blockType('BLOCK_DELETE')]: handleDeleteBlock,
-    [blockType('ACT_START')]: handleActStart,
-    [blockType('BOX_SELECT')]: handleBoxSelect,
+    'ADD': handleAddBlock,
+    'DRAG_END': handleDragEnd,
+    'CLICK': handleClickBlock,
+    'GROUP_UNITE': handleUnite,
+    'ROTATE_END': handleRotateEnd,
+    'RESIZE_END': handleResizeEnd,
+    'BLOCK_DELETE': handleDeleteBlock,
+    'ACT_START': handleActStart,
+    'BOX_SELECT': handleBoxSelect,
 }
 
-export default createReducer(initialState.hamster, block);
+export default helper.createReducer(initialState.hamster, block, namespace);

@@ -1,8 +1,5 @@
-import Immutable from 'immutable';
-
 import initialState from './initialState';
 import * as helper from './helper/helper';
-import * as miaow from '../Utils/miaow';
 import * as currentHelper from './helper/current'
 
 /**
@@ -19,21 +16,9 @@ function handlePPTInit (hamster, action) {
     return hamster;
 }
 
-// reducer生成函数，减少样板代码
-const createReducer = (initialState, handlers) => {
-    return (state, action) => {
-        state = state ? (state.toJS ? state : Immutable.fromJS(state)) : Immutable.fromJS(initialState)
-        if (handlers.hasOwnProperty(action.type)) {
-            state = handlers[action.type](state, action);
-        }
-        return state;
-    }
-}
-
-const pptType = type => 'PPT/' + type;
-
+const namespace = 'PPT';
 const ppt = {
-    [pptType('INIT')]: handlePPTInit,
+    'INIT': handlePPTInit,
 }
 
-export default createReducer(initialState.hamster, ppt);
+export default helper.createReducer(initialState.hamster, ppt, namespace);
