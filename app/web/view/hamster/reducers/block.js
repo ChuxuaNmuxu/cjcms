@@ -46,9 +46,7 @@ function handleChangeProps (hamster, action) {
  * @param {*} action 
  */
 function handleDragEnd (hamster, action) {
-    console.log(233, hamster.toJS())
     hamster = helper.handleDrag(hamster, action.payload);
-    console.log(234, hamster.toJS())
     // 移动的元素如果未激活，那么在移动结束后激活
     const operateBlockId = currentHelper.getOperatingBlockId(hamster);
     hamster = helper.activateBlock(hamster, operateBlockId, false);
