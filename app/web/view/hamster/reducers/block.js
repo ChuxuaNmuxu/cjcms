@@ -2,7 +2,7 @@ import {fromJS} from 'immutable';
 
 import initialState from './initialState';
 import * as helper from './helper/helper';
-import * as miaow from '../Utils/miaow';
+import * as miaow from '../utils/miaow';
 import * as nodeHelper from './helper/node';
 import * as currentHelper from './helper/current';
 import * as entityHelper from './helper/entity';

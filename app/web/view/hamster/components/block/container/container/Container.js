@@ -5,7 +5,7 @@ import ContainerSection from '../ContainerSection'
 import DragSection from '../DragSection'
 import ResizeSection from '../ResizeSection'
 import RotateSection from '../RotateSection'
-import { isValidateReactComponent, destruction } from '../../../../Utils/miaow';
+import { isValidateReactComponent, destruction } from '../../../../utils/miaow';
 
 class Container extends Component {
     static propTypes = {

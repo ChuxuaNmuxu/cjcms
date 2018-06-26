@@ -6,7 +6,7 @@ import {connect} from 'react-redux'
 
 import rotateSource from '../decorator/operation/rotate';
 import styles from './RotateSection.scss'
-import {isValidateReactComponent} from '../../../Utils/miaow'
+import {isValidateReactComponent} from '../../../utils/miaow'
 import blockActions from '../../../actions/block';
 import { getRotateAngle, getBlockCenterOffset } from '../../../utils/block';
 

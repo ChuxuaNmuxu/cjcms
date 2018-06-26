@@ -7,7 +7,7 @@
 import React from 'react'
 
 import configManager from '../../../manager/ConfigManager';
-import {dispatchMission, isValidateReactComponent, isMap} from '../../../Utils/miaow';
+import {dispatchMission, isValidateReactComponent, isMap} from '../../../utils/miaow';
 import Container from '../container';
 
 // 其他情况

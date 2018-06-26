@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 
-import { shallowEqual } from '../../../../Utils/miaow';
+import { shallowEqual } from '../../../../utils/miaow';
 
 const customDragLayerFactory = ({
     layerType,

@@ -3,7 +3,7 @@ import {isFunction} from 'lodash';
 import Immutable, { fromJS } from 'immutable';
 
 import configManager from '../../../manager/ConfigManager';
-import {dispatchMission, isValidateReactComponent} from '../../../Utils/miaow';
+import {dispatchMission, isValidateReactComponent} from '../../../utils/miaow';
 import Container from '../container';
 import defaultBlockConfig from '../../../config/block'
 const defaultContainerConfig = fromJS(defaultBlockConfig.content.container)

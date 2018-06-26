@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {isEqual} from 'lodash';
 
-import {isValidateReactComponent} from '../../../../../Utils/miaow';
+import {isValidateReactComponent} from '../../../../../utils/miaow';
 // import DragDropManager from './core';
 // import createSource from './createSource';
 // import createMonitor from './createMonitor';

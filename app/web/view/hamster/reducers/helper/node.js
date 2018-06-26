@@ -1,6 +1,6 @@
 import Immutbale from 'immutable';
 
-import * as miaow from '../../Utils/miaow';
+import * as miaow from '../../utils/miaow';
 import * as entityHelper from './entity';
 import lodash from 'lodash'
 

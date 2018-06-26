@@ -11,7 +11,7 @@ import uuid from 'uuid'
 import Immutable, {fromJS} from 'immutable';
 
 import Slide from '../slide'
-import { getBox, shallowEqual, map, getCoord, destruction, get } from '../../Utils/miaow';
+import { getBox, shallowEqual, map, getCoord, destruction, get } from '../../utils/miaow';
 import getEmptyImage from '../block/decorator/operation/base/getEmptyImage';
 import {ContainerSection, ResizeSection, RotateSection, DragSection} from '../block/container';
 import { handleDragBlock, handleResizeBlocks, handleRotateBlocks } from '../../reducers/helper/helper';

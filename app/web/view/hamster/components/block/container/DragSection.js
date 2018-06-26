@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 import {omit} from 'lodash'
 
 import blockActions from '../../../actions/block';
-import { isValidateReactComponent, shallowEqual } from '../../../Utils/miaow';
+import { isValidateReactComponent, shallowEqual } from '../../../utils/miaow';
 
 const spec = {
     beginDrag (props, component) {

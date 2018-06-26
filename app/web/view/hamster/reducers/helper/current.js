@@ -1,6 +1,6 @@
 import * as nodeHelper from './node';
 import lodash from 'lodash';
-import * as miaow from '../../Utils/miaow';
+import * as miaow from '../../utils/miaow';
 import { getEntity } from './entity';
 
 /**
