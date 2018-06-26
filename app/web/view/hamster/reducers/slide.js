@@ -1,6 +1,7 @@
 import initialState from './initialState';
 import slideHelper from './helper/slide'
-import {createReducer} from './helper/helper'
+import {createReducer, handleCancelActivateBlocks} from './helper/helper'
+import { getActivatedBlockIds } from './helper/current';
 
 /**
  * 添加slides
@@ -186,9 +187,9 @@ function handleActivateSlide (hamster, action) {
 }
 
 function handleSlideMouseDown (hamster, action) {
-    const activatedBlockIds = currentHelper.getActivatedBlockIds(hamster);
+    const activatedBlockIds = getActivatedBlockIds(hamster);
 
-    hamster = helper.handleCancelActivateBlocks(hamster)(activatedBlockIds);
+    hamster = handleCancelActivateBlocks(hamster)(activatedBlockIds);
 
     return hamster;
 }
