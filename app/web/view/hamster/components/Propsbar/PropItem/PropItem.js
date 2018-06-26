@@ -39,7 +39,6 @@ class PropItem extends Component {
 
     async componentDidMount () {
         const {config} = this.props;
-        console.log(21, config.get('props'))
         // 优先级：配置的组件 -> 默认组件
         let Comp = config.get('component') || (config.get('props') ? PropsGroupItem : InputItem);
 
@@ -57,13 +56,12 @@ class PropItem extends Component {
     }
 
     render() {
-        const {config, value} = this.props;
-        const name = config.get('name');
+        const {config, value, doAction} = this.props;
         const {Item} = this.state;
         return (
             <div>
                 {config.get('title')}
-                {Item ? <Item config={config} value={value} onChange={this.onChange} /> : null}
+                {Item ? <Item config={config} value={value} onChange={this.onChange} doAction={doAction} /> : null}
             </div>
         );
     }

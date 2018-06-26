@@ -21,11 +21,12 @@ class PropsPane extends Component {
     }
 
     renderItem = (item) => {
-        const {value, propsConfig} = this.props;
+        const {value, propsConfig, doAction} = this.props;
         return <PropItem
             value={value.get(item)}
             config={propsConfig.get(item)}
-            onChange={value => this.onChange(value)}
+            onChange={this.onChange}
+            doAction={doAction}
         />;
     }
 

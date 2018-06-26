@@ -1,6 +1,10 @@
 import {fromJS} from 'immutable';
 import block from './block'
 
+import {default as slideConfig} from './slide'
+
+export const slide = fromJS(slideConfig);
+
 /**
  * 默认block配置
  */

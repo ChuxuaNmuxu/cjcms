@@ -1,11 +1,17 @@
-import {fromJS} from 'immutable'
-import {createEntity} from './entity'
+import {fromJS, Map} from 'immutable'
+import {createEntity, extractEntityProps} from './entity'
+import ConfigManager from '../manager/ConfigManager';
 
 /**
  * 创建slide元素
  */
-const createSlide = () => {
-    return createEntity('slide', fromJS({blocks: []}))
+const createSlide = (slideConfig = null) => {
+    slideConfig = slideConfig || ConfigManager.getSlideConfig();
+    let data = (slideConfig.get('data') || Map()).merge({
+        props: extractEntityProps(slideConfig),
+        blocks: []
+    });
+    return createEntity('slide', data)
 }
 
 /**
