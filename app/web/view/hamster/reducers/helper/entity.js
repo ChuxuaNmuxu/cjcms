@@ -23,6 +23,7 @@ export function handleEntitiesChanges (hamster, payload) {
         return objectIds.reduce((entities, id) => {
             return operations.reduce((entities, operate, path) => {
                 const objectPath = [id].concat(path.split('.'))
+                if (objectPath.some(miaow.not(miaow.existy))) return entities;
                 return entities.updateIn(objectPath, prop => operate(prop))
             }, entities)
         }, entities);
