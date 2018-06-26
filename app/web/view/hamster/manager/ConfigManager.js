@@ -1,7 +1,10 @@
+import React from 'react';
+import {Button} from 'antd'
 import {List, Map, fromJS} from 'immutable';
 import { isString } from 'lodash';
 
 import config, {extensions} from '../config';
+import blockGroupProps from '../config/block/groupProps';
 
 /**
  * 配置管理类
@@ -14,7 +17,13 @@ class ConfigManager {
     }
 
     init () {
+        this.initSlide();
         this.initBlocks();
+    }
+
+    initSlide () {
+        let slide = config.slide;
+        this.slide = slide.update('props', this.handleProps)
     }
 
     initBlocks () {
@@ -22,7 +31,7 @@ class ConfigManager {
         this.blocks = blocks.map(block => {
             block = block.update('propsbar', this.handleBlockPropsLayout);
             block = config.defaultBlockConfig.mergeDeep(block)
-            return block.update('props', this.handleBlockProps);
+            return block.update('props', this.handleProps);
         });
     }
 
@@ -61,7 +70,11 @@ class ConfigManager {
         }, null);
         // 跟默认属性合并
         props = config.defaultBlockConfig.get('props').mergeDeep(props)
-        return this.handleBlockProps(props)
+        // 组
+        if (blocks.size > 1) {
+            props = props.mergeDeep(blockGroupProps)
+        }
+        return this.handleProps(props)
     }
 
     /**
@@ -70,11 +83,14 @@ class ConfigManager {
      */
     getBlocksLayout (blocks) {
         const props = this.getBlocksProps(blocks)
+        console.log(87, props)
         let layout;
         if (blocks.size > 1) {
             const defaultProps = config.defaultBlockConfig.get('props');
             const customProps = props.filterNot((item, k) => defaultProps.has(k))
-            const customLayout = customProps.map(p => p.get('name')).toList()
+            const customLayout = customProps.map(p => p.get('name'))
+                .toList()
+                .sortBy(name => blockGroupProps.hasOwnProperty(name))
             const defaultLayout = this.getBlock('text').get('propsbar').slice(0, 2);
             layout = defaultLayout.push(Map({
                 name: 'custom',
@@ -88,6 +104,18 @@ class ConfigManager {
             props,
             layout
         };
+    }
+
+    getSlidesPropsbar (slides) {
+        const slideConfig = this.getSlideConfig();
+        return {
+            props: slideConfig.get('props'),
+            layout: slideConfig.get('propsbar')
+        }
+    }
+
+    getSlideConfig () {
+        return this.slide;
     }
 
     /**
@@ -108,10 +136,10 @@ class ConfigManager {
     }
 
     /**
-     * 递归处理block属性
-     * @param {*} block 
+     * 递归处理props属性
+     * @param {*} props 
      */
-    handleBlockProps = (props) => {
+    handleProps = (props) => {
         return props.map((v, k) => {
             // 处理属性套件
             let widget = v.get('widget')
@@ -119,10 +147,14 @@ class ConfigManager {
                 if (isString(widget)) {
                     widget = require(`../widget/props/${widget}`).default
                 }
+                /**
+                 * 从引用该widget的地方取：value、widget、props配置合并过来
+                 * 以方便引用该widget的地方可以自定义默认值，扩展属性配置
+                 */
                 v = fromJS(widget).mergeDeep(this.pickValueProps(v))
             }
             if (v.has('props')) {
-                v = v.update('props', this.handleBlockProps);
+                v = v.update('props', this.handleProps);
             }
             return v.set('name', k)
         })

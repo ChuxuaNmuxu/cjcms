@@ -1,9 +1,6 @@
 import Immutable from 'immutable';
 
 import initialState from './initialState';
-import * as helper from './helper/helper';
-import * as miaow from '../Utils/miaow';
-import * as currentHelper from './helper/current'
 import slideHelper from './helper/slide'
 
 /**

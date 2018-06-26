@@ -6,7 +6,6 @@ const actionCreaters = createActions({
     'BLOCK': {
         'ADD': pmCreater,
         'ACTIVATE': pmCreater,
-        'PROPS_CHANGE': pmCreater,
         'CLICK': pmCreater,
         'GROUP_UNITE': pmCreater,
         'ACT_START': pmCreater,

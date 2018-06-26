@@ -1,7 +1,6 @@
 import Immutable from 'immutable';
 
 import initialState from './initialState';
-import lodash from 'lodash';
 import * as helper from './helper/helper';
 import * as miaow from '../Utils/miaow';
 import * as nodeHelper from './helper/node';
@@ -15,29 +14,6 @@ function handleAddBlock (hamster, action) {
 
     hamster = helper.handleAddBlock(hamster, blocks);
     return hamster;
-}
-
-const merger = (a, b) => {
-    if (a && a.mergeWith && !Immutable.List.isList(a) && !Immutable.List.isList(b)) {
-        return a.mergeWith(merger, b)
-    }
-    return b
-}
-
-function handleChangeProps (hamster, action) {
-    const {payload} = action;
-    // 修改props
-    return hamster.update(
-        'entities',
-        entities => entities.withMutations(entities => {
-            payload.blocks.forEach(block => {
-                entities.updateIn(
-                    [block.get('id'), 'data', 'props'],
-                    props => props.mergeWith(merger, payload.props)
-                )
-            });
-        })
-    )
 }
 
 /**
@@ -251,7 +227,6 @@ const blockType = type => 'BLOCK/' + type;
 
 const block = {
     [blockType('ADD')]: handleAddBlock,
-    [blockType('PROPS_CHANGE')]: handleChangeProps,
     [blockType('DRAG_END')]: handleDragEnd,
     [blockType('CLICK')]: handleClickBlock,
     [blockType('GROUP_UNITE')]: handleUnite,

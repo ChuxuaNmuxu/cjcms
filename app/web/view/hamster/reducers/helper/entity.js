@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable';
+import {List, fromJS} from 'immutable';
 import * as miaow from '../../Utils/miaow';
 import * as lodash from 'lodash';
 import {immrPick} from '../../utils/utils'
@@ -43,4 +43,27 @@ export const getProp = hamster => id => propPath => {
  */
 export const getEntitiesByType = (hamster, type) => {
     return immrPick(hamster.get('entities'), hamster.getIn(['index', type]));
+}
+
+// 用于合并属性
+const propsMerger = (a, b) => {
+    if (a && a.mergeWith && !List.isList(a) && !List.isList(b)) {
+        return a.mergeWith(propsMerger, b)
+    }
+    return b
+}
+
+/**
+ * 实体属性变更
+ * @param {*} hamster 
+ * @param {*} payload 
+ */
+export const changeEntitiesProps = (hamster, payload) => {
+    // 修改props
+    return handleEntitiesChanges(hamster, fromJS({
+        ids: payload.entityIds,
+        operations: {
+            'data.props': props => props.mergeWith(propsMerger, payload.props)
+        }
+    }))
 }

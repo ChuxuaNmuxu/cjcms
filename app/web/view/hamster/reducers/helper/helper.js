@@ -9,7 +9,8 @@ import ConfigManager from '../../manager/ConfigManager';
 import * as entityHelper from './entity';
 import * as blockHelper from './block';
 import * as nodeHelper from './node';
-import * as currentHelper from './current';import {extractBlockData} from '../../utils/block';
+import * as currentHelper from './current';
+import {extractBlockData} from '../../utils/block';
 
 // 生成ID
 export function createId (prefix='', suffix='') {
