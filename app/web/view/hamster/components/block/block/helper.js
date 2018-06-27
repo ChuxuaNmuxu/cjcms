@@ -12,7 +12,7 @@ import Container from '../container';
 
 // 其他情况
 const someOthers = (error) => {
-    return props => <Container config={true} {...props}>
+    return props => <Container {...props} config={true}>
         <div style={{color: 'red'}}>
             {`config not support yet, please check: ${error}`}
         </div>
@@ -24,7 +24,7 @@ const contentIsComponent = (ContentComponent) => {
     // function or class
     if (!isValidateReactComponent(ContentComponent)) return undefined;
 
-    return props => <Container config={true} {...props}>
+    return props => <Container {...props} config={true} >
         <ContentComponent {...props} />
     </Container>
 }
@@ -38,7 +38,7 @@ const componentIsComponent = (contentConfig) => {
     const containerConfig = contentConfig.get('container');
     if (!containerConfig) return contentIsComponent(ContentComponent)
 
-    return props => <Container config={containerConfig} {...props}>
+    return props => <Container {...props} config={containerConfig}>
         <ContentComponent {...props} />
     </Container>
 }
@@ -48,7 +48,7 @@ const componentIsNull = (contentConfig) => {
     if (contentConfig.get('component') !== null) return undefined;
 
     const containerConfig = contentConfig.get('container');
-    return props => <Container config={containerConfig} {...props}/>
+    return props => <Container {...props} config={containerConfig}/>
 }
 
 // @config object 配置对象

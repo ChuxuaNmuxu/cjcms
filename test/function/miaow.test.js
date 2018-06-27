@@ -137,8 +137,17 @@ test('test not', () => {
     expect(miaow.not(b)(33)).toEqual(false)
 })
 
-test.only('test arrMinus', () => {
+test('test arrMinus', () => {
     // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
 
     expect(miaow.arrMinus([1, 2])([4, 5])).toEqual([-3, -3])
 })
+
+test.only('test shallowEqual', () => {
+    // expect(miaow.getComplement(Immutable.List([1, 2, 2, 3]), Immutable.List([1, 2, 4]))).toThrowError('to be relationship of subset')
+    const a = {a: Immutable.fromJS({a: 1})}
+    const b = {a: Immutable.fromJS({a: 1})}
+
+    expect(miaow.shallowEqual(a, b)).toBe(true)
+})
+

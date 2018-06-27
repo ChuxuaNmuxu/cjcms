@@ -9,6 +9,7 @@ import styles from './RotateSection.scss'
 import {isValidateReactComponent} from '../../../Utils/miaow'
 import blockActions from '../../../actions/block';
 import { getRotateAngle, getBlockCenterOffset } from '../../../utils/block';
+import PureContainerComponent from './PureContainerComponent';
 
 const spec = {
     init: function (props, monitor) {
@@ -86,7 +87,7 @@ const collect = (monitor, connector) => ({
 
 @rotateSource('container', spec, collect)
 @CSSModules(styles)
-class RotateSection extends React.Component {
+class RotateSection extends PureContainerComponent {
     static displayName = 'RotateSection'
 
     static propTypes = {
@@ -98,17 +99,13 @@ class RotateSection extends React.Component {
         rotateEnd: PropTypes.func
     }
 
-    shouldComponentUpdate () {
-        return false;
-    }
-
     render() {
         const {rotateSource, config, ...rest} = this.props;
 
         if (!config) return null;
 
         const RotateComponent = config;
-        if (isValidateReactComponent(RotateComponent)) return <RotateComponent {...rest}/>
+        if (isValidateReactComponent(RotateComponent)) return <RotateComponent {...this.props}/>
 
         return (
             <div styleName='rotate-wrap' className='rotate-wrap'>

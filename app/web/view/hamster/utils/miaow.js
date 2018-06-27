@@ -374,6 +374,9 @@ export const getBox = (a, b) => {
 export const shallowEqual = (a, b) => {
     if (a === b) return true;
 
+    // immutable
+    if (Immutable.is(a, b)) return true;
+
     if (!existy(a) || !existy(b)) return false;
 
     if (lodash.isArray(a) && lodash.isArray(b)) {
@@ -395,9 +398,8 @@ export const shallowEqual = (a, b) => {
 	// Test for A's keys different from B.
 	var hasOwn = Object.prototype.hasOwnProperty;
 	for (var i = 0; i < keysA.length; i += 1) {
-		if (!hasOwn.call(b, keysA[i]) || a[keysA[i]] !== b[keysA[i]]) {
-			return false;
-		}
+        if (!hasOwn.call(b, keysA[i])) return false;
+        if (a[keysA[i]] !== b[keysA[i]] && !Immutable.is(a[keysA[i]], b[keysA[i]])) return false;
 	}
 
 	return true;

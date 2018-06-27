@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 
 import blockActions from '../../../actions/block';
+import configManager from '../../../manager/ConfigManager';
 import getDefaultBlock from './helper';
 
 // @withHamster()
@@ -28,10 +29,13 @@ export class Component extends React.Component {
         super(props, context);
         
         const {block} = props;
-        const Block = getDefaultBlock(block.getIn(['data', 'type']));
+        const type = block.getIn(['data', 'type']);
+        const Block = getDefaultBlock(type);
+        const blockConfig = configManager.getBlock(type);
 
         this.state = {
-            Block
+            Block,
+            blockConfig
         }
     }
     
@@ -52,22 +56,15 @@ export class Component extends React.Component {
     // }
 
     render () {
-        const {children, ...rest} = this.props;
-        const {Block} = this.state;
+        const {Block, blockConfig} = this.state;
         // const props = {
         //     ...rest,
         //     clickBlock: this.handleClick
         // }
 
-        return <Block {...rest} />
+        return <Block {...this.props} config={blockConfig}/>
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        clickBlock: (payload) => dispatch(blockActions.click(payload))
-    }
-}
-
-export default connect(null, mapDispatchToProps)(Component);
+export default Component
 // CSSModules(Component, styles, {allowMultiple: true})

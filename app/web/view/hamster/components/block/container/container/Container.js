@@ -28,16 +28,17 @@ class Container extends Component {
 
         if (isValidateReactComponent(this.config)) {
             const Container = this.config;
-            return <Container {...props} />
+            return <Container {...this.props} />
         }
 
         const {children, block, active} = this.props;
         const [dragConfig, rotateConfig, resizeConfig] = destruction('draggable', 'rotatable', 'resizable')(this.config)
 
-        const props = {block, active}
+        const containerProps = {block, active}
+        const props = {block, active, children}
         return (
-            <ContainerSection {...props}>
-                <DragSection config={dragConfig} {...props}>{children}</DragSection>
+            <ContainerSection {...containerProps}>
+                <DragSection config={dragConfig} {...props} />
                 <ResizeSection config={resizeConfig} {...props}/>
                 <RotateSection config={rotateConfig} {...props}/>
             </ContainerSection>

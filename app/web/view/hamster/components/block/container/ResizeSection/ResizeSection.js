@@ -8,6 +8,8 @@ import styles from './ResizeSection.scss'
 import parseConfig from './configManager'
 import resizeSource from '../../decorator/operation/resize';
 import blockActions from '../../../../actions/block';
+import PureContainerComponent from '../PureContainerComponent';
+import { isValidateReactComponent } from '../../../../Utils/miaow';
 
 
 const spec = {
@@ -67,7 +69,7 @@ const collect = (monitor, connect) => ({
 
 @resizeSource('container', spec, collect)
 @CSSModules(styles)
-class ResizeSection extends React.Component {
+class ResizeSection extends PureContainerComponent {
     static propTypes = {
         resizeNorth: PropTypes.func,
         resizeSouth: PropTypes.func,
@@ -94,13 +96,11 @@ class ResizeSection extends React.Component {
         this.options = parseConfig(props.config);
     }
     
-
-    shouldComponentUpdate(nextProps) {
-        return this.props.config !== nextProps.config
-    }
-
     render() {
-        const {resizeNorth, resizeSouth, resizeEast, resizeWest, resizeNW, resizeNE,  resizeSW, resizeSE} = this.props;
+        const {resizeNorth, resizeSouth, resizeEast, resizeWest, resizeNW, resizeNE,  resizeSW, resizeSE, config} = this.props;
+
+        const MaybeComponent = config;
+        if (isValidateReactComponent(MaybeComponent)) return <MaybeComponent {...this.props}/>
 
         return (
             <React.Fragment>

@@ -9,6 +9,7 @@ import {omit} from 'lodash'
 
 import blockActions from '../../../actions/block';
 import { isValidateReactComponent, shallowEqual } from '../../../Utils/miaow';
+import PureContainerComponent from './PureContainerComponent';
 
 const spec = {
     beginDrag (props, component) {
@@ -60,7 +61,7 @@ const collect = (monitor, connect) => {
 
 @DragSource('block', spec, collect)
 @CSSModules(styles)
-class DragSection extends React.Component {
+class DragSection extends PureContainerComponent {
     static displayName = 'DragSection'
 
     static propTypes = {
@@ -72,20 +73,15 @@ class DragSection extends React.Component {
         dragEnd: PropTypes.func
     }
 
-    shouldComponentUpdate = (nextProps) => {
-        const prevProps = omit(this.props, 'children');
-        const props = omit(nextProps, 'children');
-
-        return !shallowEqual(prevProps, props)
-    }
-
     render() {
-        const {dragSource, config, children, ...rest} = this.props;
+        const {dragSource, config, children} = this.props;
+
 
         if (!config) return null;
 
-        const DragComponent = config;
-        if (isValidateReactComponent(DragComponent)) return <DragComponent {...this.props}/>
+        const MaybeDragComponent = config;
+        if (isValidateReactComponent(MaybeDragComponent)) return <MaybeDragComponent {...this.props}/>
+
 
         return (
             dragSource(<div styleName='drag-wrap' className='drag-wrap' >{children}</div>)
