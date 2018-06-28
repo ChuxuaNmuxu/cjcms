@@ -1,55 +1,52 @@
 import styleConfig, {add} from './styleConfig';
 import {isFunction, reduce, flowRight, curryRight, curry, values, keys, join, filter, pickBy} from 'lodash';
 import {Map, fromJS} from 'immutable';
-
-const choose = (...args) => {
-    return (...args) => {
-        args.forEach(fn => {
-            const result = fn(...args)
-            if (result !== undefined) return result;
-        })
-    }
-}
+import { getBlockConfigByData } from '../../../../utils/config';
 
 /**
  * 处理嵌套的属性
  * @param {Map} props 
  * @param {Map} propsConfig
- * @param {Map} initData
  */
-const handleNestProps = (props, initData, propsConfig) => {
-    return props.reduce((acc, v, k) => {
-        // 优先取数据内的formatter
-        const formatter = propsConfig.getIn([k, 'formatter']);
-        const name = propsConfig.getIn([k, 'name']) || k;
-        
+const handleNestProps = (props, initData, propsConfig=Map()) => {
+    return propsConfig.reduce((acc, v, k) => {
+        // 嵌套属性
+        if (Map.isMap(v) && v.get('props')) {
+            handleNestProps(props, acc, v.get('props'));
+            return acc;
+        }
 
+        /**
+         * 自定义formatter对属性解析
+         * 内置formatter对常用属性解析
+         * 默认使用该值
+         * */
+        // 优先取数据内的formatter
+        const formatter = v.get('formatter') || styleConfig.getIn([k, 'formatter']);
+        const name = styleConfig.getIn([k, 'name']) || k;
+        const value = props.get(k);
+        
         if (!formatter) {
-            // 嵌套属性
-            if (Map.isMap(v)) {
-                handleNestProps(v, acc, propsConfig);
-                return acc;
-            }
             // 没有formatter直接取值
-            acc[name] = v;
+            acc[name] = value;
             return acc;
         }
 
         // 有formatter使用formatter
-        acc[name] = isFunction(formatter) ? formatter(v) : null;
+        acc[name] = isFunction(formatter) ? formatter(value) : null;
         return acc;
     }, initData)
 }
-
-const configProps = curryRight(handleNestProps)(styleConfig);
 
 /**
  * 生成基础style
 */
 export const baseStyleParser = block => {
+    const blockConfig = getBlockConfigByData(block);
+    const propsConfig = blockConfig.get('props');
     const props = block.getIn(['data', 'props']);
 
-    const style = configProps(props, {})
+    const style = handleNestProps(props.flatten(), {}, propsConfig)
     return {
         block,
         style
@@ -104,7 +101,7 @@ export const filterNotObject = style => {
  * aniamtion 单独处理
 */
 const animationParse = props => {
-    const {block} = props;
+    const {block, style} = props;
     const animationProps = block.getIn(['data', 'props', 'animation']);
     if (!animationProps) return props;
 
@@ -112,11 +109,11 @@ const animationParse = props => {
      * 入场时触发返回正常动画
      * 点击触发返回reveal自定义属性
      */
-    props.style = filterNotObject(props.style)(animationProps);
+    // props.style = filterNotObject(props.style)(animationProps);
     const trigger = animationProps.get('trigger');
     if (trigger === 'click') {
         // 删除style内的animation
-
+        props.style = pickBy(style, (v, k) => !/animation/.test(k));
         return {
             ...props,
             animation: {
@@ -126,14 +123,6 @@ const animationParse = props => {
         }
     }
 
-    // animation css属性
-    props.style.animation = flowRight(
-        add(' forwards'),
-        curryRight(join)(' '),
-        values,
-        configProps({}),
-        curry(removeProps)(fromJS(['trigger', 'index']))
-    )(animationProps);
     return props;
 }
 

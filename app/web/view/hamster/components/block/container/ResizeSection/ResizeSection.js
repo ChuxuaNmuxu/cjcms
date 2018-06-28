@@ -9,7 +9,7 @@ import parseConfig from './configManager'
 import resizeSource from '../../decorator/operation/resize';
 import blockActions from '../../../../actions/block';
 import PureContainerComponent from '../PureContainerComponent';
-import { isValidateReactComponent } from '../../../../Utils/miaow';
+import { isValidateReactComponent } from '../../../../utils/miaow';
 
 
 const spec = {
