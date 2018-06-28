@@ -7,10 +7,11 @@ import {connect} from 'react-redux'
 import styles from './ContainerSection.scss';
 import styleParser from '../decorator/style';
 import blockActions from '../../../actions/block';
+import PureContainerComponent from './PureContainerComponent';
 
 @styleParser()
 @CSSModules(styles, {allowMultiple: true})
-class ContainerSection extends Component {
+class ContainerSection extends PureContainerComponent {
     static displayName = 'ContainerSection'
 
     static propTypes = {
