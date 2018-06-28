@@ -7,7 +7,7 @@ import RotateSection from './RotateSection'
 import lodash from 'lodash'
 import uuid from 'uuid'
 import {Map} from 'immutable'
-import * as miaow from '../../../Utils/miaow'
+import * as miaow from '../../../utils/miaow'
 import defaultBlockConfig from '../../../config/block'
 const defaultContainerConfig = Map(defaultBlockConfig.content.container)
 

@@ -2,8 +2,8 @@ import lodash, {mapKeys} from 'lodash';
 import uuid from 'uuid';
 import Immutable, {fromJS} from 'immutable'
 
-import * as miaow from '../../Utils/miaow';
-// import BlockUtils from '../../Utils/BlockUtils';
+import * as miaow from '../../utils/miaow';
+// import BlockUtils from '../../utils/BlockUtils';
 // import {defaultBlockConfig} from '../../config/config';
 import ConfigManager from '../../manager/ConfigManager';
 import * as entityHelper from './entity';

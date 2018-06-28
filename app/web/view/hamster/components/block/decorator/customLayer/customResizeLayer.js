@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import { handleResize } from '../../../../reducers/helper/helper';
 import resizeLayler from '../../decorator/operation/resize/ResizeLayer';
-import { omit } from '../../../../Utils/miaow';
+import { omit } from '../../../../utils/miaow';
 import customDragLayerFactory from './CustomLayer';
 
 const omitProps = omit('offset', 'isResizing');
