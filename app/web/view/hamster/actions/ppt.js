@@ -5,6 +5,7 @@ import {pmCreater} from './helper'
 const actionCreaters = createActions({
     'PPT': {
         'INIT': pmCreater,
+        'SAVE_DATA': pmCreater
     }
 })
 
