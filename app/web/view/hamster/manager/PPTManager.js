@@ -1,6 +1,6 @@
 import HamsterManager from './HamsterManager';
 import pptActions from '../actions/ppt'
-import {block} from '../reducers/block'
+import {block} from '../reducers/block/block'
 import { fromJS } from 'immutable';
 
 class EditorManager extends HamsterManager {
