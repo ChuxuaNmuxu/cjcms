@@ -23,7 +23,7 @@ const props = {
         validator: [{
             type: 'number'
         }],
-        formatter: () => {}
+        formatter: v => v + 'px'
     },
     top: {
         title: '上边距', // 标题，可支持自定义模板

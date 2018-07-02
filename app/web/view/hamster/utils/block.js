@@ -1,6 +1,6 @@
 import {Map} from 'immutable';
 
-import * as miaow from '../utils/miaow'
+import * as miaow from './miaow'
 import {createEntity, extractEntityProps} from './entity'
 
 /**
@@ -32,8 +32,6 @@ export const getBlockCenterOffset = (block, rotateHandleOffset, rotateRadius) =>
     rotateRadius = rotateRadius || (blockHeight / 2 + ROTATE_HANDLE_LENGTH);
     rotateRadius = Number(rotateRadius.toFixed(2))
 
-    console.log(89, rotateHandleOffset, rotateRadius, rotation)
-
     const blockCenterClientOffset = {
         x: rotateHandleOffset.x - rotateRadius * Math.sin(rotation * Math.PI / 180),
         y: rotateHandleOffset.y + rotateRadius * Math.cos(rotation * Math.PI / 180)
@@ -51,12 +49,18 @@ export const getBlockCenterOffset = (block, rotateHandleOffset, rotateRadius) =>
  */
 export const getRotateAngle = (block, initialClientOffset, endClientOffset, rotateRadius) => {
     const blockCenterClientOffset = getBlockCenterOffset(block, initialClientOffset, rotateRadius)
-    console.log('blockCenterClientOffset: ', blockCenterClientOffset)
 
     const rotateAngle = miaow.getAngleByThreeCoord.apply(null, [blockCenterClientOffset, initialClientOffset, endClientOffset].map(miaow.getCoord));
 
     return rotateAngle
 } 
+
+/**
+ * 获取block的type，block.type对应于配置的config.name
+ * 结合configManager.getBlock获取block配置
+ * @param {*} block 来自reducer的数据
+ */
+export const getBlockType = block => block.getIn(['data', 'type']);
 
 export {
     createBlock // 创建block元素

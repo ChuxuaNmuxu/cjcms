@@ -211,7 +211,7 @@ function handleDeleteBlock (hamster, action) {
 }
 
 const namespace = 'BLOCK';
-const block = {
+export const block = {
     'ADD': handleAddBlock,
     'DRAG_END': handleDragEnd,
     'CLICK': handleClickBlock,

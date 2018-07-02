@@ -1,4 +1,4 @@
-import * as miaow from '../../app/web/view/hamster/Utils/miaow';
+import * as miaow from '../../app/web/view/hamster/utils/miaow';
 import Immutable from 'immutable';
 import _ from 'lodash';
 

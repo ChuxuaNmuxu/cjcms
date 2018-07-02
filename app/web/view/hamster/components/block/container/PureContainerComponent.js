@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallowEqual } from '../../../Utils/miaow';
+import { shallowEqual } from '../../../utils/miaow';
 import {omit} from 'lodash'
 
 export default class PureContainerComponent extends React.Component {

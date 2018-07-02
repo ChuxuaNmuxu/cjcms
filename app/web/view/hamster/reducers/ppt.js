@@ -16,9 +16,20 @@ function handlePPTInit (hamster, action) {
     return hamster;
 }
 
+/**
+ * 保存hamster
+ * @param {*} hamster 
+ * @param {*} action 
+ */
+function handleSaveData (hamster, action) {
+    if (!action.payload) return hamster;
+    return action.payload;
+}
+
 const namespace = 'PPT';
 const ppt = {
     'INIT': handlePPTInit,
+    'SAVE_DATA': handleSaveData
 }
 
 export default helper.createReducer(initialState.hamster, ppt, namespace);

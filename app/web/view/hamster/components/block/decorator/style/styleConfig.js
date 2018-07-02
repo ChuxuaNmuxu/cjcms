@@ -1,4 +1,5 @@
 import {fromJS} from 'immutable';
+import { always } from '../../../../utils/miaow';
 
 export const add = unit => value => `${value}${unit}`;
 const addPx = add('px');
@@ -33,11 +34,22 @@ const styleConfig = {
     'opacity': {
         formatter: (value) => `${value / 100}`
     },
-    'animationDuration': {
+    'duration': {
+        name: 'animationDuration',
         formatter: addMs
     },
-    'animationDelay': {
+    'delay': {
+        name: 'animationDelay',
         formatter: addMs
+    },
+    'effect': {
+        name: 'animationName'
+    },
+    'trigger': {
+        formatter: always(null)
+    },
+    'index': {
+        formatter: always(null)
     }
 }
 
