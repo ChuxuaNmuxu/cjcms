@@ -2,7 +2,8 @@ import { fromJS } from 'immutable';
 import {connect} from 'react-redux';
 
 import { handleRotate } from '../../../../reducers/helper/helper';
-import rotateLayler from '../../decorator/operation/rotate/RotateLayer';
+// import rotateLayler from '../../decorator/operation/rotate/RotateLayer';
+import {RotateLayer} from 'my-ts-app';
 import { getRotateAngle } from '../../../../utils/block';
 import { omit } from '../../../../utils/miaow';
 import customDragLayerFactory from './CustomLayer';
@@ -10,7 +11,7 @@ import customDragLayerFactory from './CustomLayer';
 const omitProps = omit('initialClientOffset', 'item', 'clientOffset', 'isRotating', 'offset');
 
 export const customRotateLayer = customDragLayerFactory({
-    layerType: rotateLayler,
+    layerType: RotateLayer,
     actType: 'isRotating',
     omitProps,
     getEntities: props => {

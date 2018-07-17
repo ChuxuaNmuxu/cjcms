@@ -17,3 +17,5 @@ test.js
 
 app/web/framework
 app/web
+
+**/my-ts-app/*

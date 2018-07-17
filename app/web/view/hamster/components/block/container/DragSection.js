@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import CSSModules from 'react-css-modules';
 import styles from './DragSection.scss';
-import {DragSource} from '../decorator/operation/drag';
+// import {DragSource} from '../decorator/operation/drag';
+import {DragSource} from 'my-ts-app'
 import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 import {omit} from 'lodash'
@@ -26,7 +27,7 @@ const spec = {
 
     drag (props, monitor) {
         const {drag, block} = props;
-        const offset = monitor.getOffset();
+        const offset = monitor.getDifferenceFromInitialOffset();
         drag && drag(fromJS({
             offset,
             blockId: block.get('id')
@@ -43,7 +44,7 @@ const spec = {
 
     endDrag (props, monitor, component) {
         const {dragEnd, block} = props;
-        const offset = monitor.getOffset();
+        const offset = monitor.getDifferenceFromInitialOffset();
 
         dragEnd && dragEnd(fromJS({
             offset,
@@ -52,7 +53,7 @@ const spec = {
     }
 }
 
-const collect = (monitor, connect) => {
+const collect = (connect, monitor) => {
     return {
         monitor,
         dragSource: connect.dragSource()

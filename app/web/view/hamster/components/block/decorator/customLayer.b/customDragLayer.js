@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 
-import dragLayer from '../../decorator/operation/drag/DragLayer';
+// import dragLayer from '../../decorator/operation/drag/DragLayer';
+import {DragLayer} from 'my-ts-app';
 import { handleDrag} from '../../../../reducers/helper/helper';
 import { omit } from '../../../../utils/miaow';
 import customLayerFactory from './CustomLayer';
@@ -9,12 +10,12 @@ const omitProps = omit('offset', 'item', 'isDragging', 'hamster');
 
 const collect = (monitor, props) => ({
     item: monitor.getItem(),
-    offset: monitor.getOffset(),
+    offset: monitor.getDifferenceFromInitialOffset(),
     isDragging: monitor.isDragging()
 })
 
 export const customDragLayer = customLayerFactory({
-    layerType: dragLayer,
+    layerType: DragLayer,
     actType: 'isDragging',
     omitProps,
     getEntities: props => {

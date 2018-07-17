@@ -12,7 +12,8 @@ import Immutable, {fromJS} from 'immutable';
 
 import Slide from '../slide'
 import { getBox, shallowEqual, map, getCoord, destruction, get } from '../../utils/miaow';
-import getEmptyImage from '../block/decorator/operation/base/getEmptyImage';
+// import getEmptyImage from '../block/decorator/operation/base/getEmptyImage';
+import {getEmptyImage} from 'my-ts-app'
 import {ContainerSection, ResizeSection, RotateSection, DragSection} from '../block/container';
 import { handleDragBlock, handleResizeBlocks, handleRotateBlocks } from '../../reducers/helper/helper';
 import prevParseConfig from './helper';
