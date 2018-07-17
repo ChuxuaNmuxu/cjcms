@@ -27,6 +27,6 @@ const createManager = (options) => class {
     getActions () {
         return manager.getActions()
     }
-} 
+}
 
 export default createManager;

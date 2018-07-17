@@ -24,7 +24,7 @@ class EditorManager extends HamsterManager {
     // 将hamster合并到reduce
     finally () {
         if (this.pipeHamster === null) return;
-        
+
         // dispatch将hamster合并到reduce的action
         this.dispatch(pptActions.saveData(fromJS({hamster: this.pipeHamster})))
         this.pipeHamster = null;
