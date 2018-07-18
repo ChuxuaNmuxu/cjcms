@@ -16,6 +16,7 @@
     "debug": "egg-bin debug"
   },
   "dependencies": {
+    "@~sunsimiao/cj-react-dnd": "^1.0.1",
     "antd": "^3.0.3",
     "babel-runtime": "^6.26.0",
     "cross-env": "^5.0.0",
@@ -94,8 +95,6 @@
     "react-color": "^2.14.0",
     "react-css-modules": "git+https://github.com/cjfed/react-css-modules.git#c1f168d2fe1d9508f236845c31c0726f73f0226e",
     "react-custom-scrollbars": "^4.2.1",
-    "react-dnd": "^2.6.0",
-    "react-dnd-html5-backend": "^2.6.0",
     "react-draft-wysiwyg": "^1.12.11",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",

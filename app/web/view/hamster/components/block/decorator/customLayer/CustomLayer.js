@@ -3,10 +3,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {reduce, omit} from 'lodash'
 import {connect} from 'react-redux'
-import { Layer } from 'my-ts-app';
+import { Layer } from '@~sunsimiao/cj-react-dnd';
 import hoistNonReactStatics  from 'hoist-non-react-statics'
-import { handleDrag } from '../../../../reducers/helper/helper';
+import { handleDrag, handleResize, handleRotate } from '../../../../reducers/helper/helper';
 import {fromJS} from 'immutable'
+import { getRotateAngle } from '../../../../utils/block';
 
 const collectOptions = ['initialClientOffset', 'clientOffset', 'offset', 'item',
 'isDragging', 'isResizing', 'isRotating', 'direction', 'hamster', 'dispatch']
@@ -36,7 +37,18 @@ const customLayer = (options) => DecoratedComponent => {
     @connect(mapStateToProps)
     class CustomLayer extends Component {
         static propTypes = {
-            prop: PropTypes
+            initialClientOffset: PropTypes.object,
+            clientOffset: PropTypes.object,
+            offset: PropTypes.object,
+            item: PropTypes.object,
+            isDragging: PropTypes.bool,
+            isResizing: PropTypes.bool,
+            isRotating: PropTypes.bool,
+            direction: PropTypes.string,
+            hamster: PropTypes.object,
+            dispatch: PropTypes.func,
+            blockIds: PropTypes.object,
+            currentBlocks: PropTypes.object
         }
     
         render() {

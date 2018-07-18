@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 
-import dragLayer from 'my-ts-app/DragLayer';
-// import {DragLayer} from 'my-ts-app'
+import dragLayer from '@~sunsimiao/cj-react-dnd/DragLayer';
+// import {DragLayer} from '@~sunsimiao/cj-react-dnd'
 
 import { handleDrag, handleRotate, handleResize } from '../../../reducers/helper/helper';
 import { withHamster } from '../../../manager';

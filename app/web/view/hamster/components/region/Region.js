@@ -13,7 +13,7 @@ import Immutable, {fromJS} from 'immutable';
 import Slide from '../slide'
 import { getBox, shallowEqual, map, getCoord, destruction, get } from '../../utils/miaow';
 // import getEmptyImage from '../block/decorator/operation/base/getEmptyImage';
-import {getEmptyImage} from 'my-ts-app'
+import {getEmptyImage} from '@~sunsimiao/cj-react-dnd'
 import {ContainerSection, ResizeSection, RotateSection, DragSection} from '../block/container';
 import { handleDragBlock, handleResizeBlocks, handleRotateBlocks } from '../../reducers/helper/helper';
 import prevParseConfig from './helper';
@@ -130,6 +130,8 @@ class Region extends Component {
     }
 
     handleDragStart = e => {
+        // e.dataTransfer.effectAllowed = "copy"
+
         this.initialClientCoord = {
             x: e.clientX,
             y: e.clientY
@@ -230,7 +232,9 @@ class Region extends Component {
             //   onDrag={this.handleDrag}
               onDragOver={this.handleDragover}
               onDragEnd={this.handleDragEnd}
+              // 鼠标从框上出来时，去除禁止符号
               onDragEnter={e => e.preventDefault()}
+            //   onDrop={e => e.dataTransfer.dropEffect = 'copy'}
             >
                 {children}
                 <Slide.Component

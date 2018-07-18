@@ -5,7 +5,7 @@ import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 
 // import rotateSource from '../decorator/operation/rotate';
-import {rotateSource} from 'my-ts-app'
+import {rotateSource} from '@~sunsimiao/cj-react-dnd'
 import styles from './RotateSection.scss'
 import {isValidateReactComponent} from '../../../utils/miaow'
 import blockActions from '../../../actions/block';

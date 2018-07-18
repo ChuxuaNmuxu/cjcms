@@ -7,7 +7,7 @@ import {fromJS} from 'immutable'
 import styles from './ResizeSection.scss'
 import parseConfig from './configManager'
 // import resizeSource from '../../decorator/operation/resize';
-import {resizeSource} from 'my-ts-app'
+import {resizeSource} from '@~sunsimiao/cj-react-dnd'
 import blockActions from '../../../../actions/block';
 import PureContainerComponent from '../PureContainerComponent';
 import { isValidateReactComponent } from '../../../../utils/miaow';

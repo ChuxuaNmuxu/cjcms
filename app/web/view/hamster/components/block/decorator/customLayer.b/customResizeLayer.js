@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import { handleResize } from '../../../../reducers/helper/helper';
 // import resizeLayler from '../../decorator/operation/resize/ResizeLayer';
-import {ResizeLayer} from 'my-ts-app';
+import {ResizeLayer} from '@~sunsimiao/cj-react-dnd';
 import { omit } from '../../../../utils/miaow';
 import customDragLayerFactory from './CustomLayer';
 
