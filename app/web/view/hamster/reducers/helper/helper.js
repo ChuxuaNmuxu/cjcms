@@ -355,7 +355,7 @@ export const handleAddBlock = (hamster, blocks) => {
         hamster.update(
             'entities',
             entities => blocks.reduce(
-                (acc, block) => entities.set(block.get('id'), block),
+                (acc, block) => acc.set(block.get('id'), block),
                 entities
             )
         );
