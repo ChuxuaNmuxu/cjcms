@@ -9,6 +9,9 @@ function handleChangeProps (hamster, {payload}) {
     return entityHelper.changeEntitiesProps(hamster, payload)
 }
 
+const handleEntitiesChange = (hamster, {payload}) => entityHelper.handleEntitiesChanges(hamster, payload)
+
 export const entity = {
     'PROPS_CHANGE': handleChangeProps,
+    'ENTITIES_CHANGE': handleEntitiesChange
 }
