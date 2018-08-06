@@ -5,6 +5,7 @@ import {pmCreater} from './helper'
 const actionCreaters = createActions({
     'ENTITY': {
         'PROPS_CHANGE': pmCreater,
+        'ENTITIES_CHANGE': pmCreater
     }
 })
 

@@ -56,6 +56,13 @@ class Hamster extends StoreManager {
         return this.blockManager.getActivatedBlockIds()
     }
 
+    /**
+     * 更新entities属性
+     */
+    changeEntitiesProps (ids, props) {
+        this.entityManager.changeEntitiesProps(ids, props)
+    }
+
     getSubscriber () {
         return this.subscriber;
     }
