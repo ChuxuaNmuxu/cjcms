@@ -5,9 +5,11 @@ import CSSModules from 'react-css-modules';
 import styles from './Viewport.scss';
 import Slide from '../slide'
 import BoxSelection from '../../components/boxSelection'
-import customDisplayLayler from '../block/decorator/customLayer'
+// import customDisplayLayler from '../block/decorator/customLayer'
+import customLayer from '../block/decorator/customLayer/CustomLayer'
 
-@customDisplayLayler()
+// @customDisplayLayler()
+@customLayer()
 @CSSModules(styles)
 class Viewport extends React.Component {
     render () {

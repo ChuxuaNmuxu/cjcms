@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 
-import dragLayer from '../decorator/operation/DragLayer';
+import dragLayer from '@~sunsimiao/cj-react-dnd/DragLayer';
+// import {DragLayer} from '@~sunsimiao/cj-react-dnd'
+
 import { handleDrag, handleRotate, handleResize } from '../../../reducers/helper/helper';
 import { withHamster } from '../../../manager';
 import { fromJS } from 'immutable';
@@ -12,7 +14,7 @@ import { getEntity } from '../../../reducers/helper/entity';
 const collect = (monitor, props) => ({
     initialClientOffset: monitor.getInitialClientOffset(),
     clientOffset: monitor.getClientOffset(),
-    offset: monitor.getOffset(),
+    offset: monitor.getDifferenceFromInitialOffset(),
     resizeDirction: monitor.getState().dragOperation.sourceOptions.dir,
     isActing: monitor.isActing()
 })

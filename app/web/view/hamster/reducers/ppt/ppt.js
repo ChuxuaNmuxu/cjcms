@@ -1,6 +1,4 @@
-import initialState from './initialState';
-import * as helper from './helper/helper';
-import * as currentHelper from './helper/current'
+import * as currentHelper from '../helper/current'
 
 /**
  * 初始化PPT
@@ -26,10 +24,7 @@ function handleSaveData (hamster, action) {
     return action.payload;
 }
 
-const namespace = 'PPT';
-const ppt = {
+export const ppt = {
     'INIT': handlePPTInit,
     'SAVE_DATA': handleSaveData
 }
-
-export default helper.createReducer(initialState.hamster, ppt, namespace);

@@ -4,7 +4,8 @@ import CSSModules from 'react-css-modules'
 import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 
-import rotateSource from '../decorator/operation/rotate';
+// import rotateSource from '../decorator/operation/rotate';
+import {rotateSource} from '@~sunsimiao/cj-react-dnd'
 import styles from './RotateSection.scss'
 import {isValidateReactComponent} from '../../../utils/miaow'
 import blockActions from '../../../actions/block';
@@ -80,8 +81,8 @@ const spec = {
     }
 }
 
-const collect = (monitor, connector) => ({
-    rotateSource: connector.connect()
+const collect = (connector, monitor) => ({
+    rotateSource: connector.rotateSource()
 })
 
 

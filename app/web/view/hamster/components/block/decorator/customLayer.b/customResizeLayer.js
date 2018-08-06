@@ -2,20 +2,21 @@ import { fromJS } from 'immutable';
 import {connect} from 'react-redux'
 
 import { handleResize } from '../../../../reducers/helper/helper';
-import resizeLayler from '../../decorator/operation/resize/ResizeLayer';
+// import resizeLayler from '../../decorator/operation/resize/ResizeLayer';
+import {ResizeLayer} from '@~sunsimiao/cj-react-dnd';
 import { omit } from '../../../../utils/miaow';
 import customDragLayerFactory from './CustomLayer';
 
 const omitProps = omit('offset', 'isResizing');
 
 const collect = (monitor) => ({
-    offset: monitor.getOffset(),
+    offset: monitor.getDifferenceFromInitialOffset(),
     direction: monitor.getDirection(),
     isResizing: monitor.isResizing()
 })
 
 export const customResizeLayer = customDragLayerFactory({
-    layerType: resizeLayler,
+    layerType: ResizeLayer,
     actType: 'isResizing',
     omitProps,
     collect,

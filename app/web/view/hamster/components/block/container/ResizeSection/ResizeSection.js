@@ -6,7 +6,8 @@ import {fromJS} from 'immutable'
 
 import styles from './ResizeSection.scss'
 import parseConfig from './configManager'
-import resizeSource from '../../decorator/operation/resize';
+// import resizeSource from '../../decorator/operation/resize';
+import {resizeSource} from '@~sunsimiao/cj-react-dnd'
 import blockActions from '../../../../actions/block';
 import PureContainerComponent from '../PureContainerComponent';
 import { isValidateReactComponent } from '../../../../utils/miaow';
@@ -34,7 +35,7 @@ const spec = {
 
     resize: (props, monitor) => {
         const {resize, block} = props;
-        const offset = monitor.getOffset();
+        const offset = monitor.getDifferenceFromInitialOffset();
         const direction = monitor.getDirection()
 
         resize && resize(fromJS({
@@ -46,7 +47,7 @@ const spec = {
 
     endResize: (props, monitor, component) => {
         const {resizeEnd} = props;
-        const offset = monitor.getOffset();
+        const offset = monitor.getDifferenceFromInitialOffset();
         const direction = monitor.getDirection()
 
         resizeEnd && resizeEnd(fromJS({
@@ -56,7 +57,7 @@ const spec = {
     }
 }
 
-const collect = (monitor, connect) => ({
+const collect = (connect, monitor) => ({
     resizeNorth: connect.resizeNorth(),
     resizeSouth: connect.resizeSouth(),
     resizeEast: connect.resizeEast(),
