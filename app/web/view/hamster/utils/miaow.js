@@ -408,6 +408,10 @@ export const shallowEqual = (a, b) => {
 // omit
 export const omit = (...args) => props => lodash.omit.apply(null, [props].concat(args))
 
+// 加上单位(普通的字符串拼接)
+export const addUnit = unit => value => `${value}${unit}`;
+export const addPx = addUnit('px')
+
 /******* immutable *********/
 
 /**

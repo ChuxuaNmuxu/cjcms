@@ -42,7 +42,7 @@ class Hamster extends StoreManager {
         this.blockManager = new BlockManager(this);
         this.slideManager = new SlideManager(this);
         this.subscriber = new Subscriber(store);
-        this.Registry = new Registry();
+        this.registry = new Registry();
     }
 
     /**
@@ -65,6 +65,14 @@ class Hamster extends StoreManager {
 
     getSubscriber () {
         return this.subscriber;
+    }
+
+    /**
+     * 获取容器
+     * @param {*} name slide | reveal
+     */
+    getContainer (name) {
+        return this.registry.getContainer(name)
     }
 }
 

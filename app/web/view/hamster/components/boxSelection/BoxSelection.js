@@ -36,8 +36,8 @@ class BoxSelection extends Component {
 
         // 款选组件加载reveal上，block是相对于slide定位的，需要减去两者之间的位置偏移
         const {hamster} = this.props;
-        const revealContainer = hamster.Registry.getContainer('reveal');
-        const slideContainer = hamster.Registry.getContainer('slide');
+        const revealContainer = hamster.registry.getContainer('reveal');
+        const slideContainer = hamster.registry.getContainer('slide');
 
 
         const containerOffset = {
