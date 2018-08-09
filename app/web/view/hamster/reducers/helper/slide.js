@@ -6,7 +6,7 @@ import {getEntitiesByType} from './entity'
  * @param {*} hamster 
  * @param {*} slideIds 
  */
-const getSlideIdxesBySlideIds = (hamster, slideIds) => {
+export const getSlideIdxesBySlideIds = (hamster, slideIds) => {
     return slideIds.size ? hamster.getIn(
         ['index', 'slides']
     ).toKeyedSeq()
@@ -21,12 +21,12 @@ const getSlideIdxesBySlideIds = (hamster, slideIds) => {
  * @param {*} hamster 
  * @param {*} groupId 
  */
-const getSlideIdxesByGroupId = (hamster, groupId) => {
+export const getSlideIdxesByGroupId = (hamster, groupId) => {
     const slideIds = hamster.getIn(['entities', groupId, 'data', 'slides']);
     return getSlideIdxesBySlideIds(hamster, slideIds);
 }
 
-const getSlideIdxesByGroupIndex = (hamster, groupIndex) => {
+export const getSlideIdxesByGroupIndex = (hamster, groupIndex) => {
     const groupId = hamster.getIn(['index', 'slide.groups', groupIndex]);
     return getSlideIdxesByGroupId(hamster, groupId);
 }
@@ -35,7 +35,7 @@ const getSlideIdxesByGroupIndex = (hamster, groupIndex) => {
  * 获取slide.group实体集
  * @param {*} hamster 
  */
-const getGroups = (hamster) => {
+export const getGroups = (hamster) => {
     return getEntitiesByType(hamster, 'slide.groups')
 }
 
@@ -44,7 +44,7 @@ const getGroups = (hamster) => {
  * @param {*} hamster 
  * @param {*} slideId 
  */
-const getGroupBySlideId = (hamster, slideId) => {
+export const getGroupBySlideId = (hamster, slideId) => {
     return getGroups(hamster).find(item => item.getIn(['data', 'slides']).includes(slideId))
 }
 
@@ -53,7 +53,7 @@ const getGroupBySlideId = (hamster, slideId) => {
  * @param {*} hamster 
  * @param {*} slideId 
  */
-const getGroupIdBySlideId = (hamster, slideId) => {
+export const getGroupIdBySlideId = (hamster, slideId) => {
     return getGroupBySlideId(hamster, slideId).get('id');
 }
 
@@ -63,25 +63,20 @@ const getGroupIdBySlideId = (hamster, slideId) => {
  * @param {*} hamster 
  * @param {*} param1 
  */
-const getEntityByIndex = (hamster, {index = 0, type}) => {
+export const getEntityByIndex = (hamster, {index = 0, type}) => {
     index = index === 'first' ? 0 : index === 'last' ? -1 : index;
     return hamster.getIn(['entities', hamster.getIn(['index', type]).get(index)]);
 }
 
-const getSlideByIndex = (hamster, index) => {
+export const getSlideByIndex = (hamster, index) => {
     return getEntityByIndex(hamster, {type: 'slides', index});
 }
 
-const getSlideGroupByIndex = (hamster, index) => {
+export const getSlideGroupByIndex = (hamster, index) => {
     return getEntityByIndex(hamster, {type: 'slide.groups', index});
 }
 
-export default {
-    getSlideIdxesBySlideIds,
-    getSlideIdxesByGroupId,
-    getSlideIdxesByGroupIndex,
-    getGroupBySlideId,
-    getGroupIdBySlideId,
-    getSlideByIndex,
-    getSlideGroupByIndex
+//
+export const snap = (hamster) => {
+    return hamster;
 }

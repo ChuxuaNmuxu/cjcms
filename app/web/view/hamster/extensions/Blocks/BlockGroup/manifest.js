@@ -1,4 +1,4 @@
-import ContainerSection from './components/ContainerSection'
+import Container from './components/container'
 
 export default {
     name: 'group', // 名称
@@ -8,16 +8,7 @@ export default {
     toolbar: null, // 自定义工具栏
     propsbar: null, // 自定义属性栏
     content: {
-        container: { // 单项配置
-            editable: true, // 可编辑
-            draggable: ContainerSection,
-            rotatable: true, // 可旋转的
-            resizable: false, // 可变尺寸
-            animationEnable: true, // 可以附加动画
-            questionEnable: true, // 可以转成习题
-            groupEnable: true, // 可以组合
-            contextMenu: {}, // 右键菜单
-        },
+        container: Container,
         component: null
     }, // 自定义组件
     props: { // 属性

@@ -1,4 +1,4 @@
-import slideHelper from '../helper/slide'
+import * as slideHelper from '../helper/slide'
 import {handleCancelActivateBlocks} from '../helper/helper'
 import { getActivatedBlockIds } from '../helper/current';
 

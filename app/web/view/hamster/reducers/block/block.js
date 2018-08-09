@@ -184,6 +184,9 @@ function handleActStart (hamster, action) {
     const {payload} = action;
     hamster = currentHelper.updateCurrent(hamster)(payload.get('type'))(true);
     hamster = currentHelper.updateCurrent(hamster)('operatingBlockId')(payload.get('blockId'));
+
+    // 操作开始，组合元素不显示
+    hamster = currentHelper.updateCurrent(hamster)('blocks')(miaow.filter(miaow.not(nodeHelper.isAncestor(hamster))));
     return hamster;
 }
 

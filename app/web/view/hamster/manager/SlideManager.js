@@ -4,7 +4,7 @@ import uuid from 'uuid';
 import HamsterManager from './HamsterManager';
 import slideActions from '../actions/slide';
 import {getActivatedSlideIds} from '../reducers/helper/current'
-import slideHelper from '../reducers/helper/slide'
+import * as slideHelper from '../reducers/helper/slide'
 import {
     createSlide,
     createSlideGroup,
