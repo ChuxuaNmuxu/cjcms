@@ -100,8 +100,6 @@ const customLayer = (options) => DecoratedComponent => {
 
             const props = omit.apply(null, [this.props].concat(collectOptions))
 
-            console.log(props)
-
             return (
                 <DecoratedComponent {...props} entities={entities} />
             )

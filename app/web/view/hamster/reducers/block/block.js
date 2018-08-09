@@ -209,7 +209,10 @@ function handleBoxSelect (hamster, action) {
         return box.top < bottom && top < box.bottom && box.right > left && right > box.left
     })
 
-    hamster = helper.handleReactivateBlocks(hamster)(blockIdsToActivated);
+    // 去掉叶子元素，只保留祖先元素
+    const rightBlocks = currentHelper.forceMaybeAncestors(hamster)(blockIdsToActivated);
+
+    hamster = helper.handleReactivateBlocks(hamster)(rightBlocks);
 
     return hamster;
 }
