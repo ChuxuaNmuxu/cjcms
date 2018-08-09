@@ -29,6 +29,10 @@ function handleDragEnd (hamster, action) {
     // current
     hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
 
+    // 更新组合元素
+    const needMoveBlockIds = currentHelper.getBlocksToDrag(hamster, operateBlockId)
+    hamster = helper.updateAllGroupFourDimension(hamster, needMoveBlockIds);
+
     return hamster;
 }   
 
@@ -58,6 +62,10 @@ function handleResizeEnd (hamster, action) {
 
     // current
     hamster = currentHelper.updateCurrent(hamster)('resizing')(false);
+
+    // 更新组合元素
+    const activatedIds = currentHelper.getActivatedBlockIds(hamster);
+    hamster = helper.updateAllGroupFourDimension(hamster, activatedIds);
 
     return hamster
 }

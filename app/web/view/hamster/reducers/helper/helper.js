@@ -10,6 +10,7 @@ import * as entityHelper from './entity';
 import * as blockHelper from './block';
 import * as nodeHelper from './node';
 import * as currentHelper from './current';
+import * as slideHelper from './slide'
 import {createBlock} from '../../utils/block';
 
 // 生成ID
@@ -80,21 +81,17 @@ export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
     const [left, top] = miaow.destruction('x', 'y')(offset); 
 
-    const {
-        operateBlockId,
-        isResistInside,
-        activatedBlockIds
-    } = currentHelper.judgeSituationWhenDrag(hamster, blockId);
-
-    // 移动blocks
-    const needMoveBlockIds = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
+    const needMoveBlockIds = currentHelper.getBlocksToDrag(hamster, blockId)
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
         offset: {top, left},
         blockIds: needMoveBlockIds
     }))
 
     // 更新组合元素
-    hamster = updateAllGroupFourDimension(hamster, needMoveBlockIds);
+    // hamster = updateAllGroupFourDimension(hamster, needMoveBlockIds);
+
+    // 更新snap数据
+    hamster = slideHelper.snap(hamster);
 
     return hamster;
 }
@@ -271,7 +268,7 @@ export function handleResizeBlocks (hamster, blockId, direction='e', offset) {
 }
 
 /**
- * 旋转
+ * 拉伸
  * @param {*} hamster 
  * @param {*} payload {offset, direction}
  */
@@ -284,7 +281,7 @@ export const handleResize = (hamster, payload) => {
 
     hamster = resizeBlockIds.reduce((hamster, id) => handleResizeBlocks(hamster, id, direction, offset), hamster)
 
-    hamster = updateAllGroupFourDimension(hamster, activatedIds);
+    // hamster = updateAllGroupFourDimension(hamster, activatedIds);
 
     return hamster;
 }

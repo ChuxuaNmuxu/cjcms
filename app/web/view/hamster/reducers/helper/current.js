@@ -229,7 +229,14 @@ export function getRightBlocks (hamster, activatedBlockId, operateBlockId) {
  * @param {*} id 当前操作的blockId 
  * @returns {Array}
  */
-export function getBlockToDrag (hamster, id) {
+export function getBlocksToDrag (hamster, id) {
+    const {
+        operateBlockId,
+        activatedBlockIds
+    } = judgeSituationWhenDrag(hamster, id);
+
+    // 移动blocks
+    return getRightBlocks(hamster, activatedBlockIds, operateBlockId);
 }
 
 /**
