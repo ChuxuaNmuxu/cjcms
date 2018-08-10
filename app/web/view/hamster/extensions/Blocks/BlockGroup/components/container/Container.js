@@ -34,7 +34,6 @@ export default class GroupContainer extends Component {
 
     render() {
         const {active} = this.props;
-        console.log(26, active)
         if (!active) return (
             <Container {...this.props} config={deactiveConfig}/>
         );

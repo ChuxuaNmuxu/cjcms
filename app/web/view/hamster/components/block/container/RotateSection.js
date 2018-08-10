@@ -103,8 +103,6 @@ class RotateSection extends PureContainerComponent {
     render() {
         const {rotateSource, config, ...rest} = this.props;
 
-        console.log(106, config)
-
         if (!config) return null;
 
         const RotateComponent = config;

@@ -30,7 +30,7 @@ function handleDragEnd (hamster, action) {
     hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
 
     // 更新组合元素
-    const {blocksToOperate} = currentHelper.getSituation(hamster, operateBlockId, ACT_DRAG)
+    const [blocksToOperate] = miaow.destruction('blocksToOperate')(currentHelper.getActSituation(hamster))
     hamster = helper.updateAllGroupFourDimension(hamster, blocksToOperate);
 
     return hamster;

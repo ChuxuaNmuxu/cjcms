@@ -29,8 +29,6 @@ class Container extends Component {
         const {children, block, active} = this.props;
         const [dragConfig, rotateConfig, resizeConfig] = destruction('draggable', 'rotatable', 'resizable')(config)
 
-        console.log(37, rotateConfig)
-
         const containerProps = {block, active}
         const props = {block, active, children}
         return (
