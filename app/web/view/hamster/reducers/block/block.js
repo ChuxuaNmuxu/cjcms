@@ -6,9 +6,9 @@ import * as nodeHelper from '../helper/node';
 import * as currentHelper from '../helper/current';
 import * as entityHelper from '../helper/entity';
 import * as blockHelper from '../helper/block';
+import { ACT_DRAG } from '../helper/contants';
 
 function handleAddBlock (hamster, action) {
-    console.log(5, action)
     const {payload: {blocks}} = action;
 
     hamster = helper.handleAddBlock(hamster, blocks);
@@ -30,8 +30,8 @@ function handleDragEnd (hamster, action) {
     hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
 
     // 更新组合元素
-    const needMoveBlockIds = currentHelper.getBlocksToDrag(hamster, operateBlockId)
-    hamster = helper.updateAllGroupFourDimension(hamster, needMoveBlockIds);
+    const {blocksToOperate} = currentHelper.getSituation(hamster, operateBlockId, ACT_DRAG)
+    hamster = helper.updateAllGroupFourDimension(hamster, blocksToOperate);
 
     return hamster;
 }   
@@ -182,11 +182,26 @@ function handleUnite (hamster, actions) {
  */
 function handleActStart (hamster, action) {
     const {payload} = action;
-    hamster = currentHelper.updateCurrent(hamster)(payload.get('type'))(true);
-    hamster = currentHelper.updateCurrent(hamster)('operatingBlockId')(payload.get('blockId'));
+    const type = payload.get('type');
+    const blockId = payload.get('blockId');
+
+    hamster = currentHelper.updateCurrent(hamster)(type)(true);
+    hamster = currentHelper.updateCurrent(hamster)('operatingBlockId')(blockId);
+
+    /**
+     * 操作形式判断
+     * 操作过程中(handleDrag, handleResize, handleRotate)将用到，但只需在操作前(actStart)判断一次就行
+     * 不需要在操作中一直计算
+    */
+    // const actSituation = 'actSituation'
+    // const judgeSituationFucn = type === 'drag' ? 'judgeSituationWhenDrag' : 'judgeSituation'
+
+    // const situation = currentHelper[judgeSituationFucn](hamster, blockId);
+
+    // hamster = currentHelper.updateCurrent(hamster)(actSituation)(fromJS())
 
     // 操作开始，组合元素不显示
-    hamster = currentHelper.updateCurrent(hamster)('blocks')(miaow.filter(miaow.not(nodeHelper.isAncestor(hamster))));
+    // hamster = currentHelper.updateCurrent(hamster)('blocks')(miaow.filter(miaow.not(nodeHelper.isAncestor(hamster))));
     return hamster;
 }
 

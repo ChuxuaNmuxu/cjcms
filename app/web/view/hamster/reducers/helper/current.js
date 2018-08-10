@@ -2,6 +2,7 @@ import * as nodeHelper from './node';
 import lodash from 'lodash';
 import * as miaow from '../../utils/miaow';
 import { getEntity } from './entity';
+import * as contants from './contants';
 
 /**
  * current数组中可能包含祖先节点，独立节点和叶子节点
@@ -104,7 +105,8 @@ export function getIdClusterInCurrent (hamster, ids) {
  * @param {} id 当前操作的元素id
  * @returns {Boolean}
  */
-export const isResistInside = hamster => id => {
+let isResistInsideWhenRotate;
+const isResistInsideWhenResize = isResistInsideWhenRotate = hamster => id => {
     const activatedBlockId = getActivatedBlockIds(hamster);
 
     if (nodeHelper.isLeaf(hamster)(id)) {
@@ -124,14 +126,14 @@ export const isResistInside = hamster => id => {
  * @param {*} id 当前操作元素
  * @returns {Boolean}
  */
-export const isResistOutside = miaow.not(isResistInside);
+// export const isResistOutside = miaow.not(isResistInside);
 
 /**
  * drag的对内和点击有点不同：在对内情况下，且至少有一个叶子元素被激活
  * @returns {Boolean}
 */
 export const isResistInsideWhenDrag = hamster => id => miaow.prevCheck(
-    isResistInside(hamster)
+    isResistInsideWhenRotate(hamster)
 )(
   id => nodeHelper.includesLeafs(hamster)(getActivatedBlockIds(hamster))
 )(id)
@@ -139,39 +141,50 @@ export const isResistInsideWhenDrag = hamster => id => miaow.prevCheck(
 // drag的对外
 export const isResistOutsideWhenDrag = miaow.not(isResistInsideWhenDrag);
 
+// 安内工厂函数
+const isResistInsideFactory = type => {
+    if (type === contants.ACT_DRAG) return isResistInsideWhenDrag;
+    if (type === contants.ACT_ROTATE) return isResistInsideWhenRotate;
+    if (type === contants.ACT_RESIZE) return isResistInsideWhenResize;
+    throw new Error('drag? resize? rotate? It is a problem!')
+}
+
 /**
- * 形势判断
+ * 形势判断(攘外没有叶子, 安内没有祖先)
  * @param {*} hamster 
- * @param {*} operateBlockId 被操作的Id
- * @param {*} option isResistInside: 判断对内的方法
+ * @param {*} blockOperating 被操作的Id
+ *   组合元素为被选中时拖动其中一个叶子元素，实际操作的是组合元素
+ * @param {*} option type
  * @returns {plainObject} {
- *      isResistInside,
+ *      type,
  *      operateBlockId,
- *      activatedBlockIds
+ *      blocksToOperate
  * } : {
  *      {Boolean} 
  *      {String} 正在被操作的blockId
  *      {List} 将被操作的blockId
  * }
  */
-export function judgeSituation (hamster, operateBlockId, option={isResistInside}) {
+const judgeSituation = (hamster, operateBlockId, type) => {
     let activatedBlockIds = getActivatedBlockIds(hamster);
 
-    const isResistInside = option.isResistInside(hamster)(operateBlockId);
+    const isResistInside = isResistInsideFactory(type)(hamster)(operateBlockId);
 
     // 安内没有祖先
+    let blocksToOperate = null;
+    let blockOperating = operateBlockId;
     if (isResistInside) {
-        activatedBlockIds = nodeHelper.filterLeafIds(hamster)(activatedBlockIds)
+        blocksToOperate = nodeHelper.filterLeafIds(hamster)(activatedBlockIds)
     } else {
         // 攘外没有叶子
-        operateBlockId = forceMaybeAncestors(hamster)(operateBlockId).get(0);
-        activatedBlockIds = forceMaybeAncestors(hamster)(activatedBlockIds);
+        blockOperating = forceMaybeAncestors(hamster)(operateBlockId).get(0);
+        blocksToOperate = forceMaybeAncestors(hamster)(activatedBlockIds);
     }
 
     return {
-        operateBlockId,
         isResistInside,
-        activatedBlockIds
+        blockOperating,
+        blocksToOperate
     }
 }
 
@@ -181,8 +194,8 @@ export function judgeSituation (hamster, operateBlockId, option={isResistInside}
  * @param {*} operateBlockId 被操作的Id
  * @returns {plainObject} {
  *      isResistInside,
- *      operateBlockId,
- *      activatedBlockIds
+ *      blockOperating,
+ *      blocksToOperate
  * } : {
  *      {Boolean} 
  *      {String} 正在被操作的blockId
@@ -190,7 +203,37 @@ export function judgeSituation (hamster, operateBlockId, option={isResistInside}
  * }
  */
 export function judgeSituationWhenDrag (hamster, operateBlockId) {
-    return judgeSituation(hamster, operateBlockId, {isResistInside: isResistInsideWhenDrag})
+    return judgeSituation(hamster, operateBlockId, contants.ACT_DRAG)
+}
+
+export function judgeSituationFactory (type) {
+    if (type === contants.ACT_DRAG) return judgeSituationWhenDrag;
+    if (type === contants.ACT_ROTATE) return judgeSituation;
+    if (type === contants.ACT_RESIZE) return judgeSituation;
+    throw new Error('drag? resize? rotate? It is a problem!')
+}
+
+/**
+ * 获取将被操作的元素
+ * 这里是指将被改变属性的元素，如拖动组合元素框时，将被改变的是其叶子元素，而不是组合框
+ * @param {*} hamster 
+ * @param {*} type 
+ * @param {*} blockId 正在被操作的元素
+ */
+export const getSituation = (hamster, blockId, type = contants.ACT_RESIZE) => {
+    let {
+        isResistInside,
+        blockOperating, 
+        blocksToOperate
+    } = judgeSituationFactory(type)(hamster, blockId, type);
+
+    if (type === contants.ACT_DRAG) blocksToOperate = getRightBlocksToDrag(hamster, blocksToOperate, blockOperating)
+
+    return {
+        isResistInside,
+        blockOperating,
+        blocksToOperate
+    };
 }
 
 /**
@@ -200,7 +243,7 @@ export function judgeSituationWhenDrag (hamster, operateBlockId) {
  * @description 对外：没有叶子节点；对内：只是叶子节点
  * @returns {Array} 全是叶子节点或者没有叶子节点
  */
-export function getRightBlocks (hamster, activatedBlockId, operateBlockId) {
+export function getRightBlocksToDrag (hamster, activatedBlockId, operateBlockId) {
     // 被操作元素已激活，选中所有激活元素；未激活则选中自己
     const rightBlocksByActivate = miaow.dispatchMission(
         miaow.prevCheck(isBlockActivated(hamster))(
@@ -229,15 +272,15 @@ export function getRightBlocks (hamster, activatedBlockId, operateBlockId) {
  * @param {*} id 当前操作的blockId 
  * @returns {Array}
  */
-export function getBlocksToDrag (hamster, id) {
-    const {
-        operateBlockId,
-        activatedBlockIds
-    } = judgeSituationWhenDrag(hamster, id);
+// export function getBlocksToDrag (hamster, id) {
+//     const {
+//         operateBlockId,
+//         blocksToOperate
+//     } = judgeSituationWhenDrag(hamster, id);
 
-    // 移动blocks
-    return getRightBlocks(hamster, activatedBlockIds, operateBlockId);
-}
+//     // 移动blocks
+//     return getRightBlocks(hamster, blocksToOperate, operateBlockId);
+// }
 
 /**
  * 将被resize的正确block
@@ -293,6 +336,8 @@ export const isRotating = hamster => hamster.getIn(['current', 'rotating']);
 export const getOperatingBlockId = hamster => hamster.getIn(['current', 'operatingBlockId']);
 
 export const getOperatingSlideId = hamster => hamster.getIn(['current', 'operatingSlideId'])
+
+export const getActSituation = hamster => hamster .getIn(['current', 'actSituation']);
 
 /**
  * 获取当前操作的slide中的所有blockIds

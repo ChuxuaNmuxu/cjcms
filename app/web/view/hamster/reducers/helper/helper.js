@@ -12,6 +12,7 @@ import * as nodeHelper from './node';
 import * as currentHelper from './current';
 import * as slideHelper from './slide'
 import {createBlock} from '../../utils/block';
+import { ACT_DRAG, ACT_ROTATE } from './contants';
 
 // 生成ID
 export function createId (namespace='', suffix='') {
@@ -81,14 +82,14 @@ export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
     const [left, top] = miaow.destruction('x', 'y')(offset); 
 
-    const needMoveBlockIds = currentHelper.getBlocksToDrag(hamster, blockId)
+    const {blocksToOperate} = currentHelper.getSituation(hamster, blockId, ACT_DRAG)
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
         offset: {top, left},
-        blockIds: needMoveBlockIds
+        blockIds: blocksToOperate
     }))
 
     // 更新组合元素
-    // hamster = updateAllGroupFourDimension(hamster, needMoveBlockIds);
+    // hamster = updateAllGroupFourDimension(hamster, blocksToOperate);
 
     // 更新snap数据
     hamster = slideHelper.snap(hamster);
@@ -136,12 +137,12 @@ export function updateAllGroupFourDimension (hamster, ids) {
  * @param {Boolean} isMultiply 多选
  */
 export function activateBlock (hamster, id, isMultiply) {
-    const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, id);
-    const rightBlocks = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
-    const isBlockActivated = currentHelper.isBlockActivated(hamster)(operateBlockId);
+    const { isResistInside, blockOperating, blocksToOperate } = currentHelper.getSituation(hamster, id);
+    // const rightBlocks = currentHelper.getRightBlocks(hamster, activatedBlockIds, operateBlockId);
+    const isBlockActivated = currentHelper.isBlockActivated(hamster)(blockOperating);
 
     // 攘外取消叶子元素的激活
-    if (!isResistInside) hamster = handleReactivateBlocks(hamster)(activatedBlockIds);
+    if (!isResistInside) hamster = handleReactivateBlocks(hamster)(blocksToOperate);
     
     /**
      * 操作符 isMultiply + isBlockActivated 判断
@@ -157,11 +158,11 @@ export function activateBlock (hamster, id, isMultiply) {
     if (isBlockActivated && isMultiply) operation = handleCancelActivateBlocks(hamster)
     if (!isBlockActivated && !isMultiply) operation = handleReactivateBlocks(hamster)
 
-    hamster = operation(operateBlockId);
+    hamster = operation(blockOperating);
 
     // 操作的是节点元素，祖先元素必然处于激活状态 @version1.0 - 3
-    if (nodeHelper.isLeaf(hamster)(operateBlockId)) {
-        const ancestor = nodeHelper.getAncestorId(hamster)(operateBlockId);
+    if (nodeHelper.isLeaf(hamster)(blockOperating)) {
+        const ancestor = nodeHelper.getAncestorId(hamster)(blockOperating);
         return handleActivateBlocks(hamster)(ancestor);
     }
 
@@ -311,13 +312,13 @@ export const handleRotate = (hamster, payload) => {
     const rotateAngle = payload.get('rotateAngle')
     const blockId = payload.get('blockId');
 
-    const { isResistInside, operateBlockId, activatedBlockIds } = currentHelper.judgeSituation(hamster, blockId);
+    const { isResistInside, blocksToOperate } = currentHelper.getSituation(hamster, blockId, ACT_ROTATE);
 
-    let rotateBlockIds = activatedBlockIds;
+    let rotateBlockIds = blocksToOperate;
     // 攘外，叶子元素跟随祖先旋转
     if (!isResistInside) {
         // rotateBlockIds = activatedBlockIds.map(nodeHelper.getAllLeafIds(hamster)).concat(activatedBlockIds).flatten();
-        const ancestorIds = nodeHelper.filterAncestorIds(hamster)(activatedBlockIds);
+        const ancestorIds = nodeHelper.filterAncestorIds(hamster)(blocksToOperate);
 
         hamster = ancestorIds.reduce((hamster, id) => {
             if (!nodeHelper.isAncestor(id)) return hamster;
