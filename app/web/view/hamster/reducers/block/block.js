@@ -6,7 +6,7 @@ import * as nodeHelper from '../helper/node';
 import * as currentHelper from '../helper/current';
 import * as entityHelper from '../helper/entity';
 import * as blockHelper from '../helper/block';
-import { ACT_DRAG } from '../helper/contants';
+import { ACT_DRAG, ACT_RESIZE, ACT_ROTATE } from '../helper/contants';
 
 function handleAddBlock (hamster, action) {
     const {payload: {blocks}} = action;
@@ -193,15 +193,15 @@ function handleActStart (hamster, action) {
      * 操作过程中(handleDrag, handleResize, handleRotate)将用到，但只需在操作前(actStart)判断一次就行
      * 不需要在操作中一直计算
     */
-    // const actSituation = 'actSituation'
-    // const judgeSituationFucn = type === 'drag' ? 'judgeSituationWhenDrag' : 'judgeSituation'
+    let actType = ACT_DRAG;
+    if (/resiz/.test(type)) actType = ACT_RESIZE;
+    if (/rotat/.test(type)) actType = ACT_ROTATE;
 
-    // const situation = currentHelper[judgeSituationFucn](hamster, blockId);
+    const situation = currentHelper.getSituation(hamster, blockId, actType);
+    hamster = currentHelper.updateCurrent(hamster)('actSituation')(fromJS(situation));
 
-    // hamster = currentHelper.updateCurrent(hamster)(actSituation)(fromJS())
-
-    // 操作开始，组合元素不显示
-    // hamster = currentHelper.updateCurrent(hamster)('blocks')(miaow.filter(miaow.not(nodeHelper.isAncestor(hamster))));
+    // drag开始，组合元素不显示
+    if (actType === ACT_DRAG) hamster = currentHelper.updateCurrent(hamster)('blocks')(miaow.filter(miaow.not(nodeHelper.isAncestor(hamster))));
     return hamster;
 }
 

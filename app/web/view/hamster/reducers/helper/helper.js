@@ -82,7 +82,7 @@ export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
     const [left, top] = miaow.destruction('x', 'y')(offset); 
 
-    const {blocksToOperate} = currentHelper.getSituation(hamster, blockId, ACT_DRAG)
+    const [blocksToOperate] = miaow.destruction('blocksToOperate')(currentHelper.getActSituation(hamster));
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
         offset: {top, left},
         blockIds: blocksToOperate
@@ -312,7 +312,7 @@ export const handleRotate = (hamster, payload) => {
     const rotateAngle = payload.get('rotateAngle')
     const blockId = payload.get('blockId');
 
-    const { isResistInside, blocksToOperate } = currentHelper.getSituation(hamster, blockId, ACT_ROTATE);
+    const [isResistInside, blocksToOperate] = miaow.destruction('isResistInside', 'blocksToOperate')(currentHelper.getActSituation(hamster));
 
     let rotateBlockIds = blocksToOperate;
     // 攘外，叶子元素跟随祖先旋转
