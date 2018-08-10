@@ -27,7 +27,7 @@ export default {
                     value: 1,
                 },
                 borderColor: {
-                    value: '#333',
+                    value: 'transparent',
                 }
             }
         },
