@@ -81,10 +81,10 @@ export function getOrphansInCurrent (hamster) {
 
 /**
  * 获取节点群组
- * @description 在激活的节点中找到孤立节点 + 祖先节点之下的所有叶子节点
+ * @description 在节点中找到孤立节点 + 祖先节点之下的所有叶子节点
  * @param {*} hamster 
  */
-export function getIdClusterInCurrent (hamster, ids) {
+export function getIdCluster (hamster, ids) {
     ids = miaow.toList(ids);
     // const orphanIdsInCurrent = getOrphansInCurrent(hamster);
     // const ancestorBlockIds = getAncestorInCurrent(hamster);
@@ -214,8 +214,8 @@ export function judgeSituationFactory (type) {
 }
 
 /**
- * 获取将被操作的元素
- * 这里是指将被改变属性的元素，如拖动组合元素框时，将被改变的是其叶子元素，而不是组合框
+ * 统一接口，drag时将被操作的元素和需要改变的元素并不相同
+ * 如拖动组合元素框(blocksToOperate)时，将被改变属性的是其叶子元素(blocksToDrag)，而不是组合框
  * @param {*} hamster 
  * @param {*} type 
  * @param {*} blockId 正在被操作的元素
@@ -227,12 +227,14 @@ export const getSituation = (hamster, blockId, type = contants.ACT_RESIZE) => {
         blocksToOperate
     } = judgeSituationFactory(type)(hamster, blockId, type);
 
-    if (type === contants.ACT_DRAG) blocksToOperate = getRightBlocksToDrag(hamster, blocksToOperate, blockOperating)
+    let blocksToDrag = null;
+    if (type === contants.ACT_DRAG) blocksToDrag = getRightBlocksToDrag(hamster, blocksToOperate, blockOperating)
 
     return {
         isResistInside,
         blockOperating,
-        blocksToOperate
+        blocksToOperate,
+        blocksToDrag
     };
 }
 
@@ -254,7 +256,7 @@ export function getRightBlocksToDrag (hamster, activatedBlockId, operateBlockId)
 
     // 将祖先元素替换为所有叶子元素
     const groupBlocks = lodash.flow(
-        miaow.map(
+        miaow.mapI(
             miaow.dispatchMission(
                 miaow.prevCheck(nodeHelper.isAncestor(hamster))(nodeHelper.getAllLeafIds(hamster)),
                 miaow.identity,

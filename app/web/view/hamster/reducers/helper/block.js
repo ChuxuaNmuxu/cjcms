@@ -14,7 +14,7 @@ import * as helper from './helper';
  * @param {*} ids 
  * @returns {plainObject} {top, bottom, left, right, width, height}
  */
-export function packageBlocks (hamster, ids) {
+export const packageBlocks = hamster => ids => {
     ids = miaow.toList(ids);
     const [tops, lefts, widths, heights] = ['top', 'left', 'width', 'height'].map(
         value => ids.map(lodash.flow(entityHelper.getEntity(hamster), miaow.get('data.props.'.concat(value))))
@@ -41,7 +41,7 @@ export function packageBlocks (hamster, ids) {
  * @returns {plainObject} {top, left, width, height}
  */
 export function getPackageFourDimension (hamster, id) {
-    return lodash.pick(packageBlocks(hamster, miaow.toList(id)), ['left', 'top', 'width', 'height']);
+    return lodash.pick(packageBlocks(hamster)(id), ['left', 'top', 'width', 'height']);
 }
 
 /**
@@ -166,7 +166,7 @@ export const samePointDifferenceVector = oldFourDimension=> newFourDimension=> p
 
     const vector = lodash.flow(
         lodash.zip,
-        miaow.map(
+        miaow.mapI(
             arr => [arr[0] - arr[1]]
         )
     )(newCoord, oldCoord)
@@ -223,7 +223,7 @@ export const updateOriginTransformOrigin = hamster => ancestorId => {
         const transformOirgin = lodash.flow(
             miaow.arrMinus(groupCenter),
             miaow.flowDebug,
-            miaow.map(miaow.add('px'))
+            miaow.mapI(miaow.add('px'))
         )(position);
         hamster = entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
             ids: leafId,

@@ -8,7 +8,7 @@ import StoreManager from './StoreManager'
 import BlockManager from './BlockManager'
 import SlideManager from './SlideManager'
 import Subscriber from './Subscriber';
-import Registry from './Registry';
+import registry from './Registry';
 
 export const HamsterContext = React.createContext();
 
@@ -42,7 +42,7 @@ class Hamster extends StoreManager {
         this.blockManager = new BlockManager(this);
         this.slideManager = new SlideManager(this);
         this.subscriber = new Subscriber(store);
-        this.registry = new Registry();
+        this.registry = registry;
     }
 
     /**

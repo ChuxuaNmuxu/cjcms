@@ -405,12 +405,17 @@ export const shallowEqual = (a, b) => {
 	return true;
 }
 
+// 多管道
+export const muiltyPipe = (funcs) => (args) => args.map((arg, k) => funcs[k](arg));
+
 // omit
 export const omit = (...args) => props => lodash.omit.apply(null, [props].concat(args))
 
 // 加上单位(普通的字符串拼接)
 export const addUnit = unit => value => `${value}${unit}`;
 export const addPx = addUnit('px')
+
+export const map = func => array => lodash.map(array, func);
 
 /******* immutable *********/
 
@@ -496,6 +501,8 @@ export function sum (list) {
     return list.reduce((sum, v) => sum + v, 0)
 }
 
+export const overI = funcs => (...arg) => funcs.map(func => func.apply(null, arg))
+
 /**
  * 数组对应位置求和
  * @param {*} a 
@@ -505,7 +512,7 @@ export function listAdd (a, b) {
     return a.zip(b).map(sum)
 }
 
-export const map = func => param => param.map(func) ;
+export const mapI = func => param => param.map(func) ;
 
 export const filter = func => list => list.filter(func);
 

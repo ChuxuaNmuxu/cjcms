@@ -30,8 +30,8 @@ function handleDragEnd (hamster, action) {
     hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
 
     // 更新组合元素
-    const [blocksToOperate] = miaow.destruction('blocksToOperate')(currentHelper.getActSituation(hamster))
-    hamster = helper.updateAllGroupFourDimension(hamster, blocksToOperate);
+    const [blocksToDrag] = miaow.destruction('blocksToDrag')(currentHelper.getActSituation(hamster))
+    hamster = helper.updateAllGroupFourDimension(hamster, blocksToDrag);
 
     return hamster;
 }   
@@ -143,7 +143,7 @@ function handleUnite (hamster, actions) {
     hamster = helper.createDefaultBlockObjects(hamster, entityId);
 
     // 初始大小及位置
-    const idCluster = currentHelper.getIdClusterInCurrent(hamster, activeblockIds);
+    const idCluster = currentHelper.getIdCluster(hamster, activeblockIds);
     hamster = blockHelper.updateGroupFourDimension(hamster, idCluster, entityId);
 
     // 修改children属性
@@ -220,7 +220,7 @@ function handleBoxSelect (hamster, action) {
     // const blockIds = hamster.get('entities').filter(entity => )
     const blockIdsInSlide = currentHelper.getAllBlockIdsInOperatingSlide(hamster);
     const blockIdsToActivated = blockIdsInSlide.filter(blockId => {
-        const box = blockHelper.packageBlocks(hamster, blockId);
+        const box = blockHelper.packageBlocks(hamster)(blockId);
         return box.top < bottom && top < box.bottom && box.right > left && right > box.left
     })
 

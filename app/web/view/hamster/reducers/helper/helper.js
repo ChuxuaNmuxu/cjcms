@@ -82,17 +82,26 @@ export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
     const [left, top] = miaow.destruction('x', 'y')(offset); 
 
-    const [blocksToOperate] = miaow.destruction('blocksToOperate')(currentHelper.getActSituation(hamster));
+    let [blocksToDrag, blocksToOperate, isResistInside] = miaow.destruction('blocksToDrag', 'blocksToOperate', 'isResistInside')(currentHelper.getActSituation(hamster));
+
+    if (blocksToDrag.size === 0) {
+        const situation = currentHelper.getSituation(hamster, blockId, ACT_DRAG);
+        hamster = currentHelper.updateCurrent(hamster)('actSituation')(fromJS(situation));
+        [blocksToDrag, blocksToOperate, isResistInside] = miaow.destruction('blocksToDrag', blocksToOperate)(situation);
+    }
+
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
         offset: {top, left},
-        blockIds: blocksToOperate
+        blockIds: blocksToDrag
     }))
 
     // 更新组合元素
     // hamster = updateAllGroupFourDimension(hamster, blocksToOperate);
 
     // 更新snap数据
-    hamster = slideHelper.snap(hamster);
+    if (!isResistInside) {
+        hamster = slideHelper.snap(hamster, blocksToOperate);
+    }
 
     return hamster;
 }
@@ -107,7 +116,7 @@ export function updateAllGroupFourDimension (hamster, ids) {
     const groupIds = lodash.flow(
         miaow.toList,
         currentHelper.forceMaybeAncestors(hamster),
-        nodeHelper.filterAncestorIds(hamster)
+        nodeHelper.getAncestorIds(hamster)
     )(ids);
 
     hamster = groupIds.reduce((hamster, id) => {
@@ -318,7 +327,7 @@ export const handleRotate = (hamster, payload) => {
     // 攘外，叶子元素跟随祖先旋转
     if (!isResistInside) {
         // rotateBlockIds = activatedBlockIds.map(nodeHelper.getAllLeafIds(hamster)).concat(activatedBlockIds).flatten();
-        const ancestorIds = nodeHelper.filterAncestorIds(hamster)(blocksToOperate);
+        const ancestorIds = nodeHelper.getAncestorIds(hamster)(blocksToOperate);
 
         hamster = ancestorIds.reduce((hamster, id) => {
             if (!nodeHelper.isAncestor(id)) return hamster;
