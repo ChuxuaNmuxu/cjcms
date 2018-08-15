@@ -82,17 +82,17 @@ export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
     const [left, top] = miaow.destruction('x', 'y')(offset); 
 
-    let [blocksToDrag, blocksToOperate, isResistInside] = miaow.destruction('blocksToDrag', 'blocksToOperate', 'isResistInside')(currentHelper.getActSituation(hamster));
+    let [blockOperating, blocksToOperate, isResistInside] = miaow.destruction('blockOperating', 'blocksToOperate', 'isResistInside')(currentHelper.getActSituation(hamster));
 
-    if (blocksToDrag.size === 0) {
-        const situation = currentHelper.getSituation(hamster, blockId, ACT_DRAG);
-        hamster = currentHelper.updateCurrent(hamster)('actSituation')(fromJS(situation));
-        [blocksToDrag, blocksToOperate, isResistInside] = miaow.destruction('blocksToDrag', blocksToOperate)(situation);
+    if (blockOperating.size === 0) {
+        const situation = fromJS(currentHelper.getSituation(hamster, blockId, ACT_DRAG));
+        hamster = currentHelper.updateCurrent(hamster)('actSituation')(situation);
+        [blockOperating, blocksToOperate, isResistInside] = miaow.destruction('blockOperating', 'blocksToOperate', 'isResistInside')(situation);
     }
 
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
         offset: {top, left},
-        blockIds: blocksToDrag
+        blockIds: blocksToOperate
     }))
 
     // 更新组合元素

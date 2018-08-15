@@ -14,7 +14,7 @@ import Snap from '../snap';
 @CSSModules(styles)
 class Viewport extends React.Component {
     render () {
-        const {blockIds, currentBlocks, entities} = this.props;
+        const {blockIds, currentBlocks, entities, snapCoord} = this.props;
 
         return (
             <div className='viewport' styleName='viewport'>
@@ -22,7 +22,7 @@ class Viewport extends React.Component {
                     <div className='reveal'>
                         <div className='slides'>
                             {/* <CustomLayer /> */}
-                            <Snap />
+                            <Snap snapCoord={snapCoord}/>
                             <section className='section'>
                                 <Slide
                                 blockIds={blockIds}

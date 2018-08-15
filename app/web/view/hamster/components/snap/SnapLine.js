@@ -29,7 +29,8 @@ export default class SnapLine extends Component {
     getStyle = () => {
         const style = _.mapValues(_.pick(this.props, ['top', 'left', 'width', 'height']), addPx);
 
-        const {config: {color}} = this.props;
+        // const {config: {color}} = this.props;
+        const color = this.props.config.get('color');
         const backgroundColor = color || SnapLine.defaultProps.config.color;
         return _.merge({}, {backgroundColor}, style)
     }

@@ -174,9 +174,13 @@ const judgeSituation = (hamster, operateBlockId, type) => {
     let blocksToOperate = null;
     let blockOperating = operateBlockId;
     if (isResistInside) {
+        // eg. 组合元素，旋转叶子元素
         blocksToOperate = nodeHelper.filterLeafIds(hamster)(activatedBlockIds)
     } else {
-        // 攘外没有叶子
+        /**
+         * 攘外没有叶子
+         * eg. 组合元素，旋转祖先元素
+         * */
         blockOperating = forceMaybeAncestors(hamster)(operateBlockId).get(0);
         blocksToOperate = forceMaybeAncestors(hamster)(activatedBlockIds);
     }
@@ -221,21 +225,18 @@ export function judgeSituationFactory (type) {
  * @param {*} blockId 正在被操作的元素
  */
 export const getSituation = (hamster, blockId, type = contants.ACT_RESIZE) => {
+    let situation = {}
     let {
-        isResistInside,
         blockOperating, 
         blocksToOperate
-    } = judgeSituationFactory(type)(hamster, blockId, type);
+    } = situation = judgeSituationFactory(type)(hamster, blockId, type);
 
-    let blocksToDrag = null;
-    if (type === contants.ACT_DRAG) blocksToDrag = getRightBlocksToDrag(hamster, blocksToOperate, blockOperating)
+    if (type === contants.ACT_DRAG) {
+        const dragSituation = getRightBlocksToDrag(hamster, blocksToOperate, blockOperating)
+        return lodash.merge(situation, dragSituation)
+    }
 
-    return {
-        isResistInside,
-        blockOperating,
-        blocksToOperate,
-        blocksToDrag
-    };
+    return situation;
 }
 
 /**
@@ -247,7 +248,7 @@ export const getSituation = (hamster, blockId, type = contants.ACT_RESIZE) => {
  */
 export function getRightBlocksToDrag (hamster, activatedBlockId, operateBlockId) {
     // 被操作元素已激活，选中所有激活元素；未激活则选中自己
-    const rightBlocksByActivate = miaow.dispatchMission(
+    const blockOperating = miaow.dispatchMission(
         miaow.prevCheck(isBlockActivated(hamster))(
             miaow.always(activatedBlockId)
         ),
@@ -255,7 +256,7 @@ export function getRightBlocksToDrag (hamster, activatedBlockId, operateBlockId)
     )(operateBlockId)
 
     // 将祖先元素替换为所有叶子元素
-    const groupBlocks = lodash.flow(
+    const blocksToOperate = lodash.flow(
         miaow.mapI(
             miaow.dispatchMission(
                 miaow.prevCheck(nodeHelper.isAncestor(hamster))(nodeHelper.getAllLeafIds(hamster)),
@@ -263,9 +264,9 @@ export function getRightBlocksToDrag (hamster, activatedBlockId, operateBlockId)
             )
         ),
         miaow.handle('flatten')
-    )(rightBlocksByActivate)
+    )(blockOperating)
 
-    return groupBlocks
+    return {blocksToOperate, blockOperating}
 }
 
 /**

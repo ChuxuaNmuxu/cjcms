@@ -7,11 +7,12 @@ import SnapLine from './SnapLine';
 import {destruction} from '../../utils/miaow'
 import { withHamster } from '../../manager';
 import styles from './Snap.scss';
+import { fromJS } from '../../../../../../node_modules/immutable';
 
 const mapStateToProps = ({hamster}) => {
     return {
-        snapCoord: hamster.getIn(['current', 'snapCoord']),
-        config: hamster.getIn(['data', 'snap'])
+        // snapCoord: hamster.getIn(['current', 'snapCoord']),
+        config: hamster.getIn(['data', 'snap', 'config'])
     }
 }
 
@@ -23,6 +24,12 @@ export default class Snap extends Component {
         children: PropTypes.node,
         snapCoord: PropTypes.object,
         config: PropTypes.object
+    }
+
+    static defaultProps = {
+        config: fromJS({
+            width: 1
+        })
     }
 
     constructor (props, context) {
@@ -47,17 +54,17 @@ export default class Snap extends Component {
         const {width, height} = container;
         const {snapCoord, config} = props;
 
-        const [stroke = 1] = destruction('stroke')(config);
+        const [stroke = 1] = destruction('width')(config);
         const [x = [], y = []] = destruction('x', 'y')(snapCoord);
 
-        const horizontalLines = x.map(v => ({
+        const horizontalLines = y.map(v => ({
             left: 0,
             top: v,
             width,
             height: stroke
         }))
 
-        const verticalLines = y.map(v => ({
+        const verticalLines = x.map(v => ({
             left: v,
             top: 0,
             width: stroke,
