@@ -15,24 +15,19 @@ class Container extends Component {
         active: PropTypes.bool,
         clickBlock: PropTypes.func
     };
-
-    config;
-    constructor(props, context) {
-        super(props, context);
-
-        this.config = prevParseConfig(props.config);
-    }
     
     render() {
-        if (!this.config) return null;
+        const config = prevParseConfig(this.props.config);
 
-        if (isValidateReactComponent(this.config)) {
-            const Container = this.config;
+        if (!config) return null;
+
+        if (isValidateReactComponent(config)) {
+            const Container = config;
             return <Container {...this.props} />
         }
 
         const {children, block, active} = this.props;
-        const [dragConfig, rotateConfig, resizeConfig] = destruction('draggable', 'rotatable', 'resizable')(this.config)
+        const [dragConfig, rotateConfig, resizeConfig] = destruction('draggable', 'rotatable', 'resizable')(config)
 
         const containerProps = {block, active}
         const props = {block, active, children}

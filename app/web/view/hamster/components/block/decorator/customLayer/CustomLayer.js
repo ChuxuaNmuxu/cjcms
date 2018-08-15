@@ -64,46 +64,45 @@ const customLayer = (options) => DecoratedComponent => {
                 hamster
             } = this.props;
 
-            let entities = hamster.get('entities');
-
+            let hamsterState = hamster
             if (isDragging) {
                 const {blockId} = item;
             
-                const hamsterState = handleDrag(hamster, fromJS({
+                hamsterState = handleDrag(hamster, fromJS({
                     blockId,
                     offset
                 }))
-                
-                entities = hamsterState.get('entities');
             }
 
             if (isResizing) {
-                const hamsterState = handleResize(hamster, fromJS({
+                hamsterState = handleResize(hamster, fromJS({
                     direction,
                     offset
                 }))
-        
-                entities = hamsterState.get('entities');
             }
 
             if (isRotating) {
                 const {blockId, initBlock} = item;
                 
                 const rotateAngle = getRotateAngle(initBlock, initialClientOffset, clientOffset);
-                const hamsterState = handleRotate(hamster, fromJS({
+                hamsterState = handleRotate(hamster, fromJS({
                     blockId,
                     rotateAngle
                 }))
         
-                entities = hamsterState.get('entities');
             }
+            
+            const entities = hamsterState.get('entities');
+            const snapCoord = hamsterState.getIn(['current', 'snap', 'data']);
 
             const props = omit.apply(null, [this.props].concat(collectOptions))
 
-            console.log(props)
-
             return (
-                <DecoratedComponent {...props} entities={entities} />
+                <DecoratedComponent
+                  {...props}
+                  entities={entities}
+                  snapCoord={snapCoord}
+                />
             )
         }
     }

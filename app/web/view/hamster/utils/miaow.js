@@ -90,7 +90,7 @@ export function toList (value) {
  */
 export const destruction = (...args) => data => {
     return args.map(path => {
-        if (!(path && data.get)) return []
+        if (!(existy(path) && data.get)) return []
         return data.get(path)
     })
 }
@@ -405,8 +405,31 @@ export const shallowEqual = (a, b) => {
 	return true;
 }
 
+// 多管道
+export const muiltyPipe = (funcs) => (args) => {
+    const lastFunc = lodash.nth(funcs, -1);
+    return args.map((arg, k) => {
+        let func = funcs[k];
+        if (!existy(func)) {
+            func = lastFunc;
+        }
+        return funcs[k](arg)
+    })
+};
+
+// 接受参数数组
+export const apply = func => args => func.apply(null, args)
+
 // omit
 export const omit = (...args) => props => lodash.omit.apply(null, [props].concat(args))
+
+// 加上单位(普通的字符串拼接)
+export const addUnit = unit => value => `${value}${unit}`;
+export const addPx = addUnit('px')
+
+export const map = func => array => lodash.map(array, func);
+
+export const concat = a => b => lodash.concat(a, b)
 
 /******* immutable *********/
 
@@ -492,6 +515,8 @@ export function sum (list) {
     return list.reduce((sum, v) => sum + v, 0)
 }
 
+export const overI = funcs => (...arg) => Immutable.fromJS(funcs.map(func => func.apply(null, arg)))
+
 /**
  * 数组对应位置求和
  * @param {*} a 
@@ -501,7 +526,13 @@ export function listAdd (a, b) {
     return a.zip(b).map(sum)
 }
 
-export const map = func => param => param.map(func) ;
+/**
+ * 除去第一个元素
+ * @param {*} list 
+ */
+export const tails = list => list.skip(1)
+
+export const mapI = func => param => param.map(func) ;
 
 export const filter = func => list => list.filter(func);
 

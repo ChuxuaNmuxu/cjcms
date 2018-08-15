@@ -12,4 +12,4 @@ class Registry {
     }
 }
 
-export default Registry;
+export default new Registry();

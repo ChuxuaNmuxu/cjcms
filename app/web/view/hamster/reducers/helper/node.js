@@ -164,10 +164,13 @@ export function getAllLeafIds (hamster) {
     }
 }
 
-// 过滤出祖先节点
-export const filterAncestorIds = hamster => ids => miaow.filter(isAncestor(hamster))(miaow.toList(ids));
+// 筛选出祖先节点
+export const getAncestorIds = hamster => ids => miaow.filter(isAncestor(hamster))(miaow.toList(ids));
 
-// 过滤出叶子节点
+// 过滤掉祖先节点
+export const filtAncestorIds = hamster => ids => miaow.filter(miaow.not(isAncestor)(hamster))(miaow.toList(ids))
+
+// 筛选出叶子节点
 export const filterLeafIds = hamster => ids => miaow.filter(isLeaf(hamster))(miaow.toList(ids));
 
 // ids里是否存在叶子元素

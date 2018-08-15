@@ -7,13 +7,14 @@ import Slide from '../slide'
 import BoxSelection from '../../components/boxSelection'
 // import customDisplayLayler from '../block/decorator/customLayer'
 import customLayer from '../block/decorator/customLayer/CustomLayer'
+import Snap from '../snap';
 
 // @customDisplayLayler()
 @customLayer()
 @CSSModules(styles)
 class Viewport extends React.Component {
     render () {
-        const {blockIds, currentBlocks, entities} = this.props;
+        const {blockIds, currentBlocks, entities, snapCoord} = this.props;
 
         return (
             <div className='viewport' styleName='viewport'>
@@ -21,11 +22,12 @@ class Viewport extends React.Component {
                     <div className='reveal'>
                         <div className='slides'>
                             {/* <CustomLayer /> */}
+                            <Snap snapCoord={snapCoord}/>
                             <section className='section'>
                                 <Slide
-                                  blockIds={blockIds}
-                                  entities={entities}
-                                  activatedIds={currentBlocks}
+                                blockIds={blockIds}
+                                entities={entities}
+                                activatedIds={currentBlocks}
                                 />
                             </section>
                         </div>

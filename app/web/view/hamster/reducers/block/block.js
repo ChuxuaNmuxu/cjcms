@@ -6,9 +6,9 @@ import * as nodeHelper from '../helper/node';
 import * as currentHelper from '../helper/current';
 import * as entityHelper from '../helper/entity';
 import * as blockHelper from '../helper/block';
+import { ACT_DRAG, ACT_RESIZE, ACT_ROTATE } from '../helper/contants';
 
 function handleAddBlock (hamster, action) {
-    console.log(5, action)
     const {payload: {blocks}} = action;
 
     hamster = helper.handleAddBlock(hamster, blocks);
@@ -28,6 +28,10 @@ function handleDragEnd (hamster, action) {
 
     // current
     hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
+
+    // 更新组合元素
+    const [blocksToDrag] = miaow.destruction('blocksToDrag')(currentHelper.getActSituation(hamster))
+    hamster = helper.updateAllGroupFourDimension(hamster, blocksToDrag);
 
     return hamster;
 }   
@@ -58,6 +62,10 @@ function handleResizeEnd (hamster, action) {
 
     // current
     hamster = currentHelper.updateCurrent(hamster)('resizing')(false);
+
+    // 更新组合元素
+    const activatedIds = currentHelper.getActivatedBlockIds(hamster);
+    hamster = helper.updateAllGroupFourDimension(hamster, activatedIds);
 
     return hamster
 }
@@ -135,7 +143,7 @@ function handleUnite (hamster, actions) {
     hamster = helper.createDefaultBlockObjects(hamster, entityId);
 
     // 初始大小及位置
-    const idCluster = currentHelper.getIdClusterInCurrent(hamster, activeblockIds);
+    const idCluster = currentHelper.getIdCluster(hamster, activeblockIds);
     hamster = blockHelper.updateGroupFourDimension(hamster, idCluster, entityId);
 
     // 修改children属性
@@ -174,8 +182,26 @@ function handleUnite (hamster, actions) {
  */
 function handleActStart (hamster, action) {
     const {payload} = action;
-    hamster = currentHelper.updateCurrent(hamster)(payload.get('type'))(true);
-    hamster = currentHelper.updateCurrent(hamster)('operatingBlockId')(payload.get('blockId'));
+    const type = payload.get('type');
+    const blockId = payload.get('blockId');
+
+    hamster = currentHelper.updateCurrent(hamster)(type)(true);
+    hamster = currentHelper.updateCurrent(hamster)('operatingBlockId')(blockId);
+
+    /**
+     * 操作形式判断
+     * 操作过程中(handleDrag, handleResize, handleRotate)将用到，但只需在操作前(actStart)判断一次就行
+     * 不需要在操作中一直计算
+    */
+    let actType = ACT_DRAG;
+    if (/resiz/.test(type)) actType = ACT_RESIZE;
+    if (/rotat/.test(type)) actType = ACT_ROTATE;
+
+    const situation = currentHelper.getSituation(hamster, blockId, actType);
+    hamster = currentHelper.updateCurrent(hamster)('actSituation')(fromJS(situation));
+
+    // drag开始，组合元素不显示
+    if (actType === ACT_DRAG) hamster = currentHelper.updateCurrent(hamster)('blocks')(miaow.filter(miaow.not(nodeHelper.isAncestor(hamster))));
     return hamster;
 }
 
@@ -194,11 +220,14 @@ function handleBoxSelect (hamster, action) {
     // const blockIds = hamster.get('entities').filter(entity => )
     const blockIdsInSlide = currentHelper.getAllBlockIdsInOperatingSlide(hamster);
     const blockIdsToActivated = blockIdsInSlide.filter(blockId => {
-        const box = blockHelper.packageBlocks(hamster, blockId);
+        const box = blockHelper.packageBlocks(hamster)(blockId);
         return box.top < bottom && top < box.bottom && box.right > left && right > box.left
     })
 
-    hamster = helper.handleReactivateBlocks(hamster)(blockIdsToActivated);
+    // 去掉叶子元素，只保留祖先元素
+    const rightBlocks = currentHelper.forceMaybeAncestors(hamster)(blockIdsToActivated);
+
+    hamster = helper.handleReactivateBlocks(hamster)(rightBlocks);
 
     return hamster;
 }
