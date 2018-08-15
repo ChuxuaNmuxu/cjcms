@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 import * as helper from '../helper/helper';
 import * as miaow from '../../utils/miaow';
@@ -26,12 +26,14 @@ function handleDragEnd (hamster, action) {
     const operateBlockId = currentHelper.getOperatingBlockId(hamster);
     hamster = helper.activateBlock(hamster, operateBlockId, false);
 
-    // current
-    hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
-
+    
     // 更新组合元素
     const [blocksToDrag] = miaow.destruction('blocksToDrag')(currentHelper.getActSituation(hamster))
     hamster = helper.updateAllGroupFourDimension(hamster, blocksToDrag);
+    
+    // current
+    hamster = currentHelper.updateCurrent(hamster)('dragging')(false);
+    hamster = currentHelper.updateCurrent(hamster)('snap.data')(null)
 
     return hamster;
 }   
