@@ -3,15 +3,14 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import CSSModules from 'react-css-modules';
 import SnapLine from './SnapLine';
+import {Map} from 'immutable'
 
 import {destruction} from '../../utils/miaow'
 import { withHamster } from '../../manager';
 import styles from './Snap.scss';
-import { fromJS } from '../../../../../../node_modules/immutable';
 
 const mapStateToProps = ({hamster}) => {
     return {
-        // snapCoord: hamster.getIn(['current', 'snapCoord']),
         config: hamster.getIn(['data', 'snap', 'config'])
     }
 }
@@ -27,7 +26,7 @@ export default class Snap extends Component {
     }
 
     static defaultProps = {
-        config: fromJS({
+        config: Map({
             width: 1
         })
     }

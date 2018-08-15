@@ -22,7 +22,34 @@ export default class SnapLine extends Component {
         width: 0,
         height: 0,
         config: {
-            color: 'yellow'
+            color: `linear-gradient(
+                to right,
+                white,
+                transparent 3%,
+                transparent 97%,
+                white 100%
+            ),
+            repeating-linear-gradient(
+                to right,
+                transparent,
+                transparent 5px,
+                #999 5px,
+                #999 10px
+            ),
+            linear-gradient(
+                to bottom,
+                white,
+                transparent 3%,
+                transparent 97%,
+                white 100%
+            ),
+            repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 5px,
+                #999 5px,
+                #999 10px
+            )`
         }
     }
 
@@ -31,8 +58,8 @@ export default class SnapLine extends Component {
 
         // const {config: {color}} = this.props;
         const color = this.props.config.get('color');
-        const backgroundColor = color || SnapLine.defaultProps.config.color;
-        return _.merge({}, {backgroundColor}, style)
+        const background = color || SnapLine.defaultProps.config.color;
+        return _.merge({}, {background}, style)
     }
 
     render() {

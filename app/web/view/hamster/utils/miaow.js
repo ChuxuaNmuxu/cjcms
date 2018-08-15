@@ -90,7 +90,7 @@ export function toList (value) {
  */
 export const destruction = (...args) => data => {
     return args.map(path => {
-        if (!(existy(path) && data.get)) return []
+        if (!(existy(path) && existy(data) && data.get)) return []
         return data.get(path)
     })
 }
