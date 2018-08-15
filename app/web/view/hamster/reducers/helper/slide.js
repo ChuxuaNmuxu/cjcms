@@ -109,6 +109,12 @@ const getXYGraduation = miaow.overI([getXGraduation, getYGraduation]);
 
 const getConfigGrad = len => gap => lodash.uniq(lodash.range(0, len, gap).concat(len));
 
+const getGradById = hamster => lodash.flow(
+    blockHelper.packageBlocks(hamster),
+    fromJS,
+    getXYGraduation,
+);
+
 const getGradByIds = hamster => blockIds => {
     blockIds = miaow.toList(blockIds);
 
@@ -120,11 +126,7 @@ const getGradByIds = hamster => blockIds => {
     /**
      * @returns List([List, List])
      */
-    const grad = lodash.flow(
-        blockHelper.packageBlocks(hamster),
-        fromJS,
-        getXYGraduation,
-    )(id);
+    const grad = getGradById(hamster)(id);
 
     return grad.zipWith((a, b) => a.concat(b), getGradByIds(hamster)(tails));
 }
@@ -158,7 +160,7 @@ export const snap = (hamster, ids) => {
     /**
      * 被操作元素的刻度尺
      * */
-    const operateBlocksGrad = getGradByIds(hamster)(ids);
+    const operateBlocksGrad = getGradById(hamster)(ids);
 
     /**
      * 余下元素
