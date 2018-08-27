@@ -431,6 +431,8 @@ export const map = func => array => lodash.map(array, func);
 
 export const concat = a => b => lodash.concat(a, b)
 
+export const split = reg => string => lodash.split(string, reg)
+
 /******* immutable *********/
 
 /**

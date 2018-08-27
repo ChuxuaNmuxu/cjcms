@@ -5,10 +5,10 @@ import {reduce, omit} from 'lodash'
 import {connect} from 'react-redux'
 import { Layer } from '@~sunsimiao/cj-react-dnd';
 import hoistNonReactStatics  from 'hoist-non-react-statics'
-import { handleDrag, handleResize, handleRotate } from '../../../../reducers/helper/helper';
 import {fromJS} from 'immutable'
-import { getRotateAngle } from '../../../../utils/block';
 
+import { getRotateAngle } from '../../../../utils/block';
+import { handleDrag, handleResize, handleRotate } from '../../../../reducers/helper/helper';
 const collectOptions = ['initialClientOffset', 'clientOffset', 'offset', 'item',
 'isDragging', 'isResizing', 'isRotating', 'direction', 'hamster', 'dispatch']
 
@@ -67,7 +67,7 @@ const customLayer = (options) => DecoratedComponent => {
             let hamsterState = hamster
             if (isDragging) {
                 const {blockId} = item;
-            
+
                 hamsterState = handleDrag(hamster, fromJS({
                     blockId,
                     offset
