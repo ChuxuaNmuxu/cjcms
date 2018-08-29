@@ -3,18 +3,21 @@ import PropTypes from 'prop-types'
 import CSSModules from 'react-css-modules';
 import styles from './DragSection.scss';
 // import {DragSource} from '../decorator/operation/drag';
-import {DragSource} from '@~sunsimiao/cj-react-dnd'
+import {DragSource} from '@ssm1982/cj-react-dnd'
 import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 import {omit} from 'lodash'
-import {getEmptyImage} from '@~sunsimiao/cj-react-dnd'
+import {getEmptyImage} from '@ssm1982/cj-react-dnd'
 
 import blockActions from '../../../actions/block';
 import { isValidateReactComponent } from '../../../utils/miaow';
 import PureContainerComponent from './PureContainerComponent';
+import {withHamster} from '../../../manager'
+
+let beforeDrag = true;
 
 const spec = {
-    beginDrag (props, component) {
+    beginDrag (props, monitor) {
         const {beginDrag, block} = props;
 
         const item = {
@@ -23,11 +26,22 @@ const spec = {
         };
         
         beginDrag && beginDrag(fromJS(item))
+
+        beforeDrag = true;
+
         return item;
     },
 
     drag (props, monitor) {
-        const {drag, block} = props;
+        const {drag, block, hamster} = props;
+
+        if (beforeDrag) {
+            hamster.fire('beforeDrag', monitor.getEvent());
+            beforeDrag = false;
+        }
+
+        console.log(35, monitor.getEvent())
+
         const offset = monitor.getDifferenceFromInitialOffset();
         drag && drag(fromJS({
             offset,
@@ -47,6 +61,8 @@ const spec = {
         const {dragEnd, block} = props;
         const offset = monitor.getDifferenceFromInitialOffset();
 
+        console.log(64, monitor.getEvent())
+
         dragEnd && dragEnd(fromJS({
             offset,
             blockId: block.get('id')
@@ -62,6 +78,7 @@ const collect = (connect, monitor) => {
     }
 }
 
+@withHamster()
 @DragSource('block', spec, collect)
 @CSSModules(styles)
 class DragSection extends PureContainerComponent {

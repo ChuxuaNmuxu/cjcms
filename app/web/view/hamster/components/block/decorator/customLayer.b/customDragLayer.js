@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 
 // import dragLayer from '../../decorator/operation/drag/DragLayer';
-import {DragLayer} from '@~sunsimiao/cj-react-dnd';
+import {DragLayer} from '@ssm1982/cj-react-dnd';
 import { handleDrag} from '../../../../reducers/helper/helper';
 import { omit } from '../../../../utils/miaow';
 import customLayerFactory from './CustomLayer';

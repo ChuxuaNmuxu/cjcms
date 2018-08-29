@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {reduce, omit} from 'lodash'
 import {connect} from 'react-redux'
-import { Layer } from '@~sunsimiao/cj-react-dnd';
+import { Layer } from '@ssm1982/cj-react-dnd';
 import hoistNonReactStatics  from 'hoist-non-react-statics'
 import {fromJS} from 'immutable'
 
@@ -89,7 +89,6 @@ const customLayer = (options) => DecoratedComponent => {
                     blockId,
                     rotateAngle
                 }))
-        
             }
             
             const entities = hamsterState.get('entities');

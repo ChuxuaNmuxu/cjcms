@@ -1,8 +1,7 @@
-import HamsterManager from './HamsterManager';
 import lodash from 'lodash';
 import * as miaow from '../utils/miaow';
 
-export default class EventManager extends HamsterManager {
+export default class EventManager {
     eventPool = {};
 
     /**
@@ -24,7 +23,7 @@ export default class EventManager extends HamsterManager {
     on (eventNames, listener, context) {
         if (lodash.isString(eventNames)) {
             lodash.flow(
-                miaow.slipt(/\s+/g),
+                miaow.split(/\s+/g),
                 miaow.map(eventName => this._bindEvent(eventName, listener, context))
             )(eventNames)
         } else if (lodash.isOjbect(eventNames)) {
@@ -47,9 +46,10 @@ export default class EventManager extends HamsterManager {
         return events;
     }
 
-    fire (eventName) {
-        const events = this._safeEvent(eventName);
-        events.forEach(event => event(this.hamster));
+    fire (eventName, ...args) {
+        const eventHandles = this._safeEvent(eventName);
+
+        eventHandles.forEach(handler => handler.listener.apply(null, args));
     }
 
     /**

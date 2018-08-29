@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 import { handleRotate } from '../../../../reducers/helper/helper';
 // import rotateLayler from '../../decorator/operation/rotate/RotateLayer';
-import {RotateLayer} from '@~sunsimiao/cj-react-dnd';
+import {RotateLayer} from '@ssm1982/cj-react-dnd';
 import { getRotateAngle } from '../../../../utils/block';
 import { omit } from '../../../../utils/miaow';
 import customDragLayerFactory from './CustomLayer';

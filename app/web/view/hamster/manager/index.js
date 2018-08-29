@@ -76,6 +76,14 @@ class Hamster extends StoreManager {
     getContainer (name) {
         return this.registry.getContainer(name)
     }
+
+    on (eventName, handler, context) {
+        this.eventManager.on(eventName, handler, context);
+    }
+
+    fire (eventName, ...args) {
+        this.eventManager.fire(eventName, ...args)
+    }
 }
 
 export default Hamster;

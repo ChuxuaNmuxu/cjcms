@@ -16,7 +16,7 @@
     "debug": "egg-bin debug"
   },
   "dependencies": {
-    "@~sunsimiao/cj-react-dnd": "^1.0.1",
+    "@ssm1982/cj-react-dnd": "^1.1.11",
     "antd": "^3.0.3",
     "babel-runtime": "^6.26.0",
     "cross-env": "^5.0.0",
