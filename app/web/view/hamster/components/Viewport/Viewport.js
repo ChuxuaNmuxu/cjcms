@@ -8,16 +8,23 @@ import BoxSelection from '../../components/boxSelection'
 // import customDisplayLayler from '../block/decorator/customLayer'
 import customLayer from '../block/decorator/customLayer/CustomLayer'
 import Snap from '../snap';
+import {withHamster} from '../../manager'
 
 // @customDisplayLayler()
 @customLayer()
+@withHamster()
 @CSSModules(styles)
 class Viewport extends React.Component {
+    componentDidMount () {
+        const {hamster} = this.props;
+        hamster.registry.registry('viewport', this.viewport);
+    }
+
     render () {
         const {blockIds, currentBlocks, entities, snapCoord} = this.props;
 
         return (
-            <div className='viewport' styleName='viewport'>
+            <div className='viewport' styleName='viewport' ref={e => {this.viewport = e}} tabIndex='0' >
                 <BoxSelection>
                     <div className='reveal'>
                         <div className='slides'>

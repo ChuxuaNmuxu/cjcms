@@ -77,8 +77,34 @@ class Hamster extends StoreManager {
         return this.registry.getContainer(name)
     }
 
+    /**
+     * 1. on('viewport: keydown')
+     * 将事件绑定到viewport上
+     * 2. on('beforeDrag')
+     * 绑定到hamster
+     * @param {*} eventName 
+     * @param {*} handler 
+     * @param {*} context 
+     */
     on (eventName, handler, context) {
-        this.eventManager.on(eventName, handler, context);
+        const eventNameInfo = eventName.split(/\s+/g);
+
+        const hamsterEventNames = [];
+        const domEventNames = [];
+        eventNameInfo.forEach(v => {
+            /:/.test(v) ? domEventNames.push(v) : hamsterEventNames.push(v);
+        })
+
+        this.eventManager.on(hamsterEventNames.join(' '), handler, context);
+
+        domEventNames.forEach(v => {
+            const name = v.split(/:/);
+            const containerName = name[0];
+            const eventName = name[1];
+
+            const container = this.registry.getContainer(containerName);
+            if (container && container.addEventListener) container.addEventListener(eventName, handler);
+        })
     }
 
     fire (eventName, ...args) {

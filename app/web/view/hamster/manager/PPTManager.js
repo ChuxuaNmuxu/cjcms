@@ -9,6 +9,22 @@ class EditorManager extends HamsterManager {
     initEditor () {
         this.dispatch(pptActions.init())
     }
+    
+    // 事件绑定
+    addEventListener () {
+        this.hamster.on('beforeDrag', e => {
+            console.log(14, event)
+            console.log(15, e)
+            // if (e.ctrlKey) {
+                // 复制
+                console.log('copy')
+            // }
+        })
+
+        this.hamster.on('viewport:keydown', event => {
+            console.log('event.key', event.key);
+        })
+    }
 
     getHamsterState () {
         return this.getState().hamster

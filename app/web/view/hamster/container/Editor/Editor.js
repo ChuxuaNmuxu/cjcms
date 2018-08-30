@@ -34,6 +34,7 @@ class Editor extends React.Component {
 
         // ppt editor 初始化的一些工作
         this.hamster.pptManager.initEditor();
+        this.hamster.pptManager.addEventListener();
     }
 
     render () {
