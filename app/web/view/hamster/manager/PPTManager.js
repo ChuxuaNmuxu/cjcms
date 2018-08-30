@@ -3,6 +3,9 @@ import pptActions from '../actions/ppt'
 import {block} from '../reducers/block/block'
 import { fromJS } from 'immutable';
 
+import { dispatchMission } from '../utils/miaow';
+import {eventHelper} from './helper';
+
 class EditorManager extends HamsterManager {
     pipeHamster = null;
 
@@ -21,9 +24,14 @@ class EditorManager extends HamsterManager {
             // }
         })
 
-        this.hamster.on('viewport:keydown', event => {
-            console.log('event.key', event.key);
+        document.addEventListener('keydown', event => {
+            dispatchMission(
+                eventHelper.onDeleteKey,
+            )(event, this.hamster)
         })
+
+        // this.hamster.on('viewport:mousedown', )
+        this.hamster.on('viewport:mousedown viewport:focus', () => {console.log(111)})
     }
 
     getHamsterState () {
