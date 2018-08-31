@@ -45,13 +45,17 @@ class Editor extends React.Component {
                         <Toolbar />
                     </header>
                     <main>
-                        <div className='sidebar right'>
+                        <div className='exhibition-area'>
+                            <div className='hidden sidebar-left'>
+                                <Navbar />
+                            </div>
+                            <div className='main-viewport'>
+                                <Viewport />
+                            </div>
+                        </div>
+                        <div className='hidden sidebar-right'>
                             <Propsbar />
                         </div>
-                        <div className='sidebar left'>
-                            <Navbar />
-                        </div>
-                        <Viewport />
                     </main>
                 </div>
             </HamsterContext.Provider>

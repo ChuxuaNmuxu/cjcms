@@ -1,5 +1,7 @@
 // navbar
 $navbarWidth: 320px;
+$hiddenWidth: 0;
+
 // propsbar
 $propsbarWidth: 320px;
 
@@ -7,79 +9,48 @@ $lineColor: #e8e8e8;
 
 .editor {
     color: #000;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 
     :global {
         .header {
             border-bottom: 1px solid $lineColor;
-
-            &.hidden {
-                margin-top: -51px;
-            }
-        }
-
-        .header.hidden ~ main {
-            top: 0;
+            height: 51px;
+            flex: none;
         }
 
         main {
-            position: absolute;
-            top: 51px;
-            bottom: 0;
-            width: 100%;
+            flex: 1;
+            display: flex;
 
-            .sidebar {
-                position: absolute;
-                height: 100%;
-
-                &.left {
-                    width: $navbarWidth;
-
-                    &.hidden {
-                        left: -$navbarWidth;
-                    }
-                }
-
-                &.right {
-                    width: $propsbarWidth;
-                    right: 0;
-
-                    &.hidden {
-                        right: -$propsbarWidth;
-                    }
-                }
-            }
-
-            .navbar, .propsbar {
-                height: 100%;
-            }
-
-            .navbar {
-                left: 0;
-                width: $navbarWidth;
-                border-right: 1px solid $lineColor;
-            }
-
-            .propsbar {
-                right: 0;
+            .sidebar-right {
                 width: $propsbarWidth;
-                border-left: 1px solid $lineColor;
+                flex: none;
+
+                &.hidden {
+                    width: $hiddenWidth;
+                }
             }
 
-            .viewport {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: $navbarWidth;
-                right: $propsbarWidth;
-                // background: lightblue;
-            }
+            .exhibition-area {
+                display: flex;
+                flex: 1;
 
-            .sidebar.left.hidden ~ .viewport {
-                left: 0;
-            }
+                .sidebar-left {
+                    // flex: 1;
+                    width: $navbarWidth;
+                    flex: 0 1 auto;
 
-            .sidebar.right.hidden ~ .viewport {
-                right: 0;
+                    &.hidden {
+                        width: $hiddenWidth;
+                    }
+                }
+
+                .main-viewport {
+                    width: 1200px;
+                    flex: 1;
+                }
             }
         }
     }
