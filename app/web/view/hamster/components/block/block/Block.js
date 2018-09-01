@@ -38,7 +38,7 @@ export class Component extends React.Component {
             blockConfig
         }
     }
-    
+
     shouldComponentUpdate (nextProps) {
         // 过滤children
         const {block, active} = this.props;
