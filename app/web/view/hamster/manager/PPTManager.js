@@ -32,6 +32,9 @@ class EditorManager extends HamsterManager {
 
         // this.hamster.on('viewport:mousedown', )
         this.hamster.on('viewport:mousedown viewport:focus', () => {console.log(111)})
+        this.hamster.on('exhibition:mousedown', e => {
+            console.log('exhibition:mousedown', e)
+        })
     }
 
     getHamsterState () {
