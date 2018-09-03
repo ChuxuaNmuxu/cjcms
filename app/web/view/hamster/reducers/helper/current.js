@@ -9,6 +9,12 @@ import { handleCancelActivateBlocks } from './helper';
  * current数组中可能包含祖先节点，独立节点和叶子节点
 */
 
+/**
+ * 获取当前current的运行时状态
+ * @param {*} hamster 
+ */
+export const getCurrentState = hamster => path => hamster.getIn(['current'].concat(path.split('.')))
+
 export const getActivatedBlockIds = (hamster) => {
     return hamster.getIn(['current', 'blocks'])
 }

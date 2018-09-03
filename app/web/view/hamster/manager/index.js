@@ -110,6 +110,10 @@ class Hamster extends StoreManager {
     fire (eventName, ...args) {
         this.eventManager.fire(eventName, ...args)
     }
+
+    getHamsterState () {
+        return this.getState().hamster
+    }
 }
 
 export default Hamster;
