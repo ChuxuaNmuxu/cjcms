@@ -1,6 +1,7 @@
 import * as slideHelper from '../helper/slide'
 import {handleCancelActivateBlocks} from '../helper/helper'
-import { getActivatedBlockIds } from '../helper/current';
+import { getActivatedBlockIds, updateCurrent, cancelActivateBlocksInCurrent } from '../helper/current';
+import { FOCUSAREA_VIEWPORT } from '../../config/constants';
 
 /**
  * 添加slides
@@ -186,10 +187,10 @@ function handleActivateSlide (hamster, action) {
 }
 
 function handleSlideMouseDown (hamster, action) {
-    const activatedBlockIds = getActivatedBlockIds(hamster);
+    hamster = cancelActivateBlocksInCurrent(hamster);
 
-    hamster = handleCancelActivateBlocks(hamster)(activatedBlockIds);
-
+    // 更新focusArea
+    hamster = updateCurrent(hamster)('focusArea')(FOCUSAREA_VIEWPORT);
     return hamster;
 }
 

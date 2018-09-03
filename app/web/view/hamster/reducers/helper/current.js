@@ -3,6 +3,7 @@ import lodash from 'lodash';
 import * as miaow from '../../utils/miaow';
 import { getEntity } from './entity';
 import * as contants from './contants';
+import { handleCancelActivateBlocks } from './helper';
 
 /**
  * current数组中可能包含祖先节点，独立节点和叶子节点
@@ -353,3 +354,13 @@ export const getAllBlockIdsInOperatingSlide = hamster => {
         miaow.get('data.blocks')
     )(hamster)
 }
+
+/**
+ * 取消当前已激活元素的激活状态
+ * @param {object} hamster 
+ */
+export const cancelActivateBlocksInCurrent = hamster => lodash.flow(
+    // 取消block激活
+    getActivatedBlockIds,
+    handleCancelActivateBlocks(hamster)
+)(hamster);
