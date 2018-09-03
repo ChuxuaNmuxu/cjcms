@@ -1,5 +1,6 @@
 import uuid from 'uuid'
-import {createSlide} from '../utils/slide'
+import {createSlide} from '../utils/slide';
+import {FOCUSAREA_VIEWPORT} from '../config/constants';
 
 /**
  * 初始化hamster数据
@@ -30,7 +31,8 @@ const initHamster = () => {
         current: {
             blocks: [],
             slides: [slideId],
-            'slide.group': slideGroupId
+            'slide.group': slideGroupId,
+            focusArea: FOCUSAREA_VIEWPORT
         }
     }
 }

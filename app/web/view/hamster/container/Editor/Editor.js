@@ -32,6 +32,7 @@ class Editor extends React.Component {
         this.hamster.registry.registry('slide', slideContainer.getBoundingClientRect());
         this.hamster.registry.registry('reveal', revealContainer.getBoundingClientRect());
         this.hamster.registry.registry('exhibition', this.exhibition);
+        this.hamster.registry.registry('nav', this.nav);
 
         // ppt editor 初始化的一些工作
         this.hamster.pptManager.initEditor();
@@ -47,7 +48,7 @@ class Editor extends React.Component {
                     </header>
                     <main>
                         <div className='exhibition-area' ref = {e => {this.exhibition = e}}>
-                            <div className='sidebar-left'>
+                            <div className='sidebar-left' ref = {e => {this.nav = e}}>
                                 <Navbar />
                             </div>
                             <div className='main-viewport'>

@@ -1,5 +1,6 @@
 import HamsterManager from './HamsterManager';
-import pptActions from '../actions/ppt'
+import pptActions from '../actions/ppt';
+import navActions from '../actions/nav';
 import {block} from '../reducers/block/block'
 import { fromJS } from 'immutable';
 
@@ -30,10 +31,15 @@ class EditorManager extends HamsterManager {
             )(event, this.hamster)
         })
 
+        this.hamster.on('nav:mousedown', e => {
+            e.stopPropagation();
+            this.dispatch(navActions.mousedown())
+        })
+
         // this.hamster.on('viewport:mousedown', )
         this.hamster.on('viewport:mousedown viewport:focus', () => {console.log(111)})
         this.hamster.on('exhibition:mousedown', e => {
-            console.log('exhibition:mousedown', e)
+            console.log(36, e.target)
         })
     }
 

@@ -236,7 +236,7 @@ function handleBoxSelect (hamster, action) {
 
 function handleDeleteBlock (hamster, action) {
     const activateIds = currentHelper.getActivatedBlockIds(hamster);
-    hamster = hamster.updateIn(['index', 'blocks'], miaow.minus(activateIds));
+    hamster = blockHelper.deleteBlocks(hamster)(activateIds);
     return hamster;
 }
 

@@ -292,3 +292,16 @@ export const leafsRotateWithAncestor = hamster => ancestorId => angle => {
 
     return hamster;
 }
+
+// 删除元素
+export const deleteBlocks = hamster => ids => {
+    hamster = hamster.updateIn(['index', 'blocks'], miaow.minus(ids));
+
+    /**
+     * TODO:
+     * 1. 更新zIndex
+     * 2. 删除资源
+     * 3. 更新组合
+     * */
+    return hamster;
+}
