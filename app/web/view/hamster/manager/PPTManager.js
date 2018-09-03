@@ -38,8 +38,15 @@ class EditorManager extends HamsterManager {
         })
 
         // this.hamster.on('viewport:mousedown', )
-        this.hamster.on('viewport:mousedown', () => {
-            this.dispatch(slideActions.slideMouseDown());
+        this.hamster.on('viewport:mousedown', e => {
+            /**
+             * TODO:
+             * 1. 在block mousedown时保存activatedBlock, 在drag等的时候已保存的block来查找应该操作的block
+             * 2. e.target方式组织冒泡用classList来做判断的方式需要优化
+            */
+            if (e.target.classList.contains('reveal') || e.target.classList.contains('slide-wrap')) {
+                this.dispatch(slideActions.slideMouseDown());
+            }
         })
         this.hamster.on('exhibition:mousedown', e => {
             console.log(36, e.target)
