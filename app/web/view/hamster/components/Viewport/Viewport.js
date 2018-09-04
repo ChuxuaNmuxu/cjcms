@@ -24,7 +24,11 @@ class Viewport extends React.Component {
         const {blockIds, currentBlocks, entities, snapCoord} = this.props;
 
         return (
-            <div className='viewport' styleName='viewport' ref={e => {this.viewport = e}} tabIndex='0' >
+            <div
+              className='viewport'
+              styleName='viewport'
+              ref={e => {this.viewport = e}}
+             >
                 <BoxSelection>
                     <div className='reveal'>
                         <div className='slides'>
@@ -32,9 +36,9 @@ class Viewport extends React.Component {
                             <Snap snapCoord={snapCoord}/>
                             <section className='section'>
                                 <Slide
-                                blockIds={blockIds}
-                                entities={entities}
-                                activatedIds={currentBlocks}
+                                  blockIds={blockIds}
+                                  entities={entities}
+                                  activatedIds={currentBlocks}
                                 />
                             </section>
                         </div>

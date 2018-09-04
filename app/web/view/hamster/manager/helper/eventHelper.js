@@ -2,12 +2,16 @@ import { getCurrentState } from "../../reducers/helper/current";
 import { FOCUSAREA_NAV, FOCUSAREA_VIEWPORT } from "../../config/constants";
 
 export const onDeleteKey = (event, hamster) => {
-    if (event.key !== 'Delete') return;
-    const focusArea = getCurrentState(hamster.getHamsterState())('focusArea');
-    if (focusArea === FOCUSAREA_NAV) {
-        // TODO: 删除导航图片(slide)
-    } else if (focusArea === FOCUSAREA_VIEWPORT) {
-        // 删除block
-        hamster.blockManager.blockDelete()
-    }
+    if (event.key !== 'Delete' && event.key !== 'Backspace') return;
+    hamster.blockManager.blockDelete();
+}
+
+export const onCopy = (event, hamster) => {
+    if (event.key !== 'c' || !event.ctrlKey) return;
+    hamster.blockManager.copyBlocks();
+}
+
+export const onPaste = (event, hamster) => {
+    if (event.key !== 'v' || !event.ctrlKey) return;
+    hamster.blockManager.pasteBlocks();
 }

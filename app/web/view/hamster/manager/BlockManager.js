@@ -71,6 +71,13 @@ class BlockManager extends HamsterManager {
         return isResizing(this.getState('hamster'))
     }
 
+    copyBlocks (payload) {
+        return this.dispatch(blockActions.copy(payload))
+    }
+
+    pasteBlocks (payload) {
+        this.dispatch(blockActions.paste(payload))
+    }
 }
 
 export default BlockManager

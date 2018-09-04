@@ -1,4 +1,5 @@
 import {fromJS, Map} from 'immutable';
+import lodash from 'lodash';
 
 import * as helper from '../helper/helper';
 import * as miaow from '../../utils/miaow';
@@ -240,6 +241,52 @@ function handleDeleteBlock (hamster, action) {
     return hamster;
 }
 
+const handleCopyBlocks = (hamster, action) => {
+    hamster = lodash.flow(
+        currentHelper.getActivatedBlockIds,
+        currentHelper.updateCurrent(hamster)('copy')
+    )(hamster)
+    return hamster;
+}
+
+
+/**
+ * paste
+ * @param {*} hamster 
+ * @param {*} action 
+ */
+const pasteOffset = 5;
+
+const handlePasteBlocks = (hamster, action) => {
+    const blocks = lodash.flow(
+        currentHelper.getCurrentState(hamster),
+        miaow.toList,
+        miaow.flowDebug,
+        miaow.mapI(lodash.flow(
+            // 拿到block
+            entityHelper.getEntity(hamster),
+            miaow.flowDebug,
+            // 更新id, 位置, zIndex等
+            entityHelper.udpateEntity(fromJS({
+                'id': helper.createId('block'),
+                'data.props.top': miaow.add(pasteOffset),
+                'data.props.left': miaow.add(pasteOffset),
+            }))
+        ))
+    )('copy')
+
+    hamster = handleAddBlock(hamster, {
+        payload: {blocks}
+    })
+
+    // 激活复制后的元素
+    hamster = helper.handleReactivateBlocks(hamster)(blocks.map(miaow.get('id')));
+
+    // 更新copy
+    hamster = handleCopyBlocks(hamster)
+    return hamster;
+}
+
 export const block = {
     'ADD': handleAddBlock,
     'DRAG_END': handleDragEnd,
@@ -250,4 +297,6 @@ export const block = {
     'BLOCK_DELETE': handleDeleteBlock,
     'ACT_START': handleActStart,
     'BOX_SELECT': handleBoxSelect,
+    'COPY': handleCopyBlocks,
+    'PASTE': handlePasteBlocks
 }

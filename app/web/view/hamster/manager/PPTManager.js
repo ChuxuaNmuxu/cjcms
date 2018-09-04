@@ -5,8 +5,10 @@ import slideActions from '../actions/slide';
 import {block} from '../reducers/block/block'
 import { fromJS } from 'immutable';
 
-import { dispatchMission } from '../utils/miaow';
+import { dispatchMission, prevCheck } from '../utils/miaow';
 import {eventHelper} from './helper';
+import { FOCUSAREA_NAV, FOCUSAREA_VIEWPORT } from '../config/constants';
+import { getCurrentState } from '../reducers/helper/current';
 
 class EditorManager extends HamsterManager {
     pipeHamster = null;
@@ -27,10 +29,28 @@ class EditorManager extends HamsterManager {
         })
 
         document.addEventListener('keydown', event => {
+            // console.log('event key:', event.key)
+            const focusArea = getCurrentState(this.hamster.getHamsterState())('focusArea');
+
             dispatchMission(
-                eventHelper.onDeleteKey,
+                // navbar 事件
+                prevCheck(() => focusArea === FOCUSAREA_NAV)(dispatchMission(
+                    // TODO:
+                    // eventHelper.onNavDeleteKey,
+                    // eventHelper.onNavCopy,
+                )),
+                // block 事件
+                prevCheck(() => focusArea === FOCUSAREA_VIEWPORT)(
+                    dispatchMission(
+                        eventHelper.onDeleteKey,
+                        eventHelper.onCopy,
+                        eventHelper.onPaste,
+                    )
+                )
             )(event, this.hamster)
         })
+
+        // document.addEventListener('paste', event => console.log(267393))
 
         this.hamster.on('nav:mousedown', e => {
             e.stopPropagation();
@@ -48,8 +68,15 @@ class EditorManager extends HamsterManager {
                 this.dispatch(slideActions.slideMouseDown());
             }
         })
+
+        this.hamster.on('viewportPaste', e => {
+            console.log(e.clipboardData)
+        })
+
+        // TODO: nav:paste
+
         this.hamster.on('exhibition:mousedown', e => {
-            console.log(36, e.target)
+            // console.log(36, e.target)
         })
     }
 

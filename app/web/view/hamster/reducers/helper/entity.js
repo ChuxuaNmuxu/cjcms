@@ -11,23 +11,41 @@ import {immrPick} from '../../utils/utils'
 export const getEntity = hamster => id => hamster.getIn(['entities', id]);
 
 /**
+ * 更新单个entity
+ * @param {*} operations  operations: {path: operate}
+ */
+export const udpateEntity = operations => entity => operations.reduce((entity, operate, path) => {
+    const objectPath = path.split('.');
+    if (objectPath.some(miaow.not(miaow.existy))) return entity;
+    operate = lodash.isFunction(operate) ? operate : miaow.always(operate)
+    return entity.updateIn(objectPath, operate)
+}, entity)
+
+/**
+ * 更新entities
+ * @returns entities
+ * @param {*} payload 
+ * @param {*} entities 
+ */
+export const updateEntities = payload => entities => {
+    const [ids, operations] = miaow.destruction('ids', 'operations')(payload);
+    const objectIds = miaow.toList(ids);
+
+    return objectIds.reduce((entities, id) => {
+        if (!miaow.existy(id)) return entities;
+
+        return entities.update(id, udpateEntity(operations))
+    }, entities);
+}
+
+/**
  * entities数据增删改
  * @param {*} hamster 
- * @param {*} payload {ids, operations}
+ * @param {*} payload {ids, operations: {path: operate}}
+ * @returns hamster
  */
 export function handleEntitiesChanges (hamster, payload) {
-    const [ids, operations] = miaow.destruction('ids', 'operations')(payload);
-
-    const objectIds = miaow.toList(ids);
-    return hamster.update('entities', entities => {
-        return objectIds.reduce((entities, id) => {
-            return operations.reduce((entities, operate, path) => {
-                const objectPath = [id].concat(path.split('.'))
-                if (objectPath.some(miaow.not(miaow.existy))) return entities;
-                return entities.updateIn(objectPath, prop => operate(prop))
-            }, entities)
-        }, entities);
-    }) 
+    return hamster.update('entities', updateEntities(payload)) 
 }
 
 export const getProp = hamster => id => propPath => {
