@@ -17,6 +17,7 @@ import {withHamster} from '../../manager'
 class Viewport extends React.Component {
     componentDidMount () {
         const {hamster} = this.props;
+        // 注册viewport容器
         hamster.registry.registry('viewport', this.viewport);
     }
 

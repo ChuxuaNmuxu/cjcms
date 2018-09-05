@@ -1,7 +1,7 @@
 import {List, fromJS} from 'immutable'
 import lodash from 'lodash'
 
-import {getEntitiesByType} from './entity'
+import {getEntitiesByType, getEntity} from './entity'
 import * as currentHelper from './current';
 import * as blockHelper from './block';
 import * as miaow from '../../utils/miaow';
@@ -222,3 +222,11 @@ export const snap = (hamster, ids) => {
 
     return hamster;
 }
+
+// 获取当前slide中的所有blocksId
+export const getCurrentSlideBlockIds = hamster => lodash.flow(
+    currentHelper.getCurrentState(hamster),
+    getEntity(hamster),
+    miaow.get('data.blocks')
+)('operatingSlideId')
+

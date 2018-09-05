@@ -7,7 +7,7 @@ import * as nodeHelper from '../helper/node';
 import * as currentHelper from '../helper/current';
 import * as entityHelper from '../helper/entity';
 import * as blockHelper from '../helper/block';
-import { ACT_DRAG, ACT_RESIZE, ACT_ROTATE } from '../helper/contants';
+import { ACT_DRAG, ACT_RESIZE, ACT_ROTATE } from '../../config/constants';
 
 function handleAddBlock (hamster, action) {
     const {payload: {blocks}} = action;
@@ -241,6 +241,7 @@ function handleDeleteBlock (hamster, action) {
     return hamster;
 }
 
+// 复制元素，只是将元素id保存到current.copy
 const handleCopyBlocks = (hamster, action) => {
     hamster = lodash.flow(
         currentHelper.getActivatedBlockIds,
@@ -248,7 +249,6 @@ const handleCopyBlocks = (hamster, action) => {
     )(hamster)
     return hamster;
 }
-
 
 /**
  * paste
@@ -261,12 +261,10 @@ const handlePasteBlocks = (hamster, action) => {
     const blocks = lodash.flow(
         currentHelper.getCurrentState(hamster),
         miaow.toList,
-        miaow.flowDebug,
         miaow.mapI(lodash.flow(
             // 拿到block
             entityHelper.getEntity(hamster),
-            miaow.flowDebug,
-            // 更新id, 位置, zIndex等
+            // 更新id, 位置等
             entityHelper.udpateEntity(fromJS({
                 'id': helper.createId('block'),
                 'data.props.top': miaow.add(pasteOffset),
@@ -274,15 +272,20 @@ const handlePasteBlocks = (hamster, action) => {
             }))
         ))
     )('copy')
-
+    
     hamster = handleAddBlock(hamster, {
         payload: {blocks}
     })
+    
+    // TODO: 更新zIndex
+    const newBlockIds = blocks.map(miaow.get('id'));
+
+    // TODO: 粘贴组合
 
     // 激活复制后的元素
-    hamster = helper.handleReactivateBlocks(hamster)(blocks.map(miaow.get('id')));
+    hamster = helper.handleReactivateBlocks(hamster)(newBlockIds);
 
-    // 更新copy
+    // 更新copy, 下次直接粘贴时会再偏移pasteOffset
     hamster = handleCopyBlocks(hamster)
     return hamster;
 }

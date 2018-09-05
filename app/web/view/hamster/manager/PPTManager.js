@@ -28,10 +28,17 @@ class EditorManager extends HamsterManager {
             // }
         })
 
+        // 键盘事件监听
         document.addEventListener('keydown', event => {
             // console.log('event key:', event.key)
             const focusArea = getCurrentState(this.hamster.getHamsterState())('focusArea');
 
+            /**
+             * 按下delete可能是删导航栏卡片，也可能是删block
+             * FOCUSAREA_NAV 导航栏区域点击，block取消激活，导航卡片取消激活
+             * FOCUSAREA_VIEWPORT 视图区点击，block取消激活，导航卡片不变
+             * 
+            */
             dispatchMission(
                 // navbar 事件
                 prevCheck(() => focusArea === FOCUSAREA_NAV)(dispatchMission(
@@ -50,7 +57,13 @@ class EditorManager extends HamsterManager {
             )(event, this.hamster)
         })
 
+        /**
+         * TODO: draggable = true的dom元素上绑定的onCopy和onPaste事件无法触发，
+         * 所以直接绑定到document，在整个编辑器内触发粘贴事件，都将粘贴元素到编辑区
+         * */
         // document.addEventListener('paste', event => console.log(267393))
+
+        // TODO: nav:paste
 
         this.hamster.on('nav:mousedown', e => {
             e.stopPropagation();
@@ -60,23 +73,15 @@ class EditorManager extends HamsterManager {
         // this.hamster.on('viewport:mousedown', )
         this.hamster.on('viewport:mousedown', e => {
             /**
-             * TODO:
+             * TODO: 在点击block时会触发viewport:mousedown，因为没有阻止冒泡，
+             * 其一因为用户自定义的block可能并不需要阻止冒泡，其二，react封装事件的e.stopPropagation()阻止不了原生事件的冒泡
+             * 目前有两个方案：
              * 1. 在block mousedown时保存activatedBlock, 在drag等的时候已保存的block来查找应该操作的block
-             * 2. e.target方式组织冒泡用classList来做判断的方式需要优化
+             * 2. e.target方式阻止冒泡用classList来做判断的方式需要优化
             */
             if (e.target.classList.contains('reveal') || e.target.classList.contains('slide-wrap')) {
                 this.dispatch(slideActions.slideMouseDown());
             }
-        })
-
-        this.hamster.on('viewportPaste', e => {
-            console.log(e.clipboardData)
-        })
-
-        // TODO: nav:paste
-
-        this.hamster.on('exhibition:mousedown', e => {
-            // console.log(36, e.target)
         })
     }
 

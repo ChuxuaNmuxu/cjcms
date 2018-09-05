@@ -25,7 +25,7 @@ export const udpateEntity = operations => entity => operations.reduce((entity, o
  * 更新entities
  * @returns entities
  * @param {*} payload 
- * @param {*} entities 
+ * @param {*} entities Map
  */
 export const updateEntities = payload => entities => {
     const [ids, operations] = miaow.destruction('ids', 'operations')(payload);
@@ -48,6 +48,7 @@ export function handleEntitiesChanges (hamster, payload) {
     return hamster.update('entities', updateEntities(payload)) 
 }
 
+// 获取entity.props里的某个属性
 export const getProp = hamster => id => propPath => {
     return lodash.flow(
         getEntity(hamster),

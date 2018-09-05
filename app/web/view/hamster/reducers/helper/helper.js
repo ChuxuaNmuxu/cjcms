@@ -12,7 +12,7 @@ import * as nodeHelper from './node';
 import * as currentHelper from './current';
 import * as slideHelper from './slide'
 import {createBlock} from '../../utils/block';
-import { ACT_DRAG, ACT_ROTATE } from './contants';
+import { ACT_DRAG, ACT_ROTATE } from '../../config/constants';
 
 // 生成ID
 export function createId (namespace='', suffix='') {
@@ -49,15 +49,19 @@ export function createDefaultBlockObjects (hamster, id) {
     return hamster.update('entities', entities => entities.set(id, defaultBlockData));
 }
 
-// 拖动blocks
+/**
+ * 拖动blocks
+ * @param {*} hamster 
+ * @param {*} payload Map{offset: {x, y}, blockIds}
+ */
 export function handleDragBlocks (hamster, payload) {
     const [offset, blockIds] = miaow.destruction('offset', 'blockIds')(payload);
 
     return entityHelper.handleEntitiesChanges(hamster, Immutable.fromJS({
         ids: miaow.toList(blockIds),
         operations: {
-            'data.props.top': miaow.add(offset.get('top')),
-            'data.props.left': miaow.add(offset.get('left'))
+            'data.props.top': miaow.add(offset.get('y')),
+            'data.props.left': miaow.add(offset.get('x'))
         }
     }));
 }
@@ -65,7 +69,7 @@ export function handleDragBlocks (hamster, payload) {
 /**
  *  拖动一个block
  * @param {*} hamster 
- * @param {*} payload {offset, blockId}
+ * @param {*} payload {offset: {x, y}, blockId}
  */
 export function handleDragBlock (hamster, payload) {
     payload = payload.set('blockIds', payload.get('blockId'));
@@ -80,7 +84,7 @@ export function handleDragBlock (hamster, payload) {
  */
 export function handleDrag (hamster, payload) {
     const [offset, blockId] = miaow.destruction('offset', 'blockId')(payload);
-    const [left, top] = miaow.destruction('x', 'y')(offset); 
+    const [x, y] = miaow.destruction('x', 'y')(offset); 
 
     let [blockOperating, blocksToOperate, isResistInside] = miaow.destruction('blockOperating', 'blocksToOperate', 'isResistInside')(currentHelper.getActSituation(hamster));
 
@@ -91,7 +95,7 @@ export function handleDrag (hamster, payload) {
     }
 
     hamster = handleDragBlocks(hamster, Immutable.fromJS({
-        offset: {top, left},
+        offset: {x, y},
         blockIds: blocksToOperate
     }))
 
@@ -280,7 +284,7 @@ export function handleResizeBlocks (hamster, blockId, direction='e', offset) {
 /**
  * 拉伸
  * @param {*} hamster 
- * @param {*} payload {offset, direction}
+ * @param {*} payload {offset: {x, y}, direction}
  */
 export const handleResize = (hamster, payload) => {
     const offset = payload.get('offset');
@@ -313,7 +317,7 @@ export const handleRotateBlocks = (hamster, blockIds, angle) => {
 }
 
 /**
- * 
+ * 旋转
  * @param {*} hamster 
  * @param {*} payload {blockId, rotateAngle}
  */
@@ -347,8 +351,8 @@ export const handleRotate = (hamster, payload) => {
 
 /**
  * 新增block
- * @param {*} hamster 
- * @param {*} blocks 
+ * @param {*} hamster
+ * @param {*} blocks 完整的block对象
  */
 export const handleAddBlock = (hamster, blocks) => {
     const blockIds = blocks.map(block => block.get('id'));

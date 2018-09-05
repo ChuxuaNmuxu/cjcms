@@ -6,6 +6,7 @@ import * as entityHelper from './entity';
 import * as currentHelper from './current';
 import * as nodeHelper from './node';
 import * as helper from './helper';
+import { getCurrentSlideBlockIds } from './slide';
 
 /**
  * 包裹blocks的框的位置及大小
@@ -101,7 +102,7 @@ export function updateGroupFourDimension (hamster, leafIds, groupId) {
 }
 
 /**
- * 钉住一个点
+ * 钉住一个点，拉伸
  * @description 坐标原点位于左上角
  * @param {Object} fourDimension 四维
  * @param {Object} offset 偏移 {width, height}
@@ -132,6 +133,7 @@ export const pin = point => offset => fourDimension => {
 }
 
 /**
+ * block拉伸后，同一点的坐标偏移向量
  * 坐标原点位于中心
  * @param {*} oldFourDimension
  * @param {*} newFourDimension
@@ -303,5 +305,42 @@ export const deleteBlocks = hamster => ids => {
      * 2. 删除资源
      * 3. 更新组合
      * */
+    return hamster;
+}
+
+/**
+ * zIndex相关
+ * @param zIndexs blockIds[]
+ * @description 将zIndex映射成一个zIndex数组(id[])，操作该数组，在以该数组更新entities
+*/
+
+const startZIndex = 10;
+
+/**
+ * 获取从小到大排列好的zIndexs
+ * @param {*} hamster 
+ */
+export const getSortedZIndexs = hamster => {
+    const currentSlideBlockIds = getCurrentSlideBlockIds(hamster);
+    const sortedZIndexs = currentSlideBlockIds.sort((a, b) => {
+        const [zIndexA, zIndexB] = [a, b].map(lodash.flow(getEntity(hamster), miaow.get('data.props.zIndex')));
+        return zIndexA > zIndexB;
+    })
+
+    return sortedZIndexs;
+}
+
+/**
+ * 按照zIndexs的排序重新更新entities里的zIndex属性
+ * @param {*} hamster 
+ */
+export const mapZIndexsToBlocks = hamster => zIndexs => {
+    hamster = zIndexs.reduce((hamster, id, i) => {
+        return entityHelper.changeEntitiesProps(hamster, fromJS({
+            ids: id,
+            'data.props.zIndex': i + startZIndex
+        }))
+    }, hamster)
+    
     return hamster;
 }

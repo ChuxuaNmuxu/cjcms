@@ -2,11 +2,14 @@ import * as nodeHelper from './node';
 import lodash from 'lodash';
 import * as miaow from '../../utils/miaow';
 import { getEntity } from './entity';
-import * as contants from './contants';
+import * as contants from '../../config/constants';
 import { handleCancelActivateBlocks } from './helper';
 
 /**
  * current数组中可能包含祖先节点，独立节点和叶子节点
+ * 祖先节点：组合框
+ * 叶子节点：组合内元素
+ * 独立节点：既不是祖先节点也不是叶子节点的节点
 */
 
 /**
@@ -103,6 +106,14 @@ export function getIdCluster (hamster, ids) {
 
     return miaow.uniq(miaow.cat(orphanIds, allLeafBlockIds))
 }
+
+/**
+ * situation相关
+ * 因为有组合的存在，所以在drag, resize, rotate时根据正在被操作的元素以及被激活的元素，
+ * 判断正在操作以及将要操作的是组合内元素(安内)，还是组合外元素(攘外)。
+ * 安内时组合框表现为一个作用域，将感知不到外部元素，
+ * 攘外时组合框(和内部元素一起)表现为一个元素，内部元素无法被感知，无法操作
+*/
 
 /**
  * 安内
